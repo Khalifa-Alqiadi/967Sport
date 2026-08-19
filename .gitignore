@@ -1,0 +1,25 @@
+/core/.phpunit.cache
+/core/node_modules
+/core/public/build
+/core/public/hot
+/core/public/storage
+/core/storage/*.key
+/core/storage/pail
+/core/vendor
+/uploads
+/core/.env
+/core/.env copy
+/core/.env.backup
+/core/.env.production
+/core/.phpactor.json
+/core/.phpunit.result.cache
+/core/Homestead.json
+/core/Homestead.yaml
+/core/npm-debug.log
+/core/yarn-error.log
+/core/auth.json
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed

@@ -1,0 +1,78 @@
+# Disabel any not supported file extensions
+# <FilesMatch ".*.(php3|php4|php5|php6|php7|php8|phps|pl|py|pyc|pyo|jsp|asp|htm|shtml|phtml|sh|cgi)$">
+#  Order Deny,Allow
+#  Deny from all
+# </FilesMatch>
+
+<IfModule mod_rewrite.c>
+    # <IfModule mod_negotiation.c>
+    #     Options -MultiViews -Indexes
+    # </IfModule>
+
+    RewriteEngine On
+
+    ### Enable Next 2 lines to force HTTPS
+    # RewriteCond %{HTTPS} !=on
+    # RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
+
+    ### Enable Next 3 lines if you want to redirect wwww to non-www
+    # RewriteBase /
+    # RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+    # RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+    ### Enable the next 2 to remove index.php from the url
+    # RewriteCond %{THE_REQUEST} ^GET.*index\.php [NC]
+    # RewriteRule (.*?)index\.php/*(.*) /$1$2 [R=301,NE,L]
+
+    # Handle Authorization Header
+    # RewriteCond %{HTTP:Authorization} .
+    # RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Handle X-XSRF-Token Header
+    # RewriteCond %{HTTP:x-xsrf-token} .
+    # RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+ # Images
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+
+  # Video
+  ExpiresByType video/webm "access plus 1 year"
+  ExpiresByType video/mp4 "access plus 1 year"
+  ExpiresByType video/mpeg "access plus 1 year"
+
+  # Fonts
+  ExpiresByType font/ttf "access plus 1 year"
+  ExpiresByType font/otf "access plus 1 year"
+  ExpiresByType font/woff "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType application/font-woff "access plus 1 year"
+  ExpiresByType application/font-woff2 "access plus 1 year"
+
+  # CSS, JavaScript
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+
+  # Others
+  ExpiresByType application/pdf "access plus 1 year"
+  ExpiresByType image/vnd.microsoft.icon "access plus 1 year"
+</IfModule>

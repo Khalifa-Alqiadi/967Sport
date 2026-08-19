@@ -1,0 +1,332 @@
+/* 967Sport brand layer — derived from the official Facebook profile mark. */
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800;1,900&family=Changa:wght@400;500;600;700;800&display=swap");
+
+:root {
+    --sport-yellow: #febb22;
+    --sport-yellow-light: #ffd76a;
+    --sport-yellow-dark: #d99600;
+    --sport-purple: #4d2c85;
+    --sport-purple-deep: #2a1748;
+    --sport-purple-soft: #6a3fa2;
+    --sport-ink: #20172b;
+    --sport-muted: #6e6578;
+    --sport-cream: #fff9e9;
+    --sport-line: #eadff6;
+
+    /* Keep the existing component API, but make every component 967Sport. */
+    --meu-navy: var(--sport-purple);
+    --meu-navy-2: var(--sport-purple-soft);
+    --meu-navy-ink: var(--sport-purple-deep);
+    --meu-accent: var(--sport-yellow);
+    --meu-accent-light: var(--sport-yellow-light);
+    --meu-accent-dark: var(--sport-yellow-dark);
+    --meu-cream: var(--sport-cream);
+    --meu-line: var(--sport-line);
+    --meu-ink: var(--sport-ink);
+    --meu-muted: var(--sport-muted);
+}
+
+html[dir="rtl"] body,
+html[dir="rtl"] body *:not(i):not(.fa):not(.fas):not(.far):not(.fab):not(.bi) {
+    font-family: "Changa", "Tajawal", sans-serif;
+}
+
+html[dir="ltr"] body {
+    font-family: "Barlow Condensed", sans-serif;
+}
+
+body {
+    color: var(--sport-ink);
+    background: #fff;
+}
+
+a,
+#footer .footer-bottom a,
+.navbar a,
+.navbar a:focus {
+    color: var(--sport-purple-deep);
+}
+
+a:hover,
+.navbar a:hover,
+.navbar .active,
+.navbar .active:focus,
+.navbar li:hover > a,
+.navbar .dropdown ul a:hover,
+.navbar-mobile a:hover,
+.sidebar-list .list-group .active,
+.sidebar-list .list-group a:hover {
+    color: var(--sport-purple) !important;
+}
+
+/* Header and brand lock-up */
+#header.header-bg {
+    background: rgba(255, 255, 255, .96) !important;
+    border-top: 4px solid var(--sport-yellow);
+}
+
+#header.header-bg::after {
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--sport-purple) 25%, var(--sport-yellow) 50%, var(--sport-purple) 75%, transparent);
+    opacity: .7;
+}
+
+#header.header-scrolled {
+    box-shadow: 0 16px 38px -22px rgba(42, 23, 72, .55) !important;
+}
+
+.sport-brand {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 11px;
+    text-decoration: none;
+}
+
+#header .logo.sport-brand {
+    padding: 7px 0;
+}
+
+#header .logo.sport-brand img,
+#footer .footer-logo.sport-brand img {
+    width: 62px;
+    height: 62px;
+    max-height: none;
+    flex: 0 0 62px;
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow: 0 9px 24px -13px rgba(42, 23, 72, .7);
+}
+
+.sport-brand-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1;
+}
+
+.sport-brand-copy b,
+.hero-slide-brand,
+.hero-fx-wordmark,
+.footer-fx-watermark {
+    font-family: "Barlow Condensed", sans-serif !important;
+    font-style: italic;
+    font-weight: 900;
+    letter-spacing: -.035em;
+}
+
+.sport-brand-copy b {
+    color: var(--sport-purple);
+    font-size: 27px;
+    white-space: nowrap;
+    transform: skewX(-6deg);
+}
+
+.sport-brand-copy b span {
+    color: var(--sport-yellow-dark);
+    margin-inline-end: 3px;
+}
+
+.sport-brand-copy small {
+    margin-top: 6px;
+    color: var(--sport-purple-deep);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0;
+    white-space: nowrap;
+}
+
+.navbar > ul > li > a {
+    font-weight: 600;
+}
+
+.navbar > ul > li > a::after {
+    height: 3px;
+    background: var(--sport-yellow);
+}
+
+.navbar .dropdown ul {
+    border-top-color: var(--sport-yellow);
+}
+
+.navbar .dropdown ul a:hover {
+    background: var(--sport-cream);
+    border-inline-start-color: var(--sport-yellow);
+}
+
+/* Hero: purple broadcast overlay with the yellow score-line accent. */
+#hero .carousel-item::before {
+    background: linear-gradient(90deg, rgba(22, 10, 40, .86), rgba(42, 23, 72, .58) 55%, rgba(42, 23, 72, .16)) !important;
+}
+
+#hero .hero-fx-grid {
+    background-image: linear-gradient(rgba(254, 187, 34, .07) 1px, transparent 1px), linear-gradient(90deg, rgba(254, 187, 34, .07) 1px, transparent 1px);
+}
+
+#hero .hero-fx-wordmark {
+    color: transparent;
+    -webkit-text-stroke-color: rgba(254, 187, 34, .12);
+}
+
+#hero .hero-slide-brand,
+#hero .hero-slide-count,
+#hero .hero-slide-meta-mark {
+    color: var(--sport-yellow);
+}
+
+#hero .slider-title {
+    font-weight: 800;
+}
+
+#hero .slider-link,
+.btn-theme,
+.landing-block .more-btn .btn-theme {
+    background: var(--sport-yellow) !important;
+    border-color: var(--sport-yellow) !important;
+    color: var(--sport-purple-deep) !important;
+    font-weight: 700;
+}
+
+#hero .slider-link:hover,
+.btn-theme:hover,
+.landing-block .more-btn .btn-theme:hover {
+    background: var(--sport-purple) !important;
+    border-color: var(--sport-purple) !important;
+    color: #fff !important;
+}
+
+/* News and football content */
+.landing-page > section.landing-block:nth-of-type(even) {
+    background: linear-gradient(135deg, #fffdf7, var(--sport-cream));
+}
+
+.landing-block.meu-band-navy {
+    background: linear-gradient(145deg, var(--sport-purple-deep), var(--sport-purple) 64%, #65409a) !important;
+}
+
+.landing-block.meu-band-navy::before {
+    background-image: radial-gradient(circle at 9% 12%, rgba(254, 187, 34, .18), transparent 39%), radial-gradient(circle at 92% 88%, rgba(254, 187, 34, .11), transparent 44%);
+}
+
+.landing-block .section-title .meu-kicker,
+.section-title h2::after {
+    background: linear-gradient(180deg, var(--sport-yellow), var(--sport-purple));
+}
+
+.meu-post-cat,
+.meu-feature-card .meu-post-cat,
+.meu-editorial-num {
+    color: var(--sport-purple) !important;
+}
+
+.meu-feature-card:hover,
+.meu-post:hover,
+.meu-tile:hover,
+.card:hover {
+    border-color: rgba(254, 187, 34, .7) !important;
+}
+
+.back-to-top,
+#preloader:before,
+.pagination .active .page-link,
+.page-item.active .page-link {
+    background-color: var(--sport-yellow) !important;
+    border-color: var(--sport-yellow) !important;
+    color: var(--sport-purple-deep) !important;
+}
+
+#preloader:before {
+    border-top-color: var(--sport-purple) !important;
+}
+
+/* Footer */
+#footer {
+    background: radial-gradient(ellipse 850px 520px at 5% -10%, rgba(254, 187, 34, .18), transparent 60%), radial-gradient(ellipse 760px 520px at 105% 110%, rgba(77, 44, 133, .1), transparent 57%), linear-gradient(160deg, #fffdf7 0%, #fff8e8 54%, #f5ecff 100%) !important;
+}
+
+#footer::after {
+    background: linear-gradient(90deg, transparent, var(--sport-purple) 20%, var(--sport-yellow) 50%, var(--sport-purple) 80%, transparent);
+    box-shadow: 0 0 16px rgba(254, 187, 34, .5);
+}
+
+#footer .footer-fx-grid {
+    background-image: radial-gradient(rgba(77, 44, 133, .1) 1px, transparent 1px);
+}
+
+#footer .footer-fx-seal {
+    background: linear-gradient(155deg, var(--sport-yellow-light), var(--sport-yellow));
+    box-shadow: 0 0 13px rgba(254, 187, 34, .6);
+}
+
+#footer .footer-fx-orb-1 {
+    background: radial-gradient(circle, rgba(254, 187, 34, .22), transparent 70%);
+}
+
+#footer .footer-fx-orb-2 {
+    background: radial-gradient(circle, rgba(77, 44, 133, .15), transparent 70%);
+}
+
+#footer .footer-fx-watermark {
+    -webkit-text-stroke-color: rgba(77, 44, 133, .09);
+    background: linear-gradient(180deg, rgba(77, 44, 133, .08), transparent 72%);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+#footer .footer-logo.sport-brand {
+    justify-content: flex-start;
+    width: auto;
+    height: auto;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+#footer .footer-logo.sport-brand img {
+    width: 78px;
+    height: 78px;
+    flex-basis: 78px;
+    border-radius: 20px;
+}
+
+#footer .footer-logo .sport-brand-copy b {
+    font-size: 31px;
+}
+
+#footer .footer-title-icon {
+    background: rgba(254, 187, 34, .18);
+    border-color: rgba(254, 187, 34, .65);
+    color: var(--sport-purple);
+}
+
+#footer .footer-title h3::after,
+#footer .footer-title h4::after {
+    background: linear-gradient(90deg, var(--sport-yellow), transparent);
+}
+
+@media (max-width: 991px) {
+    #header .logo.sport-brand img {
+        width: 52px;
+        height: 52px;
+        flex-basis: 52px;
+        border-radius: 13px;
+    }
+
+    .sport-brand-copy b {
+        font-size: 23px;
+    }
+
+    .sport-brand-copy small {
+        font-size: 9px;
+    }
+}
+
+@media (max-width: 575px) {
+    .sport-brand-copy small {
+        display: none;
+    }
+
+    .sport-brand-copy b {
+        font-size: 21px;
+    }
+}
