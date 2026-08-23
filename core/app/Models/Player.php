@@ -25,6 +25,7 @@ class Player extends Model
     {
         return $this->belongsToMany(Team::class, 'team_players')
             ->withPivot([
+                'id',
                 'season_id',
                 'position_id',
                 'detailed_position_id',

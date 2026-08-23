@@ -40,6 +40,8 @@
         </div>
     @endif
 
+    @include('frontEnd.homepage.home-matches')
+
     <div class="container sport-gateway-wrap">
         <div class="sport-gateway-head">
             <div>

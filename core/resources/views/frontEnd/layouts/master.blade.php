@@ -9,6 +9,7 @@
     <link href="{{ URL::asset('assets/frontend/css/967sport-brand.css') }}?v={{ Helper::system_version() }}" rel="stylesheet"/>
     @yield('headInclude')
     @stack('after-styles')
+    <link href="{{ URL::asset('assets/frontend/css/967sport-inner.css') }}?v={{ Helper::system_version() }}" rel="stylesheet"/>
     @if(Helper::GeneralSiteSettings("css")!="")
         <style type="text/css">
             {!! Helper::GeneralSiteSettings("css") !!}
@@ -17,7 +18,7 @@
     {!! Helper::GeneralSiteSettings("js") !!}
 </head>
 
-<body class="dir-{{ @Helper::currentLanguage()->direction }} lang-{{ @Helper::currentLanguage()->code }} @yield('bodyClass') {{ (!Helper::GeneralSiteSettings("style_change") && Helper::GeneralSiteSettings("style_type"))?"dark":"" }}">
+<body class="dir-{{ @Helper::currentLanguage()->direction }} lang-{{ @Helper::currentLanguage()->code }} {{ (@$page_type !== 'home') ? 'sport-inner-page' : '' }} @yield('bodyClass') {{ (!Helper::GeneralSiteSettings("style_change") && Helper::GeneralSiteSettings("style_type"))?"dark":"" }}">
 
 @if(!@$HideHeader)
 <!-- ======= Header ======= -->

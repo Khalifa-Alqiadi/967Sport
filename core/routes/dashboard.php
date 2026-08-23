@@ -173,6 +173,8 @@ Route::Group(['prefix' => config('smartend.backend_path'), 'middleware' => ['aut
     Route::post('/teams/teamsUpdateAll', [TeamsController::class, 'updateAll'])->name('teamsUpdateAll');
     Route::post('/teams/update/{id}', [TeamsController::class, 'update'])->name('teamsUpdate');
     Route::get('/teams/destroy/{id?}', [TeamsController::class, 'destroy'])->name('teamsDestroy');
+    Route::get('/teams/{team}/players/create', [TeamsController::class, 'createPlayer'])->name('teams.players.create');
+    Route::post('/teams/{team}/players/store', [TeamsController::class, 'storePlayer'])->name('teams.players.store');
     Route::get('/teams/{team}/players/{player}/edit', [TeamsController::class, 'editPlayer'])->name('teams.players.edit');
     Route::post('/teams/{team}/players/{player}/update', [TeamsController::class, 'updatePlayer'])->name('teams.players.update');
     Route::get('/teams/{team}/players/{player}/destroy', [TeamsController::class, 'destroyPlayer'])->name('teams.players.destroy');

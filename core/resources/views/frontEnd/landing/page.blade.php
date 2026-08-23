@@ -1,3 +1,4 @@
+@php($page_type = 'home')
 @extends('frontEnd.layouts.master')
 
 @if((int) @$Topic->id === 5)

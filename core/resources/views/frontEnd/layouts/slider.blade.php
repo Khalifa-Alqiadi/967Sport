@@ -154,30 +154,19 @@
                             @endforeach
                         </div>
 
-                        <div class="container matchday-navigation">
-                            <div class="matchday-story-list" role="tablist" aria-label="{{ __('frontend.heroStories') }}">
-                                @foreach($SliderBanners as $SliderBanner)
-                                    <?php $tabTitle = $SliderBanner->$title_var ?: $SliderBanner->$title_var2; ?>
-                                    <button type="button" class="matchday-story {{ $loop->first ? 'active' : '' }}"
-                                            data-bs-target="#matchdayCarousel" data-bs-slide-to="{{ $loop->index }}"
-                                            aria-label="{{ strip_tags($tabTitle) }}" @if($loop->first) aria-current="true" @endif>
-                                        <span>{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
-                                        <b>{{ \Illuminate\Support\Str::limit(strip_tags($tabTitle), 48) }}</b>
-                                    </button>
-                                @endforeach
-                            </div>
-                            @if(count($SliderBanners) >1)
+                        @if(count($SliderBanners) >1)
+                            <div class="container matchday-navigation">
                                 <div class="matchday-controls">
                                     <button type="button" data-bs-target="#matchdayCarousel" data-bs-slide="prev" aria-label="{{ __('frontend.heroPrevious') }}">
                                         <i class="bi bi-chevron-right"></i>
                                     </button>
-                                    <span><b class="matchday-current">01</b> / {{ str_pad($SliderBannersCount, 2, '0', STR_PAD_LEFT) }}</span>
+                                    <span><b class="matchday-current">01</b><small>/ {{ str_pad($SliderBannersCount, 2, '0', STR_PAD_LEFT) }}</small></span>
                                     <button type="button" data-bs-target="#matchdayCarousel" data-bs-slide="next" aria-label="{{ __('frontend.heroNext') }}">
                                         <i class="bi bi-chevron-left"></i>
                                     </button>
                                 </div>
-                            @endif
-                        </div>
+                            </div>
+                        @endif
                     </div>
                 @else
                     {{-- Video Banners--}}
@@ -286,15 +275,8 @@
                 var carousel = document.getElementById('matchdayCarousel');
                 if (!carousel) return;
 
-                var tabs = Array.prototype.slice.call(carousel.querySelectorAll('.matchday-story'));
                 var current = carousel.querySelector('.matchday-current');
                 carousel.addEventListener('slid.bs.carousel', function (event) {
-                    tabs.forEach(function (tab, index) {
-                        var active = index === event.to;
-                        tab.classList.toggle('active', active);
-                        if (active) tab.setAttribute('aria-current', 'true');
-                        else tab.removeAttribute('aria-current');
-                    });
                     if (current) current.textContent = String(event.to + 1).padStart(2, '0');
                 });
             });

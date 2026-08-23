@@ -9,6 +9,7 @@ use App\Imports\TopicsImport;
 use App\Mail\NotificationEmail;
 use App\Models\AttachFile;
 use App\Models\Comment;
+use App\Models\Fixture;
 use App\Models\Map;
 use App\Models\Photo;
 use App\Models\League;
@@ -1099,7 +1100,13 @@ class TopicsController extends Controller
                         ->get(['id', 'name_ar', 'name_en']);
                 }
                 if($WebmasterSection->sportmonks_status == 3 && $Topic->team_id){
-                    $matches = Helper::leagueTeamMatches($Topic->league_id, $Topic->team_id);
+                    $matches = $this->leagueTeamFixtures(
+                            (int) $Topic->league_id,
+                            (int) $Topic->team_id,
+                            (int) $Topic->season_id
+                        )
+                        ->orderByDesc('starting_at')
+                        ->get();
                 }
 
                 $allowed_file_types = $this->allowed_file_types;
@@ -3647,19 +3654,8 @@ class TopicsController extends Controller
 
         $nameColumn = $lang === 'ar' ? 'name_ar' : 'name_en';
 
-        $query = \App\Models\Fixture::query()
-            ->with(['homeTeam:id,name_ar,name_en', 'awayTeam:id,name_ar,name_en'])
-            ->where('league_id', $leagueId)
-            ->where(function ($q) use ($teamId) {
-                $q->where('home_team_id', $teamId)
-                  ->orWhere('away_team_id', $teamId);
-            });
-
-        if ($seasonId > 0) {
-            $query->where('season_id', $seasonId);
-        }
-
-        $matches = $query->orderByDesc('starting_at')
+        $matches = $this->leagueTeamFixtures($leagueId, $teamId, $seasonId)
+            ->orderByDesc('starting_at')
             ->get()
             ->map(function ($match) use ($nameColumn) {
                 $homeName = $match->homeTeam?->{$nameColumn} ?: $match->homeTeam?->name_en ?: $match->homeTeam?->name_ar ?: '-';
@@ -3674,6 +3670,18 @@ class TopicsController extends Controller
             ->values();
 
         return response()->json(['ok' => true, 'matches' => $matches]);
+    }
+
+    private function leagueTeamFixtures(int $leagueId, int $teamId, int $seasonId = 0)
+    {
+        return Fixture::query()
+            ->with(['homeTeam:id,name_ar,name_en', 'awayTeam:id,name_ar,name_en'])
+            ->where('league_id', $leagueId)
+            ->where(function ($query) use ($teamId) {
+                $query->where('home_team_id', $teamId)
+                    ->orWhere('away_team_id', $teamId);
+            })
+            ->when($seasonId > 0, fn ($query) => $query->where('season_id', $seasonId));
     }
 
     public function getTeamPlayers(Request $request)

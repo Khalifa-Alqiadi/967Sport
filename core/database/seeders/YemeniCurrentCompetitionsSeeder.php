@@ -243,6 +243,7 @@ class YemeniCurrentCompetitionsSeeder extends Seeder
                     'home_score' => $finished ? $homeScore : null,
                     'away_score' => $finished ? $awayScore : null,
                     'is_finished' => $finished,
+                    'is_home' => $round === 12,
                     'ft_home_score' => $finished ? $homeScore : null,
                     'ft_away_score' => $finished ? $awayScore : null,
                     'minute' => $finished ? 90 : null,

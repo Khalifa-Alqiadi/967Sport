@@ -1,0 +1,5 @@
+@php($title_var = 'title_' . Helper::currentLanguage()->code)
+@php($name_var = 'name_' . Helper::currentLanguage()->code)
+@extends('dashboard.layouts.master')
+@section('title', __('backend.add_player'))
+@section('content')<div class="padding"><div class="box m-b-0"><div class="box-header dker"><h3><i class="material-icons">&#xe7fe;</i> {{ __('backend.add_player') }}</h3><small><a href="{{ route('teams.edit',['id'=>$team->id,'tab'=>'players']) }}">{{ $team->$name_var ?: $team->name_en ?: $team->name_ar }}</a> / {{ __('backend.add_player') }}</small></div></div><div class="box nav-active-border b-info">@include('dashboard.football.teams.tabs')<div class="box-body p-a-2"><form method="POST" action="{{ route('teams.players.store',['team'=>$team->id]) }}" enctype="multipart/form-data">@csrf @include('dashboard.football.teams.players.form-fields')<div class="m-t-md"><button class="btn btn-lg btn-primary">{{ __('backend.add') }}</button> <a href="{{ route('teams.edit',['id'=>$team->id,'tab'=>'players']) }}" class="btn btn-lg btn-default">{{ __('backend.cancel') }}</a></div></form></div></div></div>@endsection

@@ -90,6 +90,14 @@ return [
     'sliderMatchFinished' => 'انتهت المباراة',
     'sliderMatchUpcoming' => 'المباراة القادمة',
     'sliderMatchPenalty' => 'ركلات الترجيح',
+    'homeMatchesEyebrow' => 'من قلب الحدث',
+    'homeMatchesTitle' => 'المباريات المختارة',
+    'homeMatchesDescription' => 'أهم مباريات الكرة اليمنية بمواعيدها ونتائجها، مختارة لتبقى قريباً من كل مواجهة.',
+    'homeMatchesSelected' => 'مباريات مختارة',
+    'homeMatchesMatch' => 'مباراة',
+    'homeMatchesLocalTime' => 'بتوقيت اليمن',
+    'homeMatchesOfficial' => 'بيانات المباراة',
+    'homeMatchesSwipe' => 'اسحب لاستعراض بقية المباريات',
 ];
 
 ?>

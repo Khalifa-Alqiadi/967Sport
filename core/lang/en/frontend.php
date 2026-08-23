@@ -89,5 +89,13 @@ return [
     'sliderMatchFinished' => 'FULL TIME',
     'sliderMatchUpcoming' => 'UPCOMING MATCH',
     'sliderMatchPenalty' => 'Penalties',
+    'homeMatchesEyebrow' => 'From the action',
+    'homeMatchesTitle' => 'Featured Matches',
+    'homeMatchesDescription' => 'Selected Yemeni football fixtures with schedules and results, keeping every important match close.',
+    'homeMatchesSelected' => 'selected matches',
+    'homeMatchesMatch' => 'Match',
+    'homeMatchesLocalTime' => 'Yemen time',
+    'homeMatchesOfficial' => 'Match data',
+    'homeMatchesSwipe' => 'Swipe to explore more matches',
 ];
 ?>

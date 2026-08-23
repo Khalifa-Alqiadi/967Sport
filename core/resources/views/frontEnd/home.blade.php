@@ -10,6 +10,7 @@
         ?>
 
         @include('frontEnd.layouts.slider',["BannersSettingsId"=>Helper::GeneralWebmasterSettings("home_banners_section_id")])
+        @include('frontEnd.homepage.home-matches')
         @include('frontEnd.homepage.row1',["Topic"=>$Topic])
         @include('frontEnd.homepage.row2')
         @include('frontEnd.homepage.row3')

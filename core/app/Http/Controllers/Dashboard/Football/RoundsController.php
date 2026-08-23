@@ -408,7 +408,8 @@ class RoundsController extends Controller
 
 
         if (!empty($match)) {
-            return view('dashboard.football.rounds.details', compact('match', 'GeneralWebmasterSections', 'today'));
+            $matchStatuses = $this->matchStatuses();
+            return view('dashboard.football.rounds.details', compact('match', 'GeneralWebmasterSections', 'today', 'matchStatuses'));
         } else {
             return redirect()->action([RoundsController::class, 'index'])->with('doneMessage', __('backend.saveDone'));
         }
@@ -418,9 +419,40 @@ class RoundsController extends Controller
     {
         $fixture = Fixture::findOrFail($id);
 
-        $fixture->update([
-            'is_home'   => $request->boolean('is_home'),
+        $statusCodes = array_keys($this->matchStatuses());
+        $validated = $request->validate([
+            'starting_at' => ['required', 'date'],
+            'state_code' => ['required', 'in:'.implode(',', $statusCodes)],
+            'minute' => ['nullable', 'integer', 'min:0', 'max:180'],
+            'first_half_added_time' => ['nullable', 'integer', 'min:0', 'max:60'],
+            'second_half_added_time' => ['nullable', 'integer', 'min:0', 'max:60'],
+            'home_score' => ['nullable', 'integer', 'min:0', 'max:99'],
+            'away_score' => ['nullable', 'integer', 'min:0', 'max:99'],
+            'ht_home_score' => ['nullable', 'integer', 'min:0', 'max:99'],
+            'ht_away_score' => ['nullable', 'integer', 'min:0', 'max:99'],
+            'ft_home_score' => ['nullable', 'integer', 'min:0', 'max:99'],
+            'ft_away_score' => ['nullable', 'integer', 'min:0', 'max:99'],
+            'et_home_score' => ['nullable', 'integer', 'min:0', 'max:99'],
+            'et_away_score' => ['nullable', 'integer', 'min:0', 'max:99'],
+            'pen_home' => ['nullable', 'integer', 'min:0', 'max:99'],
+            'pen_away' => ['nullable', 'integer', 'min:0', 'max:99'],
         ]);
+
+        $stateNames = [
+            'NS' => 'Not Started', '1H' => 'First Half', 'HT' => 'Half Time',
+            '2H' => 'Second Half', 'LIVE' => 'Live', 'BREAK' => 'Break',
+            'ET' => 'Extra Time', 'FT' => 'Finished', 'AET' => 'After Extra Time',
+            'PEN' => 'Penalties', 'PST' => 'Postponed', 'CANC' => 'Cancelled',
+            'ABD' => 'Abandoned', 'DELAYED' => 'Delayed', 'AWARDED' => 'Awarded',
+        ];
+
+        $finishedStatuses = ['FT', 'AET', 'PEN', 'AWARDED'];
+        $validated['state_name'] = $stateNames[$validated['state_code']];
+        $validated['is_finished'] = in_array($validated['state_code'], $finishedStatuses, true);
+        $validated['is_home'] = $request->boolean('is_home');
+        $validated['is_slider'] = $request->boolean('is_slider');
+
+        $fixture->update($validated);
 
         return redirect()->action([RoundsController::class, 'matcheRoundsEdit'], ['id' => $id])->with('doneMessage', __('backend.saveDone'));
     }
@@ -476,5 +508,26 @@ class RoundsController extends Controller
         return redirect()
             ->action([RoundsController::class, 'index'], ['league_id' => $League->id])
             ->with('doneMessage', __('backend.saveDone'));
+    }
+
+    private function matchStatuses(): array
+    {
+        return [
+            'NS' => __('backend.matchStatusNotStarted'),
+            '1H' => __('backend.matchStatusFirstHalf'),
+            'HT' => __('backend.matchStatusHalfTime'),
+            '2H' => __('backend.matchStatusSecondHalf'),
+            'LIVE' => __('backend.matchStatusLive'),
+            'BREAK' => __('backend.matchStatusBreak'),
+            'ET' => __('backend.matchStatusExtraTime'),
+            'FT' => __('backend.matchStatusFinished'),
+            'AET' => __('backend.matchStatusAfterExtraTime'),
+            'PEN' => __('backend.matchStatusPenalties'),
+            'PST' => __('backend.matchStatusPostponed'),
+            'CANC' => __('backend.matchStatusCancelled'),
+            'ABD' => __('backend.matchStatusAbandoned'),
+            'DELAYED' => __('backend.matchStatusDelayed'),
+            'AWARDED' => __('backend.matchStatusAwarded'),
+        ];
     }
 }
