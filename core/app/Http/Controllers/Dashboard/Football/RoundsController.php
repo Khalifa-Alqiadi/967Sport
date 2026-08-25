@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Dashboard\Football;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Fixture;
+use App\Models\FixtureEvent;
 use App\Models\League;
+use App\Models\Player;
 use App\Models\Season;
 use App\Models\Team;
 use App\Models\Venue;
@@ -14,6 +16,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class RoundsController extends Controller
 {
@@ -401,7 +405,8 @@ class RoundsController extends Controller
             'league',
             'season',
             'homeTeam',
-            'awayTeam'
+            'awayTeam',
+            'events.player',
         ])->find($id);
 
         $today = Carbon::now()->addMinutes(110);
@@ -409,7 +414,17 @@ class RoundsController extends Controller
 
         if (!empty($match)) {
             $matchStatuses = $this->matchStatuses();
-            return view('dashboard.football.rounds.details', compact('match', 'GeneralWebmasterSections', 'today', 'matchStatuses'));
+            $homePlayers = $this->teamPlayersForFixture($match, (int) $match->home_team_id);
+            $awayPlayers = $this->teamPlayersForFixture($match, (int) $match->away_team_id);
+
+            return view('dashboard.football.rounds.details', compact(
+                'match',
+                'GeneralWebmasterSections',
+                'today',
+                'matchStatuses',
+                'homePlayers',
+                'awayPlayers'
+            ));
         } else {
             return redirect()->action([RoundsController::class, 'index'])->with('doneMessage', __('backend.saveDone'));
         }
@@ -452,9 +467,187 @@ class RoundsController extends Controller
         $validated['is_home'] = $request->boolean('is_home');
         $validated['is_slider'] = $request->boolean('is_slider');
 
-        $fixture->update($validated);
+        $hasGoalEvents = $fixture->events()->goals()->where('rescinded', false)->exists();
+        if ($hasGoalEvents) {
+            unset($validated['home_score'], $validated['away_score']);
+        }
+
+        DB::transaction(function () use ($fixture, $validated, $hasGoalEvents): void {
+            $fixture->update($validated);
+            if ($hasGoalEvents) {
+                $this->recalculateFixtureScore($fixture->fresh());
+            }
+        });
 
         return redirect()->action([RoundsController::class, 'matcheRoundsEdit'], ['id' => $id])->with('doneMessage', __('backend.saveDone'));
+    }
+
+    public function storeGoal(Request $request, Fixture $fixture)
+    {
+        $validated = $this->validateGoalEvent($request, $fixture);
+
+        DB::transaction(function () use ($fixture, $validated): void {
+            $lockedFixture = Fixture::query()->lockForUpdate()->findOrFail($fixture->id);
+
+            FixtureEvent::create([
+                'fixture_id' => $lockedFixture->id,
+                'team_id' => $validated['team_id'],
+                'player_id' => $validated['player_id'],
+                'type' => FixtureEvent::TYPE_GOAL,
+                'type_id' => 14,
+                'minute' => $validated['minute'],
+                'extra_minute' => $validated['extra_minute'] ?? null,
+                'sort_order' => (int) FixtureEvent::where('fixture_id', $lockedFixture->id)->max('sort_order') + 1,
+                'payload' => ['source' => 'dashboard', 'created_by' => Auth::id()],
+            ]);
+
+            $this->recalculateFixtureScore($lockedFixture);
+        });
+
+        return redirect()
+            ->to(route('matcheRoundsEdit', ['id' => $fixture->id]).'#match-goals')
+            ->with('doneMessage', __('backend.matchGoalAdded'));
+    }
+
+    public function updateGoal(Request $request, Fixture $fixture, FixtureEvent $event)
+    {
+        $this->ensureGoalBelongsToFixture($fixture, $event);
+        $validated = $this->validateGoalEvent($request, $fixture);
+
+        DB::transaction(function () use ($fixture, $event, $validated): void {
+            $lockedFixture = Fixture::query()->lockForUpdate()->findOrFail($fixture->id);
+            $event->update([
+                'team_id' => $validated['team_id'],
+                'player_id' => $validated['player_id'],
+                'minute' => $validated['minute'],
+                'extra_minute' => $validated['extra_minute'] ?? null,
+            ]);
+            $this->recalculateFixtureScore($lockedFixture);
+        });
+
+        return redirect()
+            ->to(route('matcheRoundsEdit', ['id' => $fixture->id]).'#match-goals')
+            ->with('doneMessage', __('backend.matchGoalUpdated'));
+    }
+
+    public function destroyGoal(Fixture $fixture, FixtureEvent $event)
+    {
+        $this->ensureGoalBelongsToFixture($fixture, $event);
+
+        DB::transaction(function () use ($fixture, $event): void {
+            $lockedFixture = Fixture::query()->lockForUpdate()->findOrFail($fixture->id);
+            $event->delete();
+            $this->recalculateFixtureScore($lockedFixture);
+        });
+
+        return redirect()
+            ->to(route('matcheRoundsEdit', ['id' => $fixture->id]).'#match-goals')
+            ->with('doneMessage', __('backend.matchGoalDeleted'));
+    }
+
+    private function validateGoalEvent(Request $request, Fixture $fixture): array
+    {
+        $validator = Validator::make($request->all(), [
+            'team_id' => ['required', 'integer', 'in:'.$fixture->home_team_id.','.$fixture->away_team_id],
+            'player_id' => ['required', 'integer', 'exists:players,id'],
+            'minute' => ['required', 'integer', 'min:0', 'max:180'],
+            'extra_minute' => ['nullable', 'integer', 'min:0', 'max:60'],
+        ]);
+
+        $validator->after(function ($validator) use ($request, $fixture): void {
+            if ($validator->errors()->has('team_id') || $validator->errors()->has('player_id')) {
+                return;
+            }
+
+            $isLinked = DB::table('team_players')
+                ->where('team_id', (int) $request->input('team_id'))
+                ->where('player_id', (int) $request->input('player_id'))
+                ->where(function ($query) use ($fixture): void {
+                    if ($fixture->season_id) {
+                        $query->where('season_id', $fixture->season_id)->orWhere('is_current', true);
+                    } else {
+                        $query->where('is_current', true);
+                    }
+                })
+                ->exists();
+
+            if (!$isLinked) {
+                $validator->errors()->add('player_id', __('backend.matchGoalPlayerTeamMismatch'));
+            }
+        });
+
+        return $validator->validate();
+    }
+
+    private function ensureGoalBelongsToFixture(Fixture $fixture, FixtureEvent $event): void
+    {
+        abort_unless(
+            (int) $event->fixture_id === (int) $fixture->id
+            && in_array($event->type, [FixtureEvent::TYPE_GOAL, FixtureEvent::TYPE_OWN_GOAL, FixtureEvent::TYPE_PENALTY], true),
+            404
+        );
+    }
+
+    private function teamPlayersForFixture(Fixture $fixture, int $teamId)
+    {
+        return Player::query()
+            ->whereExists(function ($query) use ($fixture, $teamId): void {
+                $query->selectRaw('1')
+                    ->from('team_players')
+                    ->whereColumn('team_players.player_id', 'players.id')
+                    ->where('team_players.team_id', $teamId)
+                    ->where(function ($membership) use ($fixture): void {
+                        if ($fixture->season_id) {
+                            $membership->where('team_players.season_id', $fixture->season_id)
+                                ->orWhere('team_players.is_current', true);
+                        } else {
+                            $membership->where('team_players.is_current', true);
+                        }
+                    });
+            })
+            ->orderBy('players.name_ar')
+            ->get();
+    }
+
+    private function recalculateFixtureScore(Fixture $fixture): void
+    {
+        $goals = FixtureEvent::query()
+            ->where('fixture_id', $fixture->id)
+            ->goals()
+            ->where('rescinded', false)
+            ->lockForUpdate()
+            ->get()
+            ->sortBy(fn(FixtureEvent $event) => sprintf(
+                '%03d-%03d-%020d',
+                $event->minute ?? 999,
+                $event->extra_minute ?? 0,
+                $event->id
+            ));
+
+        $homeScore = 0;
+        $awayScore = 0;
+        $sortOrder = 1;
+
+        foreach ($goals as $goal) {
+            if ((int) $goal->team_id === (int) $fixture->home_team_id) {
+                $homeScore++;
+            } elseif ((int) $goal->team_id === (int) $fixture->away_team_id) {
+                $awayScore++;
+            }
+
+            $goal->update([
+                'sort_order' => $sortOrder++,
+                'result' => $homeScore.'-'.$awayScore,
+            ]);
+        }
+
+        $scores = ['home_score' => $homeScore, 'away_score' => $awayScore];
+        if ($fixture->is_finished) {
+            $scores['ft_home_score'] = $homeScore;
+            $scores['ft_away_score'] = $awayScore;
+        }
+
+        $fixture->update($scores);
     }
 
     public function create($league_id)

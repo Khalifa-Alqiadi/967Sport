@@ -27,7 +27,14 @@
     $custom_js_code .= $Topic->js_code;
     $custom_body_code .= $Topic->body_code;
     ?>
-    @php($isSportHome = (int) @$Topic->id === 5)
+    <?php
+        $isSportHome = (int) @$Topic->id === 5;
+        $activeTopicBlocks = $Topic->topicBlocks->where('status', 1);
+        $hasSportFeaturedTickerBlock = $activeTopicBlocks->contains(function ($block) {
+            $classes = preg_split('/\s+/', trim((string) $block->css_classes), -1, PREG_SPLIT_NO_EMPTY);
+            return (int) $block->type === 3 && in_array('sport-featured-ticker-block', $classes, true);
+        });
+    ?>
     <div class="landing-page {{ $isSportHome ? 'sport-home' : '' }}">
 
         @if($Topic->topicBlocks->where("status",1)->count() >0)
@@ -39,36 +46,53 @@
                         } catch (Exception $e) {
                             $TopicBlockContents = [];
                         }
+                        $topicBlockClasses = preg_split('/\s+/', trim((string) $TopicBlock->css_classes), -1, PREG_SPLIT_NO_EMPTY);
+                        $isSportGatewayBlock = (int) $TopicBlock->type === 2
+                            && in_array('sport-gateway-block', $topicBlockClasses, true);
+                        $isSportManifestoBlock = (int) $TopicBlock->type === 0
+                            && in_array('sport-manifesto-block', $topicBlockClasses, true);
+                        $isSportFeaturedTickerBlock = (int) $TopicBlock->type === 3
+                            && in_array('sport-featured-ticker-block', $topicBlockClasses, true);
                         ?>
-                    @if($TopicBlock->type == 4)
-                        {{--Form--}}
-                        @if(@$TopicBlockContents->view_style !="")
-                            @if(@$TopicBlockContents->module_id >0)
-                                @include('frontEnd.landing.'.strtolower(str_replace(" ","",@$TopicBlockContents->view_style)))
-                            @else
-                                @include('frontEnd.landing.contact')
+                    @if($isSportFeaturedTickerBlock)
+                        @include('frontEnd.homepage.sport-featured-ticker')
+                        @if($isSportHome)
+                            @include('frontEnd.homepage.sport-hub')
+                        @endif
+                    @elseif($isSportGatewayBlock)
+                        @include('frontEnd.homepage.sport-gateway')
+                    @elseif($isSportManifestoBlock)
+                        @include('frontEnd.homepage.sport-manifesto')
+                    @else
+                        @if($TopicBlock->type == 4)
+                            {{--Form--}}
+                            @if(@$TopicBlockContents->view_style !="")
+                                @if(@$TopicBlockContents->module_id >0)
+                                    @include('frontEnd.landing.'.strtolower(str_replace(" ","",@$TopicBlockContents->view_style)))
+                                @else
+                                    @include('frontEnd.landing.contact')
+                                @endif
                             @endif
                         @endif
-                    @endif
-                    @if($TopicBlock->type == 3)
-                        {{--Dynamic--}}
-                        @if(@$TopicBlockContents->view_style !="")
-                            @include('frontEnd.landing.'.strtolower(str_replace(" ","",@$TopicBlockContents->view_style)))
+                        @if($TopicBlock->type == 3)
+                            {{--Dynamic--}}
+                            @if(@$TopicBlockContents->view_style !="")
+                                @include('frontEnd.landing.'.strtolower(str_replace(" ","",@$TopicBlockContents->view_style)))
+                            @endif
+                        @elseif($TopicBlock->type == 2)
+                            {{--Banners--}}
+                            @if(@$TopicBlockContents->banner_area_id >0 && @$TopicBlockContents->banner_style !="")
+                                @include('frontEnd.layouts.'.@$TopicBlockContents->banner_style,["BannersSettingsId"=>@$TopicBlockContents->banner_area_id])
+                            @endif
+                        @elseif($TopicBlock->type == 1)
+                            {{--Custom Code--}}
+                            @include('frontEnd.landing.code')
+                        @elseif($TopicBlock->type == 0)
+                            {{--Static Content--}}
+                            @include('frontEnd.landing.static')
                         @endif
-                    @elseif($TopicBlock->type == 2)
-                        {{--Banners--}}
-                        @if(@$TopicBlockContents->banner_area_id >0 && @$TopicBlockContents->banner_style !="")
-                            @include('frontEnd.layouts.'.@$TopicBlockContents->banner_style,["BannersSettingsId"=>@$TopicBlockContents->banner_area_id])
-                        @endif
-                    @elseif($TopicBlock->type == 1)
-                        {{--Custom Code--}}
-                        @include('frontEnd.landing.code')
-                    @elseif($TopicBlock->type == 0)
-                        {{--Static Content--}}
-                        @include('frontEnd.landing.static')
                     @endif
-
-                    @if($isSportHome && (int) @$TopicBlock->id === 5)
+                    @if($isSportHome && (int) @$TopicBlock->id === 5 && !$hasSportFeaturedTickerBlock)
                         @include('frontEnd.homepage.sport-hub')
                     @endif
                 @endif

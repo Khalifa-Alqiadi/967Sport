@@ -27,10 +27,10 @@ $site_desc_var = "site_desc_".@Helper::currentLanguage()->code;
                 <div class="col-lg-3 col-md-6 footer-brand">
                     <div class="footer-panel">
                         <a href="{{ Helper::homeURL() }}" class="footer-logo sport-brand">
-                            <img alt="شعار 967Sport" src="{{ URL::to('uploads/settings/967sport-facebook-logo.jpg') }}" width="78" height="78">
+                            <img alt="{{ __('frontend.sportLogoAlt') }}" src="{{ URL::to('uploads/settings/967sport-facebook-logo.jpg') }}" width="78" height="78">
                             <span class="sport-brand-copy" aria-hidden="true">
-                                <b><span>967</span>SPORT</b>
-                                <small>منصة كرة القدم اليمنية</small>
+                                <b><span>967</span>{{ __('frontend.sportBrandWord') }}</b>
+                                <small>{{ __('frontend.sportPlatformName') }}</small>
                             </span>
                         </a>
                         @if(Helper::GeneralSiteSettings($site_desc_var) !="")
@@ -115,13 +115,13 @@ $site_desc_var = "site_desc_".@Helper::currentLanguage()->code;
                 . {{ Helper::GeneralSiteSettings($site_title_var) }}
             </div>
             <div class="credits text-center text-md-end">
-                Design by <a href="https://yemenhosting.com">Yemen Hosting</a>
+                {{ __('frontend.designedBy') }} <a href="https://yemenhosting.com">{{ __('frontend.yemenHostingName') }}</a>
             </div>
         </div>
     </div>
 </footer>
 @if(Helper::GeneralSiteSettings('whatsapp_no') !="")
-    <a href="https://wa.me/{{Helper::GeneralSiteSettings('whatsapp_no')}}" class="whatsapp_float" target="_blank" aria-label="Whatsapp"
+    <a href="https://wa.me/{{Helper::GeneralSiteSettings('whatsapp_no')}}" class="whatsapp_float" target="_blank" aria-label="{{ __('frontend.whatsappAria') }}"
        rel="noopener noreferrer">
         <i class="fa fa-whatsapp"></i>
     </a>

@@ -282,7 +282,25 @@
 .sport-manifesto-lead { color: var(--s97-yellow-soft); font-size: 17px; font-weight: 700; }
 .sport-manifesto-text p { max-width: 680px; color: rgba(255,255,255,.73); font-size: 16px; line-height: 2; }
 .sport-manifesto-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
-.sport-manifesto-tags span { padding: 9px 16px; border: 1px solid rgba(255,255,255,.16); border-radius: 999px; color: rgba(255,255,255,.84); font-size: 12px; }
+.sport-manifesto-tags a {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 16px;
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 999px;
+    color: rgba(255,255,255,.84) !important;
+    font-size: 12px;
+    transition: .25s ease;
+}
+.sport-manifesto-tags a > i { color: var(--s97-yellow); font-size: 13px; }
+.sport-manifesto-tags a:hover {
+    color: var(--s97-purple-ink) !important;
+    border-color: var(--s97-yellow);
+    background: var(--s97-yellow);
+    transform: translateY(-2px);
+}
+.sport-manifesto-tags a:hover > i { color: var(--s97-purple-ink); }
 
 /* Editorial news section */
 .sport-home .landing-block.news {
@@ -1901,4 +1919,275 @@
     .home-page .home-fixtures-v4 .home-fixture-result { width: 76px; min-height: 76px; padding-inline: 5px; }
     .sport-home .home-fixtures-v4 .home-fixture-team,
     .home-page .home-fixtures-v4 .home-fixture-team { padding-inline: 6px; }
+}
+
+/* ========================================================================
+   MOBILE EXPERIENCE — compact, touch-first homepage composition
+   ======================================================================== */
+@media (max-width: 767px) {
+    .sport-home-page,
+    .sport-home-page body,
+    .sport-home { overflow-x: clip; }
+
+    .sport-home-page .container { padding-inline: 17px; }
+    .sport-home-page #header {
+        min-height: 66px;
+        background: rgba(18, 9, 32, .94) !important;
+        backdrop-filter: blur(14px) saturate(130%);
+        -webkit-backdrop-filter: blur(14px) saturate(130%);
+    }
+    .sport-home-page #header::before { width: 46%; }
+    .sport-home-page #header .logo.sport-brand img {
+        width: 43px;
+        height: 43px;
+        box-shadow: 0 0 0 4px rgba(254,187,34,.08), 0 10px 24px -13px #000;
+    }
+
+    /* Mobile hero behaves like a compact match cover, not a squeezed desktop. */
+    .sport-home .matchday-hero,
+    .sport-home .matchday-stage,
+    .sport-home #matchdayCarousel,
+    .sport-home .matchday-hero .carousel-inner,
+    .sport-home .matchday-slide {
+        height: 100svh;
+        min-height: 660px;
+        max-height: 820px;
+    }
+    .sport-home .matchday-image,
+    [dir="rtl"] .sport-home .matchday-image {
+        inset: 0;
+        background-position: center 20%;
+    }
+    .sport-home .matchday-image::after,
+    [dir="rtl"] .sport-home .matchday-image::after {
+        background:
+            linear-gradient(180deg, rgba(13,7,22,.12) 0, rgba(13,7,22,.2) 27%, rgba(13,7,22,.82) 58%, #0d0716 88%),
+            linear-gradient(90deg, rgba(77,44,133,.32), transparent 68%);
+    }
+    .sport-home .matchday-cut {
+        inset: auto 0 0;
+        width: 100%;
+        height: 47%;
+        opacity: .76;
+        clip-path: polygon(0 29%, 100% 0, 100% 100%, 0 100%);
+        background: linear-gradient(155deg, #4d2c85 0 2%, #1a0d2d 2% 78%, #febb22 78% 79%, #10071e 79%);
+    }
+    [dir="rtl"] .sport-home .matchday-cut { clip-path: polygon(0 0, 100% 29%, 100% 100%, 0 100%); }
+    .sport-home .matchday-outline {
+        top: 25%;
+        inset-inline-start: -15px;
+        font-size: 10rem;
+        -webkit-text-stroke-width: 1px;
+    }
+    .sport-home .matchday-content {
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        width: 100%;
+        height: 100%;
+        min-height: 660px;
+        padding: 76px 17px 66px;
+    }
+    .sport-home .matchday-kicker {
+        align-self: start;
+        margin: 0;
+        padding: 0 0 14px;
+        border-bottom-color: rgba(255,255,255,.18);
+    }
+    .sport-home .matchday-brand { font-size: 14px; }
+    .sport-home .matchday-brand b { padding: 6px 8px; }
+    .sport-home .matchday-live { gap: 7px; font-size: 8px; }
+    .sport-home .matchday-live i { width: 7px; height: 7px; }
+    .sport-home .matchday-headline {
+        align-self: end;
+        width: calc(100% - 13px);
+        max-width: 560px;
+        margin: 0 0 13px;
+        padding: 15px 17px 19px;
+        box-shadow: 9px 9px 0 rgba(255,255,255,.1);
+        transform: none;
+    }
+    [dir="rtl"] .sport-home .matchday-headline,
+    .sport-home .matchday-hero .carousel-item.active .matchday-headline,
+    [dir="rtl"] .sport-home .matchday-hero .carousel-item.active .matchday-headline { transform: none; }
+    .sport-home .matchday-headline > span { margin-bottom: 6px; font-size: 8px; }
+    .sport-home .matchday-headline h2 {
+        display: -webkit-box;
+        overflow: hidden;
+        font-size: clamp(1.85rem, 9.2vw, 2.75rem);
+        line-height: 1.06;
+        letter-spacing: -.055em;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+    }
+    .sport-home .matchday-summary {
+        align-self: end;
+        width: 100%;
+        margin: 0;
+        padding: 11px;
+        border: 1px solid rgba(255,255,255,.11);
+        border-inline-start: 3px solid var(--s97-yellow);
+        background: rgba(13,7,22,.82);
+        box-shadow: 0 18px 38px -25px #000;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+    }
+    .sport-home .matchday-summary p {
+        display: -webkit-box;
+        margin: 0 0 8px;
+        overflow: hidden;
+        font-size: 10px;
+        line-height: 1.6;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+    .sport-home .matchday-fixture { margin-bottom: 8px; }
+    .sport-home .matchday-fixture-top { padding: 7px 9px; font-size: 8px; }
+    .sport-home .matchday-fixture-board {
+        grid-template-columns: minmax(0,1fr) 66px minmax(0,1fr);
+        gap: 6px;
+        padding: 9px 7px;
+    }
+    .sport-home .matchday-club { gap: 5px; }
+    .sport-home .matchday-club img,
+    .sport-home .matchday-club-placeholder { width: 36px; height: 36px; font-size: 15px; }
+    .sport-home .matchday-club strong { font-size: 9px; }
+    .sport-home .matchday-fixture-center time b { font-size: 20px; }
+    .sport-home .matchday-score em { font-size: 24px; }
+    .sport-home .matchday-read { gap: 7px; font-size: 9px; }
+    .sport-home .matchday-read i { width: 28px; height: 28px; }
+    .sport-home .matchday-progress { top: 65px; }
+    .sport-home .matchday-navigation { bottom: 12px; padding-inline: 17px; }
+    .sport-home .matchday-controls { grid-template-columns: 39px 62px 39px; min-height: 39px; }
+    .sport-home .matchday-controls b { font-size: 20px; }
+
+    /* Ticker */
+    .sport-ticker { box-shadow: 0 10px 28px -23px #000; }
+    .sport-ticker-inner { min-height: 46px; gap: 8px; padding-inline: 14px; }
+    .sport-ticker-label { gap: 7px; font-size: 10px; }
+    .sport-ticker-label span { width: 7px; height: 7px; box-shadow: 0 0 0 3px rgba(227,40,63,.16); }
+    .sport-ticker-track a { gap: 5px; padding-inline: 14px; font-size: 10px; }
+
+    /* Match carousel */
+    .sport-home .home-fixtures-v4,
+    .home-page .home-fixtures-v4 { padding: 34px 0 30px; background-size: 34px 34px; }
+    .sport-home .home-fixtures-v4 .home-fixtures-head,
+    .home-page .home-fixtures-v4 .home-fixtures-head { gap: 13px; margin-bottom: 16px; }
+    .sport-home .home-fixtures-v4 .home-fixtures-head h2,
+    .home-page .home-fixtures-v4 .home-fixtures-head h2 { font-size: 2rem; line-height: 1.08; }
+    .sport-home .home-fixtures-v4 .home-fixtures-head p,
+    .home-page .home-fixtures-v4 .home-fixtures-head p { max-width: 330px; margin-top: 6px; line-height: 1.65; }
+    .sport-home .home-fixtures-v4 .home-fixtures-actions,
+    .home-page .home-fixtures-v4 .home-fixtures-actions { width: 100%; height: 38px; }
+    .sport-home .home-fixtures-v4 .home-fixtures-count,
+    .home-page .home-fixtures-v4 .home-fixtures-count { min-width: 93px; padding: 6px 10px; }
+    .sport-home .home-fixtures-v4 .home-fixtures-count strong,
+    .home-page .home-fixtures-v4 .home-fixtures-count strong { font-size: 24px; }
+    .sport-home .home-fixtures-v4 .home-fixtures-actions > button,
+    .home-page .home-fixtures-v4 .home-fixtures-actions > button { width: 38px; border-radius: 8px; }
+    .sport-home .home-fixtures-v4 .home-fixtures-swiper,
+    .home-page .home-fixtures-v4 .home-fixtures-swiper { margin-inline-end: -17px; padding: 3px 17px 3px 3px; }
+    [dir="ltr"] .sport-home .home-fixtures-v4 .home-fixtures-swiper,
+    [dir="ltr"] .home-page .home-fixtures-v4 .home-fixtures-swiper { margin-inline: -17px 0; padding: 3px 3px 3px 17px; }
+    .sport-home .home-fixtures-v4 .home-fixture-card,
+    .home-page .home-fixtures-v4 .home-fixture-card { border-radius: 14px; box-shadow: 0 9px 24px rgba(26,13,45,.1); }
+    .sport-home .home-fixtures-v4 .home-fixture-meta,
+    .home-page .home-fixtures-v4 .home-fixture-meta { min-height: 48px; padding: 9px 11px; }
+    .sport-home .home-fixtures-v4 .home-fixture-date,
+    .home-page .home-fixtures-v4 .home-fixture-date { padding: 10px 11px 2px; }
+    .sport-home .home-fixtures-v4 .home-fixture-teams,
+    .home-page .home-fixtures-v4 .home-fixture-teams {
+        grid-template-columns: minmax(0,1fr) 68px minmax(0,1fr);
+        min-height: 154px;
+        gap: 6px;
+        padding: 9px 8px 17px;
+    }
+    .sport-home .home-fixtures-v4 .home-fixture-team,
+    .home-page .home-fixtures-v4 .home-fixture-team { gap: 7px; padding: 11px 4px 9px; border-radius: 11px; }
+    .sport-home .home-fixtures-v4 .home-fixture-team img,
+    .sport-home .home-fixtures-v4 .home-fixture-team > span,
+    .home-page .home-fixtures-v4 .home-fixture-team img,
+    .home-page .home-fixtures-v4 .home-fixture-team > span { width: 47px; height: 54px; font-size: 18px; }
+    .sport-home .home-fixtures-v4 .home-fixture-team strong,
+    .home-page .home-fixtures-v4 .home-fixture-team strong { min-height: 27px; font-size: 9px; }
+    .sport-home .home-fixtures-v4 .home-fixture-result,
+    .home-page .home-fixtures-v4 .home-fixture-result { width: 66px; min-height: 68px; padding: 7px 3px; border-width: 2px; }
+    .sport-home .home-fixtures-v4 .home-fixture-result > time,
+    .home-page .home-fixtures-v4 .home-fixture-result > time { font-size: 21px; }
+    .sport-home .home-fixtures-v4 .home-fixture-result b,
+    .home-page .home-fixtures-v4 .home-fixture-result b { font-size: 23px; }
+    .sport-home .home-fixtures-v4 .home-fixtures-rail,
+    .home-page .home-fixtures-v4 .home-fixtures-rail { margin-top: 16px; }
+
+    /* Gateway becomes a native horizontal touch rail. */
+    .sport-gateway-wrap { padding-top: 54px; padding-bottom: 60px; }
+    .sport-gateway-head { gap: 15px; margin-bottom: 24px; }
+    .sport-section-label { margin-bottom: 9px; font-size: 10px; }
+    .sport-gateway-head h2 { font-size: 2.25rem; line-height: 1.03; }
+    .sport-gateway-head > p { max-width: 360px; font-size: 12px; line-height: 1.75; }
+    .sport-gateway-grid {
+        display: flex;
+        gap: 10px;
+        margin-inline: -17px;
+        padding: 4px 17px 18px;
+        overflow-x: auto;
+        scroll-padding-inline: 17px;
+        scroll-snap-type: inline mandatory;
+        scrollbar-width: none;
+    }
+    .sport-gateway-grid::-webkit-scrollbar { display: none; }
+    .sport-gateway-card {
+        flex: 0 0 min(67vw, 245px);
+        min-height: 152px;
+        padding: 18px;
+        border-radius: 18px 6px 18px 6px;
+        scroll-snap-align: start;
+        box-shadow: 0 15px 35px -27px rgba(24,13,43,.55);
+    }
+    .sport-gateway-card > i { font-size: 28px; }
+    .sport-gateway-card strong { max-width: 145px; font-size: 13px; }
+    .sport-gateway-arrow { width: 31px; height: 31px; opacity: 1; transform: none; }
+
+    /* Brand manifesto */
+    .sport-home .sport-manifesto { padding: 58px 0 64px; }
+    .sport-manifesto-lines { background-size: 38px 38px; }
+    .sport-manifesto-mark {
+        min-height: 225px;
+        padding: 25px;
+        border-radius: 6px 48px 6px 6px;
+    }
+    .sport-manifesto-eyebrow { font-size: 9px; }
+    .sport-manifesto-mark strong { font-size: clamp(6rem, 31vw, 8.4rem); -webkit-text-stroke-width: 1.5px; }
+    .sport-manifesto-mark b { font-size: clamp(2.4rem, 13vw, 3.6rem); }
+    .sport-manifesto-ball { inset-inline-end: 20px; bottom: 20px; width: 48px; height: 48px; font-size: 21px; box-shadow: 0 0 0 8px rgba(254,187,34,.08); }
+    .sport-manifesto-copy { padding-inline: 2px; }
+    .sport-manifesto-copy h2,
+    .sport-manifesto-text h1 { margin-bottom: 13px; font-size: 2.15rem; line-height: 1.13; }
+    .sport-manifesto-lead { font-size: 13px; line-height: 1.75; }
+    .sport-manifesto-text p { font-size: 12px; line-height: 1.85; }
+    .sport-manifesto-tags { gap: 7px; margin-top: 20px; }
+    .sport-manifesto-tags a { padding: 8px 11px; font-size: 10px; }
+
+    /* News cards */
+    .sport-home .landing-block.news { padding: 62px 0 70px; }
+    .sport-home .landing-block.news::before { top: 35px; font-size: 8rem; }
+    .sport-home .landing-block.news .section-title h2 { font-size: 2rem; }
+    .sport-home .meu-feature-card { border-radius: 5px 27px 5px 5px; }
+    .sport-home .meu-feature-card .meu-post-media { min-height: 390px; }
+    .sport-home .meu-feature-card .meu-post-body { padding: 22px 19px; }
+    .sport-home .meu-feature-card .item-title { font-size: 1.55rem; }
+    .sport-home .meu-editorial { padding-top: 18px; }
+    .sport-home .meu-editorial-row { grid-template-columns: 27px minmax(0,1fr) 76px; min-height: 92px; gap: 8px; padding: 11px 0; }
+    .sport-home .meu-editorial-media { width: 76px; height: 61px; }
+}
+
+@media (max-width: 389px) {
+    .sport-home-page .container { padding-inline: 13px; }
+    .sport-home .matchday-content { padding-inline: 13px; }
+    .sport-home .matchday-headline h2 { font-size: 1.72rem; }
+    .sport-home .matchday-live { max-width: 112px; text-align: end; }
+    .sport-home .home-fixtures-v4 .home-fixture-teams,
+    .home-page .home-fixtures-v4 .home-fixture-teams { grid-template-columns: minmax(0,1fr) 60px minmax(0,1fr); }
+    .sport-home .home-fixtures-v4 .home-fixture-result,
+    .home-page .home-fixtures-v4 .home-fixture-result { width: 58px; }
+    .sport-gateway-card { flex-basis: 74vw; }
 }

@@ -132,20 +132,91 @@ class Sport967PlatformSeeder extends Seeder
                 'desc_en' => 'From the heart of Yemeni sport',
                 'details_en' => '<h1>Yemeni sport in one place</h1><p>Coverage of the Yemeni League, national teams, Republic Cup, transfers and Yemeni professionals.</p>',
                 'bg_en' => null,
+                'banner_area_id' => '6',
             ];
             DB::table('topic_blocks')->where('id', 6)->update([
+                'row_no' => 4,
                 'block_name' => '967Sport Introduction',
                 'content' => json_encode($welcomeContent, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                'status' => 1,
+                'css_classes' => 'sport-manifesto-block',
                 'updated_by' => 1,
                 'updated_at' => $now,
             ]);
-            DB::table('topic_blocks')->where('id', 7)->update(['row_no' => 4, 'updated_by' => 1, 'updated_at' => $now]);
+            DB::table('topic_blocks')->where('id', 7)->update(['row_no' => 6, 'updated_by' => 1, 'updated_at' => $now]);
+
+            DB::table('topic_blocks')->updateOrInsert(
+                ['id' => 9673299],
+                [
+                    'topic_id' => 5,
+                    'row_no' => 2,
+                    'block_name' => '967Sport Featured News Ticker',
+                    'type' => 3,
+                    'content' => json_encode([
+                        'title_ar' => 'الآن',
+                        'desc_ar' => 'NEWSROOM 967',
+                        'bg_ar' => null,
+                        'title_en' => 'Now',
+                        'desc_en' => '967 NEWSROOM',
+                        'bg_en' => null,
+                        'module_id' => '3',
+                        'category_ids' => null,
+                        'records_count' => '5',
+                        'records_order' => '2',
+                        'view_style' => 'News',
+                    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                    'title_status' => 1,
+                    'desc_status' => 1,
+                    'image_status' => 0,
+                    'divider_status' => 0,
+                    'more_btn_status' => 0,
+                    'bg_color' => null,
+                    'css_classes' => 'sport-featured-ticker-block',
+                    'status' => 1,
+                    'created_by' => 1,
+                    'updated_by' => 1,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]
+            );
+
+            DB::table('topic_blocks')->updateOrInsert(
+                ['id' => 9673300],
+                [
+                    'topic_id' => 5,
+                    'row_no' => 3,
+                    'block_name' => '967Sport Gateway Banners',
+                    'type' => 2,
+                    'content' => json_encode([
+                        'title_ar' => 'كل الرياضة اليمنية بلمسة واحدة',
+                        'desc_ar' => 'انتقل مباشرة إلى البطولة أو المنتخب أو القصة التي تهمك، وتابع آخر المستجدات من قلب الحدث.',
+                        'bg_ar' => null,
+                        'title_en' => 'All Yemeni sport, one touch away',
+                        'desc_en' => 'Go straight to the competition, national team or story that matters to you, and follow the latest action.',
+                        'bg_en' => null,
+                        'banner_area_id' => '5',
+                        'banner_style' => 'banners',
+                    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                    'title_status' => 1,
+                    'desc_status' => 1,
+                    'image_status' => 0,
+                    'divider_status' => 0,
+                    'more_btn_status' => 0,
+                    'bg_color' => null,
+                    'css_classes' => 'sport-gateway-block',
+                    'status' => 1,
+                    'created_by' => 1,
+                    'updated_by' => 1,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]
+            );
 
             DB::table('topic_blocks')->updateOrInsert(
                 ['id' => 9673301],
                 [
                     'topic_id' => 5,
-                    'row_no' => 3,
+                    'row_no' => 5,
                     'block_name' => 'Latest 967Sport News',
                     'type' => 3,
                     'content' => json_encode([

@@ -128,7 +128,7 @@ if (!Helper::GeneralSiteSettings("style_subscribe")) {
                     . <a href="#">{{Helper::GeneralSiteSettings($site_title_var)}}</a>
                 </div>
                 <div class="credits">
-                    Design by <a href="https://yemenhosting.com">Yemen Hosting</a>
+                    {{ __('frontend.designedBy') }} <a href="https://yemenhosting.com">{{ __('frontend.yemenHostingName') }}</a>
                 </div>
             </div>
             @include("frontEnd.layouts.social",["tt_position"=>"top"])
@@ -136,7 +136,7 @@ if (!Helper::GeneralSiteSettings("style_subscribe")) {
     </div>
 </footer>
 @if(Helper::GeneralSiteSettings('whatsapp_no') !="")
-    <a href="https://wa.me/{{Helper::GeneralSiteSettings('whatsapp_no')}}" class="whatsapp_float" target="_blank" aria-label="Whatsapp"
+    <a href="https://wa.me/{{Helper::GeneralSiteSettings('whatsapp_no')}}" class="whatsapp_float" target="_blank" aria-label="{{ __('frontend.whatsappAria') }}"
        rel="noopener noreferrer">
         <i class="fa fa-whatsapp"></i>
     </a>

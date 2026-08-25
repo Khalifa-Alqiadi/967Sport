@@ -98,6 +98,23 @@ return [
     'homeMatchesLocalTime' => 'بتوقيت اليمن',
     'homeMatchesOfficial' => 'بيانات المباراة',
     'homeMatchesSwipe' => 'اسحب لاستعراض بقية المباريات',
+    'sportBrandWord' => 'SPORT',
+    'sportDocumentBrand' => '967SPORT',
+    'sportPlatformName' => 'منصة كرة القدم اليمنية',
+    'sportManifestoEyebrow' => 'YEMEN FOOTBALL',
+    'sportManifestoCoverageLinks' => 'روابط تغطية المنصة',
+    'sportHomeAria' => '967Sport - الرئيسية',
+    'sportLogoAlt' => 'شعار 967Sport',
+    'sportHubAria' => 'بوابة 967Sport السريعة',
+    'sportTickerNow' => 'الآن',
+    'sportNewsroomBrand' => '967 NEWSROOM',
+    'sportGatewayKicker' => 'اعرف ملعبك',
+    'sportGatewayTitle' => 'كل الرياضة اليمنية',
+    'sportGatewayTitleAccent' => 'بلمسة واحدة',
+    'sportGatewayDescription' => 'انتقل مباشرة إلى البطولة أو المنتخب أو القصة التي تهمك، وتابع آخر المستجدات من قلب الحدث.',
+    'designedBy' => 'تصميم وتطوير',
+    'yemenHostingName' => 'يمن هوستنج',
+    'whatsappAria' => 'واتساب',
 ];
 
 ?>

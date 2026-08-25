@@ -34,6 +34,39 @@
                             </div>
                         @endif
                     @endforeach
+                    @php
+                        $staticBlockClasses = preg_split('/\s+/', trim((string) @$TopicBlock->css_classes), -1, PREG_SPLIT_NO_EMPTY);
+                        $isSportManifestoSettings = in_array('sport-manifesto-block', $staticBlockClasses, true);
+                    @endphp
+                    @if($isSportManifestoSettings)
+                        <div class="form-group row">
+                            <label for="banner_area_id" class="col-sm-12 form-control-label">
+                                {{ __('backend.bannerArea') }}
+                            </label>
+                            <div class="col-sm-12">
+                                <select name="banner_area_id" id="banner_area_id" class="form-control">
+                                    <option value="">- - {{ __('backend.select') }} - -</option>
+                                    @php
+                                        $dashboardBannerTitleVar = 'title_'.@Helper::currentLanguage()->code;
+                                        $dashboardBannerFallbackTitleVar = 'title_'.config('smartend.default_language');
+                                        $dashboardBannerAreas = \App\Models\WebmasterBanner::query()
+                                            ->where('status', 1)
+                                            ->orderBy('row_no')
+                                            ->get();
+                                    @endphp
+                                    @foreach($dashboardBannerAreas as $dashboardBannerArea)
+                                        @php
+                                            $dashboardBannerAreaTitle = $dashboardBannerArea->$dashboardBannerTitleVar
+                                                ?: $dashboardBannerArea->$dashboardBannerFallbackTitleVar;
+                                        @endphp
+                                        <option value="{{ $dashboardBannerArea->id }}" @selected((int) @$TopicBlockContents->banner_area_id === (int) $dashboardBannerArea->id)>
+                                            {{ $dashboardBannerAreaTitle }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -47,4 +80,3 @@
     @endif
 </script>
 @include('dashboard.layouts.editor',['StopEditorCode'=>1])
-

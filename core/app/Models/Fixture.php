@@ -90,4 +90,9 @@ class Fixture extends Model
         return $this->belongsTo(Group::class, 'group_id', 'id');
     }
 
+    public function events()
+    {
+        return $this->hasMany(FixtureEvent::class)->orderBy('sort_order')->orderBy('id');
+    }
+
 }

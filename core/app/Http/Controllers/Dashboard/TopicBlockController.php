@@ -151,6 +151,7 @@ class TopicBlockController extends Controller
                             $content["bg_".$ActiveLanguage->code] = @$$formFileName;
                         }
                     }
+                    $content["banner_area_id"] = $request->banner_area_id;
                 }
 
                 $TopicBlock = [];

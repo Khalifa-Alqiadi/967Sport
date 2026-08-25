@@ -12,40 +12,6 @@ if (@$TopicBlock->image_status && @$TopicBlockContents->{"bg_".@Helper::currentL
 $block_classes = trim((string) @$TopicBlock->css_classes);
 $is_image_view = in_array('image-view', preg_split('/\s+/', $block_classes), true);
 ?>
-@if((int) @$TopicBlock->id === 6)
-<section id="landing-block-{{ @$TopicBlock->id }}" class="landing-block sport-manifesto" style="{{ $block_style }}">
-    <div class="sport-manifesto-lines" aria-hidden="true"></div>
-    <div class="container position-relative">
-        <div class="row align-items-center gy-5">
-            <div class="col-lg-5">
-                <div class="sport-manifesto-mark meu-reveal">
-                    <span class="sport-manifesto-eyebrow">YEMEN FOOTBALL</span>
-                    <strong>967</strong>
-                    <b>SPORT</b>
-                    <span class="sport-manifesto-ball"><i class="bi bi-dribbble"></i></span>
-                </div>
-            </div>
-            <div class="col-lg-7">
-                <div class="sport-manifesto-copy meu-reveal meu-reveal-right">
-                    <span class="sport-section-label"><i></i> منصة كرة القدم اليمنية</span>
-                    @if(@$TopicBlock->title_status)
-                        <h2>{{ @$TopicBlockContents->{"title_".@Helper::currentLanguage()->code} }}</h2>
-                    @endif
-                    @if(@$TopicBlock->desc_status)
-                        <p class="sport-manifesto-lead">{!! nl2br(@$TopicBlockContents->{"desc_".@Helper::currentLanguage()->code}) !!}</p>
-                    @endif
-                    <div class="sport-manifesto-text">
-                        {!! str_replace('"#','"'.Request::url().'#',@$TopicBlockContents->{"details_".@Helper::currentLanguage()->code}) !!}
-                    </div>
-                    <div class="sport-manifesto-tags" aria-label="تغطية المنصة">
-                        <span>الدوري اليمني</span><span>المنتخبات</span><span>النتائج</span><span>المحترفون</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-@else
 <section id="landing-block-{{ @$TopicBlock->id }}" class="landing-block meu-static-block {{ $is_image_view ? 'meu-static-visual' : 'meu-static-document' }} {{ $block_classes }}" style="{{ $block_style }}">
     <span class="meu-static-decor meu-static-decor-one" aria-hidden="true"></span>
     <span class="meu-static-decor meu-static-decor-two" aria-hidden="true"></span>
@@ -84,7 +50,7 @@ $is_image_view = in_array('image-view', preg_split('/\s+/', $block_classes), tru
             <div class="meu-static-document-frame meu-reveal">
                 <div class="meu-static-document-toolbar" aria-hidden="true">
                     <span></span><span></span><span></span>
-                    <b>967SPORT</b>
+                    <b>{{ __('frontend.sportDocumentBrand') }}</b>
                 </div>
                 <span class="meu-static-document-watermark" aria-hidden="true">967</span>
                 <div class="meu-prose meu-static-copy meu-static-copy-wide meu-stagger">
@@ -94,4 +60,3 @@ $is_image_view = in_array('image-view', preg_split('/\s+/', $block_classes), tru
         @endif
     </div>
 </section>
-@endif
