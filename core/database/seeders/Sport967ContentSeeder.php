@@ -12,6 +12,7 @@ class Sport967ContentSeeder extends Seeder
             Sport967PlatformSeeder::class,
             Sport967NewsSeeder::class,
             Sport967SliderSeeder::class,
+            Sport967MenusSeeder::class,
         ]);
     }
 }

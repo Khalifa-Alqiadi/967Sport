@@ -1,0 +1,1274 @@
+/* 967Sport match centre */
+.sport-matches-page {
+    --sm-ink: #160922;
+    --sm-purple: #4d2c85;
+    --sm-yellow: #febb22;
+    --sm-paper: #f7f5f9;
+    --sm-muted: #7b7285;
+    --sm-line: rgba(28, 12, 48, .12);
+    --sm-shadow: 0 26px 70px -45px rgba(28, 10, 48, .55);
+}
+
+.sport-matches-page #main { overflow: clip; }
+.sport-matches-page .sm-page { min-height: 70vh; color: var(--sm-ink); }
+.sport-matches-page .sm-section { position: relative; padding: 76px 0 92px; }
+.sport-matches-page .sm-eyebrow { display: inline-flex; align-items: center; gap: 10px; color: var(--sm-yellow); font-size: 11px; font-weight: 900; letter-spacing: .08em; }
+.sport-matches-page .sm-eyebrow i { width: 34px; height: 3px; background: currentColor; transform: skewX(-25deg); }
+
+/* Page mastheads */
+.sport-matches-page .sm-hero {
+    position: relative;
+    isolation: isolate;
+    min-height: 420px;
+    padding: 130px 0 72px;
+    overflow: hidden;
+    color: #fff;
+    background: radial-gradient(circle at 78% 18%, rgba(95, 51, 154, .7), transparent 32%), linear-gradient(115deg, #0c0515, #1a0b2d 58%, #311653);
+}
+.sport-matches-page .sm-hero::before { content: "967"; position: absolute; z-index: -1; inset-inline-end: -2vw; bottom: -.25em; color: transparent; -webkit-text-stroke: 2px rgba(255,255,255,.055); font: italic 900 clamp(15rem, 30vw, 30rem)/.8 "Barlow Condensed", sans-serif; letter-spacing: -.09em; }
+.sport-matches-page .sm-hero::after { content: ""; position: absolute; z-index: -1; inset: 0; opacity: .28; background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 52px 52px; mask-image: linear-gradient(90deg, transparent, #000 30%, #000); }
+.sport-matches-page .sm-hero__inner { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: space-between; gap: 60px; }
+.sport-matches-page .sm-hero h1 { max-width: 850px; margin: 18px 0 16px; color: #fff !important; font-size: clamp(3rem, 6vw, 6.4rem); font-weight: 900; line-height: .98; letter-spacing: -.055em; }
+.sport-matches-page .sm-hero p { max-width: 650px; margin: 0; color: rgba(255,255,255,.62); font-size: 14px; line-height: 1.9; }
+.sport-matches-page .sm-hero-stat { display: grid; place-items: center; width: 180px; min-width: 180px; aspect-ratio: 1; padding: 25px; border: 1px solid rgba(254,187,34,.45); border-radius: 50% 50% 18px 50%; background: rgba(255,255,255,.045); box-shadow: inset 0 0 0 10px rgba(255,255,255,.025); text-align: center; }
+.sport-matches-page .sm-hero-stat strong { color: var(--sm-yellow); font: italic 900 4.5rem/.8 "Barlow Condensed", sans-serif; }
+.sport-matches-page .sm-hero-stat span { margin-top: 13px; color: rgba(255,255,255,.65); font-size: 10px; font-weight: 800; }
+
+/* Shared headings and empty states */
+.sport-matches-page .sm-section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 25px; margin-bottom: 34px; }
+.sport-matches-page .sm-section-heading > div > span { display: block; margin-bottom: 7px; color: var(--sm-purple); font-size: 10px; font-weight: 900; letter-spacing: .07em; }
+.sport-matches-page .sm-section-heading h2 { margin: 0; color: var(--sm-ink); font-size: clamp(1.75rem, 3.2vw, 3rem); font-weight: 900; letter-spacing: -.04em; }
+.sport-matches-page .sm-section-heading > a { display: inline-flex; align-items: center; gap: 10px; padding: 11px 15px; color: var(--sm-ink) !important; border-bottom: 2px solid var(--sm-yellow); font-size: 11px; font-weight: 900; }
+.sport-matches-page .sm-section-heading > a:hover { color: var(--sm-purple) !important; transform: translateY(-2px); }
+.sport-matches-page .sm-section-heading--compact { margin-bottom: 20px; }
+.sport-matches-page .sm-section-heading--compact h2 { font-size: 1.65rem; }
+.sport-matches-page .sm-empty { display: grid; place-items: center; min-height: 250px; padding: 44px 24px; border: 1px dashed rgba(77,44,133,.25); border-radius: 28px 8px 28px 8px; background: rgba(255,255,255,.55); text-align: center; }
+.sport-matches-page .sm-empty > span { display: grid; place-items: center; width: 64px; height: 64px; margin-bottom: 18px; color: var(--sm-purple); border-radius: 50%; background: rgba(77,44,133,.08); font-size: 23px; }
+.sport-matches-page .sm-empty h3 { margin: 0 0 8px; color: var(--sm-ink); font-size: 18px; font-weight: 900; }
+.sport-matches-page .sm-empty p { margin: 0; color: var(--sm-muted); font-size: 11px; }
+
+/* Competition portal */
+.sport-matches-page .sm-competitions-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px; }
+.sport-matches-page .sm-competition-card { position: relative; display: grid; grid-template-columns: 100px minmax(0,1fr); align-items: center; min-height: 230px; padding: 32px; overflow: hidden; color: var(--sm-ink) !important; border: 1px solid var(--sm-line); border-radius: 8px 34px 8px 8px; background: rgba(255,255,255,.88); box-shadow: var(--sm-shadow); }
+.sport-matches-page .sm-competition-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 4px; background: linear-gradient(90deg, var(--sm-yellow) 0 35%, var(--sm-purple) 35%); transform: scaleX(.25); transform-origin: right; transition: transform .35s ease; }
+[dir="ltr"] .sport-matches-page .sm-competition-card::before { transform-origin: left; }
+.sport-matches-page .sm-competition-card::after { content: ""; position: absolute; inset-inline-end: -80px; bottom: -130px; width: 260px; height: 260px; border: 45px solid rgba(77,44,133,.035); border-radius: 50%; }
+.sport-matches-page .sm-competition-card:hover { color: var(--sm-ink) !important; border-color: rgba(77,44,133,.28); transform: translateY(-8px); box-shadow: 0 34px 70px -40px rgba(28,10,48,.72); }
+.sport-matches-page .sm-competition-card:hover::before { transform: scaleX(1); }
+.sport-matches-page .sm-competition-card__no { position: absolute; inset: 18px 20px auto auto; color: rgba(22,9,34,.26); font: italic 900 13px "Barlow Condensed", sans-serif; }
+[dir="ltr"] .sport-matches-page .sm-competition-card__no { inset: 18px auto auto 20px; }
+.sport-matches-page .sm-competition-card__logo { display: grid; place-items: center; width: 82px; height: 100px; clip-path: polygon(50% 0, 92% 16%, 87% 70%, 50% 100%, 13% 70%, 8% 16%); color: var(--sm-purple); background: linear-gradient(145deg, #fff1c2, #febb22); font-size: 30px; }
+.sport-matches-page .sm-competition-card__logo img { width: 65px; height: 65px; object-fit: contain; }
+.sport-matches-page .sm-competition-card__body { min-width: 0; padding-inline-start: 20px; }
+.sport-matches-page .sm-competition-card__body > span { color: var(--sm-purple); font-size: 9px; font-weight: 900; }
+.sport-matches-page .sm-competition-card__body h2 { margin: 8px 0 5px; color: var(--sm-ink); font-size: clamp(1.25rem, 2vw, 1.75rem); font-weight: 900; line-height: 1.25; }
+.sport-matches-page .sm-competition-card__body p { margin: 0; color: var(--sm-muted); font-size: 10px; }
+.sport-matches-page .sm-competition-card__stats { grid-column: 1 / -1; display: flex; align-items: center; gap: 24px; margin-top: 25px; padding-top: 19px; border-top: 1px solid var(--sm-line); }
+.sport-matches-page .sm-competition-card__stats span { display: inline-flex; align-items: baseline; gap: 6px; color: var(--sm-muted); font-size: 9px; font-weight: 800; }
+.sport-matches-page .sm-competition-card__stats b { color: var(--sm-ink); font: 900 21px "Barlow Condensed", sans-serif; }
+.sport-matches-page .sm-competition-card__stats > i { margin-inline-start: auto; color: var(--sm-purple); font-size: 20px; }
+
+/* Schedule */
+.sport-matches-page .sm-date-ticket { display: grid; grid-template-columns: auto auto; align-items: center; min-width: 190px; padding: 20px 24px; color: #fff; border: 1px solid rgba(255,255,255,.17); border-top: 3px solid var(--sm-yellow); background: rgba(255,255,255,.06); }
+.sport-matches-page .sm-date-ticket span { color: var(--sm-yellow); font-size: 10px; font-weight: 900; }
+.sport-matches-page .sm-date-ticket strong { grid-row: 1 / 3; grid-column: 2; padding-inline-start: 22px; font: italic 900 4rem/.8 "Barlow Condensed", sans-serif; }
+.sport-matches-page .sm-date-ticket small { color: rgba(255,255,255,.55); font-size: 9px; }
+.sport-matches-page .sm-section--schedule { padding-top: 0; }
+.sport-matches-page .sm-day-tabs { position: relative; z-index: 4; display: grid; grid-template-columns: repeat(4,1fr); margin: -43px 0 60px; border: 1px solid rgba(255,255,255,.09); border-radius: 8px 25px 8px 8px; background: #170a28; box-shadow: 0 24px 55px -35px #000; }
+.sport-matches-page .sm-day-tabs a, .sport-matches-page .sm-day-tabs button { display: flex; align-items: center; justify-content: space-between; min-height: 86px; padding: 18px 24px; color: rgba(255,255,255,.55) !important; border: 0; border-inline-end: 1px solid rgba(255,255,255,.09); background: transparent; text-align: start; cursor: pointer; }
+.sport-matches-page .sm-day-tabs > :last-child { border-inline-end: 0; }
+.sport-matches-page .sm-day-tabs span { font-size: 11px; font-weight: 900; }
+.sport-matches-page .sm-day-tabs b { color: #fff; font: italic 900 22px "Barlow Condensed", sans-serif; }
+.sport-matches-page .sm-day-tabs .is-active { color: var(--sm-ink) !important; background: var(--sm-yellow); }
+.sport-matches-page .sm-day-tabs .is-active b { color: var(--sm-ink); }
+.sport-matches-page .sm-date-filter { display: none; align-items: end; gap: 12px; max-width: 650px; margin: -36px auto 55px; padding: 18px; border-radius: 5px 18px 5px 5px; background: #fff; box-shadow: var(--sm-shadow); }
+.sport-matches-page .sm-date-filter.is-open { display: flex; }
+.sport-matches-page .sm-date-filter label { color: var(--sm-muted); font-size: 9px; font-weight: 900; }
+.sport-matches-page .sm-date-filter input { flex: 1; min-height: 46px; padding: 8px 13px; color: var(--sm-ink); border: 1px solid var(--sm-line); border-radius: 4px; background: var(--sm-paper); }
+.sport-matches-page .sm-date-filter button { min-height: 46px; padding: 8px 18px; color: var(--sm-ink); border: 0; border-radius: 4px 12px 4px 4px; background: var(--sm-yellow); font-size: 10px; font-weight: 900; }
+.sport-matches-page .sm-results-heading { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 34px; }
+.sport-matches-page .sm-results-heading span { color: var(--sm-purple); font-size: 10px; font-weight: 900; }
+.sport-matches-page .sm-results-heading h2 { margin: 6px 0 0; color: var(--sm-ink); font-size: 2.5rem; font-weight: 900; }
+.sport-matches-page .sm-results-heading > strong { color: var(--sm-purple); font: italic 900 3.2rem "Barlow Condensed", sans-serif; }
+.sport-matches-page .sm-results-heading > strong small { color: var(--sm-muted); font: 800 9px sans-serif; }
+.sport-matches-page .sm-league-group { margin-bottom: 40px; padding: 0; }
+.sport-matches-page .sm-league-group > header { display: flex; align-items: center; gap: 13px; margin-bottom: 14px; padding: 14px 18px; color: #fff; border-radius: 5px 18px 0 0; background: var(--sm-ink); }
+.sport-matches-page .sm-mini-logo { display: grid; place-items: center; width: 42px; height: 42px; flex: 0 0 42px; color: var(--sm-ink); border-radius: 50%; background: var(--sm-yellow); }
+.sport-matches-page .sm-mini-logo img { width: 30px; height: 30px; object-fit: contain; }
+.sport-matches-page .sm-league-group header small { color: rgba(255,255,255,.42); font-size: 8px; }
+.sport-matches-page .sm-league-group header h3 { margin: 2px 0 0; color: #fff; font-size: 14px; font-weight: 900; }
+.sport-matches-page .sm-league-group header > a { margin-inline-start: auto; color: var(--sm-yellow) !important; font-size: 9px; font-weight: 900; }
+.sport-matches-page .sm-fixtures-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 13px; }
+
+/* Fixture cards */
+.sport-matches-page .sm-fixture-card { display: block; min-width: 0; overflow: hidden; color: var(--sm-ink) !important; border: 1px solid var(--sm-line); border-radius: 5px 22px 5px 5px; background: rgba(255,255,255,.92); box-shadow: 0 18px 48px -40px rgba(28,10,48,.75); }
+.sport-matches-page .sm-fixture-card:hover { color: var(--sm-ink) !important; border-color: rgba(77,44,133,.35); transform: translateY(-5px); box-shadow: var(--sm-shadow); }
+.sport-matches-page .sm-fixture-card__meta, .sport-matches-page .sm-fixture-card__foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 15px; color: var(--sm-muted); font-size: 8px; font-weight: 800; }
+.sport-matches-page .sm-fixture-card__meta { border-bottom: 1px solid var(--sm-line); }
+.sport-matches-page .sm-fixture-card__meta span:first-child { color: var(--sm-purple); }
+.sport-matches-page .sm-fixture-card__contest { display: grid; grid-template-columns: 1fr 108px 1fr; align-items: center; gap: 10px; min-height: 142px; padding: 20px 18px; }
+.sport-matches-page .sm-fixture-team { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.sport-matches-page .sm-fixture-team:last-child { flex-direction: row-reverse; text-align: end; }
+.sport-matches-page .sm-fixture-team > strong { min-width: 0; color: var(--sm-ink); font-size: 11px; font-weight: 900; line-height: 1.45; }
+.sport-matches-page .sm-team-mark { display: grid; place-items: center; width: 52px; height: 60px; flex: 0 0 52px; clip-path: polygon(50% 0, 92% 15%, 85% 72%, 50% 100%, 15% 72%, 8% 15%); color: #fff; background: var(--sm-purple); }
+.sport-matches-page .sm-team-mark img { width: 39px; height: 39px; object-fit: contain; }
+.sport-matches-page .sm-team-mark b { font-size: 19px; }
+.sport-matches-page .sm-fixture-score { display: grid; place-items: center; min-height: 78px; padding: 10px 5px; color: #fff; border-radius: 5px 18px 5px 5px; background: var(--sm-ink); box-shadow: 0 14px 28px -18px #160922; text-align: center; }
+.sport-matches-page .sm-fixture-score strong { color: var(--sm-yellow); font: italic 900 28px/1 "Barlow Condensed", sans-serif; }
+.sport-matches-page .sm-fixture-score strong i { color: rgba(255,255,255,.45); font-style: normal; }
+.sport-matches-page .sm-fixture-score span { margin-top: 5px; color: rgba(255,255,255,.48); font-size: 7px; font-weight: 800; }
+.sport-matches-page .sm-fixture-score span.is-live { color: #ff5574; }
+.sport-matches-page .sm-fixture-score span.is-live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-inline-end: 4px; border-radius: 50%; background: #ff3158; box-shadow: 0 0 0 4px rgba(255,49,88,.13); animation: smPulse 1.3s infinite; }
+.sport-matches-page .sm-fixture-card__foot { color: rgba(22,9,34,.45); border-top: 1px solid var(--sm-line); background: rgba(77,44,133,.025); }
+.sport-matches-page .sm-fixture-card__foot span:last-child { color: var(--sm-purple); }
+@keyframes smPulse { 50% { opacity: .35; } }
+
+/* League page */
+.sport-matches-page .sm-league-hero { position: relative; padding: 115px 0 0; overflow: hidden; color: #fff; background: radial-gradient(circle at 74% 0, rgba(97,52,158,.7), transparent 35%), linear-gradient(115deg,#0b0513,#1c0d30 65%,#321953); }
+.sport-matches-page .sm-league-hero::after { content: "967"; position: absolute; inset-inline-end: -30px; top: 65px; color: transparent; -webkit-text-stroke: 2px rgba(255,255,255,.045); font: italic 900 290px/.8 "Barlow Condensed", sans-serif; }
+.sport-matches-page .sm-league-hero .container { position: relative; z-index: 1; }
+.sport-matches-page .sm-league-hero__crumbs, .sport-matches-page .sm-match-crumbs { display: flex; align-items: center; gap: 9px; margin-bottom: 35px; color: rgba(255,255,255,.4); font-size: 9px; font-weight: 800; }
+.sport-matches-page .sm-league-hero__crumbs a, .sport-matches-page .sm-match-crumbs a { color: var(--sm-yellow) !important; }
+.sport-matches-page .sm-league-hero__main { display: grid; grid-template-columns: 135px minmax(0,1fr) 230px; align-items: center; gap: 30px; padding-bottom: 46px; }
+.sport-matches-page .sm-league-badge { display: grid; place-items: center; width: 126px; height: 145px; color: var(--sm-ink); clip-path: polygon(50% 0, 94% 15%, 88% 72%, 50% 100%, 12% 72%, 6% 15%); background: linear-gradient(145deg,#fff3c9,var(--sm-yellow)); font-size: 44px; }
+.sport-matches-page .sm-league-badge img { width: 88px; height: 88px; object-fit: contain; }
+.sport-matches-page .sm-league-title h1 { margin: 10px 0 8px; color: #fff !important; font-size: clamp(2.7rem, 5vw, 5rem); font-weight: 900; letter-spacing: -.05em; }
+.sport-matches-page .sm-league-title p { margin: 0; color: rgba(255,255,255,.52); font-size: 12px; }
+.sport-matches-page .sm-season-switcher { display: grid; gap: 8px; }
+.sport-matches-page .sm-season-switcher label { color: var(--sm-yellow); font-size: 9px; font-weight: 900; }
+.sport-matches-page .sm-season-switcher select { width: 100%; min-height: 48px; padding: 8px 13px; color: #fff; border: 1px solid rgba(255,255,255,.16); border-radius: 5px 15px 5px 5px; background: rgba(255,255,255,.07); font-size: 11px; }
+.sport-matches-page .sm-season-switcher option { color: var(--sm-ink); background: #fff; }
+.sport-matches-page .sm-league-tabs { display: flex; overflow-x: auto; scrollbar-width: none; border-top: 1px solid rgba(255,255,255,.11); }
+.sport-matches-page .sm-league-tabs::-webkit-scrollbar { display: none; }
+.sport-matches-page .sm-league-tabs a { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-width: 145px; min-height: 70px; padding: 15px 20px; color: rgba(255,255,255,.5) !important; border-inline-end: 1px solid rgba(255,255,255,.09); font-size: 10px; font-weight: 900; white-space: nowrap; }
+.sport-matches-page .sm-league-tabs a::after { content: ""; position: absolute; inset: auto 18px 0; height: 4px; background: var(--sm-yellow); transform: scaleX(0); transition: transform .25s ease; }
+.sport-matches-page .sm-league-tabs a.is-active { color: #fff !important; background: rgba(255,255,255,.05); }
+.sport-matches-page .sm-league-tabs a.is-active::after { transform: scaleX(1); }
+.sport-matches-page .sm-league-content { padding-top: 58px; }
+.sport-matches-page .sm-stat-strip { display: grid; grid-template-columns: repeat(4,1fr); margin-bottom: 58px; overflow: hidden; border: 1px solid var(--sm-line); border-radius: 6px 22px 6px 6px; background: #fff; box-shadow: var(--sm-shadow); }
+.sport-matches-page .sm-stat-strip article { position: relative; min-height: 125px; padding: 26px; border-inline-end: 1px solid var(--sm-line); }
+.sport-matches-page .sm-stat-strip article:last-child { border: 0; }
+.sport-matches-page .sm-stat-strip span { display: block; color: var(--sm-muted); font-size: 9px; font-weight: 800; }
+.sport-matches-page .sm-stat-strip strong { display: block; margin-top: 9px; color: var(--sm-purple); font: italic 900 3.4rem/.9 "Barlow Condensed", sans-serif; }
+.sport-matches-page .sm-overview-grid { display: grid; grid-template-columns: minmax(0,1.4fr) minmax(400px,.8fr); gap: 35px; }
+.sport-matches-page .sm-fixtures-stack { display: grid; gap: 12px; }
+.sport-matches-page .sm-news-section { margin-top: 72px; }
+.sport-matches-page .sm-match-columns { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 28px; }
+.sport-matches-page .sm-match-columns > div > h3 { display: flex; align-items: center; gap: 10px; margin: 0 0 18px; padding: 15px 18px; color: #fff; border-radius: 5px 17px 5px 5px; background: var(--sm-ink); font-size: 13px; }
+.sport-matches-page .sm-match-columns > div > h3 i { color: var(--sm-yellow); }
+.sport-matches-page .sm-statistics-board { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+.sport-matches-page .sm-statistics-board article { position: relative; min-height: 250px; padding: 35px; overflow: hidden; color: #fff; border-radius: 7px 28px 7px 7px; background: linear-gradient(135deg,#160922,#35175a); }
+.sport-matches-page .sm-statistics-board article:nth-child(2n) { color: var(--sm-ink); background: var(--sm-yellow); }
+.sport-matches-page .sm-statistics-board article > i { position: absolute; inset-inline-end: 30px; top: 28px; opacity: .35; font-size: 30px; }
+.sport-matches-page .sm-statistics-board span { display: block; font-size: 11px; font-weight: 900; }
+.sport-matches-page .sm-statistics-board strong { display: block; margin: 45px 0 12px; color: inherit; font: italic 900 6rem/.75 "Barlow Condensed",sans-serif; }
+.sport-matches-page .sm-statistics-board small { opacity: .55; font-size: 9px; }
+
+/* Tables and news */
+.sport-matches-page .sm-table-wrap { overflow-x: auto; border: 1px solid var(--sm-line); border-radius: 7px 24px 7px 7px; background: #fff; box-shadow: var(--sm-shadow); }
+.sport-matches-page .sm-standings-table { width: 100%; min-width: 690px; margin: 0; border-collapse: collapse; }
+.sport-matches-page .sm-standings-table th { height: 48px; padding: 10px 14px; color: rgba(255,255,255,.55); border: 0; background: var(--sm-ink); font-size: 8px; font-weight: 900; text-align: center; }
+.sport-matches-page .sm-standings-table th:nth-child(2) { text-align: start; }
+.sport-matches-page .sm-standings-table td { height: 62px; padding: 10px 14px; color: var(--sm-muted); border: 0; border-bottom: 1px solid var(--sm-line); background: #fff; font-size: 10px; text-align: center; }
+.sport-matches-page .sm-standings-table tbody tr:last-child td { border-bottom: 0; }
+.sport-matches-page .sm-standings-table tbody tr:hover td { background: rgba(254,187,34,.055); }
+.sport-matches-page .sm-standings-table td:first-child b, .sport-matches-page .sm-standings-table td:last-child strong { color: var(--sm-purple); font: 900 17px "Barlow Condensed",sans-serif; }
+.sport-matches-page .sm-table-team { display: flex; align-items: center; gap: 10px; min-width: 190px; text-align: start; }
+.sport-matches-page .sm-table-team img, .sport-matches-page .sm-table-team i { display: grid; place-items: center; width: 32px; height: 32px; object-fit: contain; border-radius: 50%; background: rgba(77,44,133,.08); font-style: normal; }
+.sport-matches-page .sm-table-team strong { color: var(--sm-ink); font-size: 10px; }
+.sport-matches-page .sm-table-wrap.is-compact .sm-standings-table { min-width: 620px; }
+.sport-matches-page .sm-news-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 15px; }
+.sport-matches-page .sm-news-card { display: block; overflow: hidden; color: var(--sm-ink) !important; border: 1px solid var(--sm-line); border-radius: 6px 22px 6px 6px; background: #fff; box-shadow: var(--sm-shadow); }
+.sport-matches-page .sm-news-card:hover { color: var(--sm-ink) !important; transform: translateY(-6px); }
+.sport-matches-page .sm-news-card__media { display: grid; place-items: center; height: 175px; overflow: hidden; color: var(--sm-yellow); background: var(--sm-ink); font-size: 36px; }
+.sport-matches-page .sm-news-card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+.sport-matches-page .sm-news-card:hover .sm-news-card__media img { transform: scale(1.06); }
+.sport-matches-page .sm-news-card__body { display: block; padding: 18px; }
+.sport-matches-page .sm-news-card__body small { display: block; margin-bottom: 9px; color: var(--sm-purple); font-size: 8px; font-weight: 900; }
+.sport-matches-page .sm-news-card__body > strong { display: -webkit-box; min-height: 50px; overflow: hidden; color: var(--sm-ink); font-size: 12px; font-weight: 900; line-height: 1.65; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.sport-matches-page .sm-news-card__body em { display: flex; justify-content: space-between; margin-top: 17px; padding-top: 13px; color: var(--sm-purple); border-top: 1px solid var(--sm-line); font-size: 8px; font-style: normal; font-weight: 900; }
+
+/* Match page */
+.sport-matches-page .sm-match-hero { position: relative; padding: 115px 0 54px; overflow: hidden; color: #fff; background: radial-gradient(circle at 50% 0,rgba(88,47,146,.75),transparent 42%),linear-gradient(120deg,#090410,#1b0c2e 50%,#0d0617); }
+.sport-matches-page .sm-match-hero::before { content: "MATCHDAY"; position: absolute; inset-inline-start: 50%; bottom: -.1em; color: rgba(255,255,255,.025); font: italic 900 clamp(7rem,17vw,15rem)/.8 "Barlow Condensed",sans-serif; transform: translateX(-50%); white-space: nowrap; }
+.sport-matches-page .sm-match-hero .container { position: relative; z-index: 1; }
+.sport-matches-page .sm-match-status { display: flex; align-items: center; justify-content: center; gap: 8px; width: max-content; margin: 0 auto 30px; padding: 8px 15px; color: var(--sm-ink); border-radius: 30px; background: var(--sm-yellow); font-size: 9px; font-weight: 900; }
+.sport-matches-page .sm-match-status i { width: 6px; height: 6px; border-radius: 50%; background: var(--sm-ink); }
+.sport-matches-page .sm-match-status.is-live { color: #fff; background: #e52d52; }
+.sport-matches-page .sm-match-status.is-live i { background: #fff; animation: smPulse 1s infinite; }
+.sport-matches-page .sm-scoreboard { display: grid; grid-template-columns: 1fr 260px 1fr; align-items: center; gap: 45px; max-width: 970px; margin: auto; }
+.sport-matches-page .sm-scoreboard__team { display: grid; place-items: center; text-align: center; }
+.sport-matches-page .sm-scoreboard__team > span { display: grid; place-items: center; width: 125px; height: 140px; color: var(--sm-ink); clip-path: polygon(50% 0, 94% 15%, 88% 72%, 50% 100%, 12% 72%, 6% 15%); background: #fff; }
+.sport-matches-page .sm-scoreboard__team img { width: 85px; height: 85px; object-fit: contain; }
+.sport-matches-page .sm-scoreboard__team b { font-size: 40px; }
+.sport-matches-page .sm-scoreboard__team h1 { margin: 18px 0 4px; color: #fff !important; font-size: clamp(1.35rem,2.6vw,2.2rem); font-weight: 900; }
+.sport-matches-page .sm-scoreboard__team small { color: rgba(255,255,255,.4); font-size: 8px; font-weight: 800; }
+.sport-matches-page .sm-scoreboard__center { display: grid; place-items: center; min-height: 210px; padding: 25px; border: 1px solid rgba(255,255,255,.12); border-top: 3px solid var(--sm-yellow); border-radius: 5px 24px 5px 5px; background: rgba(255,255,255,.045); text-align: center; }
+.sport-matches-page .sm-scoreboard__center > span { color: rgba(255,255,255,.45); font-size: 8px; }
+.sport-matches-page .sm-scoreboard__center > strong { color: var(--sm-yellow); font: italic 900 5.8rem/.8 "Barlow Condensed",sans-serif; }
+.sport-matches-page .sm-scoreboard__center > strong.is-time { font-size: 4.6rem; }
+.sport-matches-page .sm-scoreboard__center > strong i { color: #fff; font-style: normal; }
+.sport-matches-page .sm-scoreboard__center > small { color: #fff; font-size: 9px; font-weight: 900; }
+.sport-matches-page .sm-scoreboard__center > em { color: rgba(255,255,255,.58); font-size: 8px; font-style: normal; }
+.sport-matches-page .sm-match-facts { display: grid; grid-template-columns: repeat(3,1fr); max-width: 900px; margin: 45px auto 0; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.035); }
+.sport-matches-page .sm-match-facts > span { display: grid; grid-template-columns: 34px 1fr; align-items: center; column-gap: 10px; min-height: 70px; padding: 12px 18px; border-inline-end: 1px solid rgba(255,255,255,.1); }
+.sport-matches-page .sm-match-facts > span:last-child { border: 0; }
+.sport-matches-page .sm-match-facts i { grid-row: 1/3; color: var(--sm-yellow); font-size: 20px; }
+.sport-matches-page .sm-match-facts small { color: rgba(255,255,255,.35); font-size: 7px; }
+.sport-matches-page .sm-match-facts strong { overflow: hidden; color: #fff; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.sport-matches-page .sm-match-layout { display: grid; grid-template-columns: minmax(0,1fr) 365px; gap: 34px; }
+.sport-matches-page .sm-timeline { position: relative; display: grid; gap: 12px; }
+.sport-matches-page .sm-timeline::before { content: ""; position: absolute; inset-block: 0; inset-inline-start: 50%; width: 1px; background: var(--sm-line); }
+.sport-matches-page .sm-timeline article { position: relative; display: grid; grid-template-columns: 48px 42px minmax(0,1fr); align-items: center; width: calc(50% + 21px); gap: 10px; padding: 13px; border: 1px solid var(--sm-line); border-radius: 5px 18px 5px 5px; background: #fff; box-shadow: 0 15px 40px -38px #160922; }
+.sport-matches-page .sm-timeline article.is-away { margin-inline-start: calc(50% - 21px); }
+.sport-matches-page .sm-timeline time { color: var(--sm-purple); font: italic 900 20px "Barlow Condensed",sans-serif; text-align: center; }
+.sport-matches-page .sm-event-icon { display: grid; place-items: center; width: 38px; height: 38px; color: var(--sm-ink); border-radius: 50%; background: var(--sm-yellow); }
+.sport-matches-page .sm-timeline small, .sport-matches-page .sm-timeline em { display: block; color: var(--sm-muted); font-size: 7px; font-style: normal; }
+.sport-matches-page .sm-timeline strong { display: block; margin: 3px 0; color: var(--sm-ink); font-size: 10px; }
+.sport-matches-page .sm-side-panel, .sport-matches-page .sm-related { margin-bottom: 22px; padding: 24px; border: 1px solid var(--sm-line); border-radius: 6px 22px 6px 6px; background: #fff; box-shadow: var(--sm-shadow); }
+.sport-matches-page .sm-side-panel h2, .sport-matches-page .sm-related > h2 { margin: 0 0 20px; color: var(--sm-ink); font-size: 17px; font-weight: 900; }
+.sport-matches-page .sm-side-panel dl { margin: 0; }
+.sport-matches-page .sm-side-panel dl div { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--sm-line); }
+.sport-matches-page .sm-side-panel dl div:last-child { border: 0; }
+.sport-matches-page .sm-side-panel dt { color: var(--sm-muted); font-size: 9px; }
+.sport-matches-page .sm-side-panel dd { margin: 0; color: var(--sm-purple); font: 900 17px "Barlow Condensed",sans-serif; }
+.sport-matches-page .sm-related { padding: 18px; }
+.sport-matches-page .sm-related .sm-fixture-card { margin-bottom: 10px; }
+.sport-matches-page .sm-related .sm-fixture-card__contest { grid-template-columns: 1fr 72px 1fr; min-height: 105px; padding: 12px 10px; }
+.sport-matches-page .sm-related .sm-team-mark { width: 38px; height: 44px; flex-basis: 38px; }
+.sport-matches-page .sm-related .sm-team-mark img { width: 28px; height: 28px; }
+.sport-matches-page .sm-related .sm-fixture-team { display: grid; place-items: center; gap: 5px; text-align: center; }
+.sport-matches-page .sm-related .sm-fixture-team:last-child { display: grid; text-align: center; }
+.sport-matches-page .sm-related .sm-fixture-team > strong { font-size: 8px; }
+.sport-matches-page .sm-related .sm-fixture-score { min-height: 60px; }
+.sport-matches-page .sm-related .sm-fixture-score strong { font-size: 21px; }
+.sport-matches-page .sm-related .sm-fixture-card__foot { display: none; }
+
+@media (max-width: 1199px) {
+    .sport-matches-page .sm-overview-grid, .sport-matches-page .sm-match-layout { grid-template-columns: 1fr; }
+    .sport-matches-page .sm-news-grid { grid-template-columns: repeat(2,1fr); }
+    .sport-matches-page .sm-match-side { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .sport-matches-page .sm-scoreboard { grid-template-columns: 1fr 230px 1fr; gap: 25px; }
+}
+
+@media (max-width: 991px) {
+    .sport-matches-page .sm-hero { min-height: 370px; padding-top: 115px; }
+    .sport-matches-page .sm-competitions-grid, .sport-matches-page .sm-fixtures-grid, .sport-matches-page .sm-match-columns { grid-template-columns: 1fr; }
+    .sport-matches-page .sm-league-hero__main { grid-template-columns: 110px minmax(0,1fr); }
+    .sport-matches-page .sm-league-badge { width: 100px; height: 116px; }
+    .sport-matches-page .sm-season-switcher { grid-column: 1/-1; grid-template-columns: 80px 1fr; align-items: center; }
+    .sport-matches-page .sm-stat-strip { grid-template-columns: repeat(2,1fr); }
+    .sport-matches-page .sm-stat-strip article:nth-child(2) { border-inline-end: 0; }
+    .sport-matches-page .sm-stat-strip article:nth-child(-n+2) { border-bottom: 1px solid var(--sm-line); }
+    .sport-matches-page .sm-scoreboard { grid-template-columns: 1fr 180px 1fr; gap: 15px; }
+    .sport-matches-page .sm-scoreboard__center > strong { font-size: 4.4rem; }
+}
+
+@media (max-width: 767px) {
+    .sport-matches-page .sm-section { padding: 48px 0 62px; }
+    .sport-matches-page .sm-hero { min-height: 345px; padding: 105px 0 65px; }
+    .sport-matches-page .sm-hero__inner { align-items: flex-start; flex-direction: column; gap: 25px; }
+    .sport-matches-page .sm-hero h1 { margin-top: 13px; font-size: 2.7rem; }
+    .sport-matches-page .sm-hero p { font-size: 11px; }
+    .sport-matches-page .sm-hero-stat { display: flex; width: auto; min-width: 0; height: 54px; aspect-ratio: auto; gap: 12px; padding: 10px 16px; border-radius: 4px 15px 4px 4px; }
+    .sport-matches-page .sm-hero-stat strong { font-size: 2rem; }
+    .sport-matches-page .sm-hero-stat span { margin: 0; }
+    .sport-matches-page .sm-section-heading { align-items: flex-start; margin-bottom: 24px; }
+    .sport-matches-page .sm-section-heading h2 { font-size: 1.65rem; }
+    .sport-matches-page .sm-section-heading > a { padding: 8px 0; font-size: 8px; }
+    .sport-matches-page .sm-competition-card { grid-template-columns: 76px 1fr; min-height: 200px; padding: 24px 18px; border-radius: 6px 24px 6px 6px; }
+    .sport-matches-page .sm-competition-card__logo { width: 66px; height: 78px; }
+    .sport-matches-page .sm-competition-card__logo img { width: 48px; height: 48px; }
+    .sport-matches-page .sm-competition-card__body { padding-inline-start: 12px; }
+    .sport-matches-page .sm-competition-card__body h2 { font-size: 1.2rem; }
+    .sport-matches-page .sm-date-ticket { min-width: 0; width: 100%; }
+    .sport-matches-page .sm-day-tabs { grid-template-columns: repeat(4, minmax(84px,1fr)); margin: -34px -12px 45px; overflow-x: auto; border-radius: 0; }
+    .sport-matches-page .sm-day-tabs a, .sport-matches-page .sm-day-tabs button { min-height: 70px; padding: 12px; flex-direction: column; align-items: flex-start; }
+    .sport-matches-page .sm-day-tabs span { font-size: 9px; }
+    .sport-matches-page .sm-day-tabs b { font-size: 17px; }
+    .sport-matches-page .sm-date-filter.is-open { display: grid; margin-top: -25px; }
+    .sport-matches-page .sm-results-heading h2 { font-size: 1.7rem; }
+    .sport-matches-page .sm-fixture-card__contest { grid-template-columns: 1fr 82px 1fr; min-height: 130px; padding: 16px 10px; }
+    .sport-matches-page .sm-fixture-team, .sport-matches-page .sm-fixture-team:last-child { flex-direction: column; gap: 7px; text-align: center; }
+    .sport-matches-page .sm-team-mark { width: 45px; height: 52px; flex-basis: 52px; }
+    .sport-matches-page .sm-team-mark img { width: 33px; height: 33px; }
+    .sport-matches-page .sm-fixture-team > strong { font-size: 9px; }
+    .sport-matches-page .sm-fixture-score { min-height: 68px; }
+    .sport-matches-page .sm-fixture-score strong { font-size: 23px; }
+    .sport-matches-page .sm-fixture-card__foot { font-size: 7px; }
+    .sport-matches-page .sm-league-hero { padding-top: 100px; }
+    .sport-matches-page .sm-league-hero__crumbs { margin-bottom: 24px; }
+    .sport-matches-page .sm-league-hero__main { grid-template-columns: 78px 1fr; gap: 16px; padding-bottom: 32px; }
+    .sport-matches-page .sm-league-badge { width: 75px; height: 88px; }
+    .sport-matches-page .sm-league-badge img { width: 56px; height: 56px; }
+    .sport-matches-page .sm-league-title h1 { font-size: 2rem; }
+    .sport-matches-page .sm-league-tabs { margin-inline: -12px; }
+    .sport-matches-page .sm-league-tabs a { min-width: 118px; min-height: 60px; padding: 12px; }
+    .sport-matches-page .sm-stat-strip { margin-bottom: 40px; }
+    .sport-matches-page .sm-stat-strip article { min-height: 100px; padding: 18px; }
+    .sport-matches-page .sm-stat-strip strong { font-size: 2.7rem; }
+    .sport-matches-page .sm-statistics-board { grid-template-columns: 1fr; }
+    .sport-matches-page .sm-statistics-board article { min-height: 190px; }
+    .sport-matches-page .sm-statistics-board strong { font-size: 4.7rem; }
+    .sport-matches-page .sm-news-grid { grid-template-columns: 1fr; }
+    .sport-matches-page .sm-news-card { display: grid; grid-template-columns: 120px 1fr; }
+    .sport-matches-page .sm-news-card__media { height: 100%; min-height: 135px; }
+    .sport-matches-page .sm-news-card__body { padding: 14px; }
+    .sport-matches-page .sm-match-hero { padding: 100px 0 40px; }
+    .sport-matches-page .sm-scoreboard { grid-template-columns: 1fr 95px 1fr; gap: 8px; }
+    .sport-matches-page .sm-scoreboard__team > span { width: 74px; height: 85px; }
+    .sport-matches-page .sm-scoreboard__team img { width: 55px; height: 55px; }
+    .sport-matches-page .sm-scoreboard__team h1 { margin-top: 11px; font-size: 1rem; }
+    .sport-matches-page .sm-scoreboard__center { min-height: 140px; padding: 12px 5px; }
+    .sport-matches-page .sm-scoreboard__center > strong, .sport-matches-page .sm-scoreboard__center > strong.is-time { font-size: 2.7rem; }
+    .sport-matches-page .sm-scoreboard__center > span { font-size: 6px; }
+    .sport-matches-page .sm-match-facts { grid-template-columns: 1fr; margin-top: 32px; }
+    .sport-matches-page .sm-match-facts > span { min-height: 58px; border-inline-end: 0; border-bottom: 1px solid rgba(255,255,255,.1); }
+    .sport-matches-page .sm-match-side { grid-template-columns: 1fr; }
+    .sport-matches-page .sm-timeline::before { inset-inline-start: 20px; }
+    .sport-matches-page .sm-timeline article, .sport-matches-page .sm-timeline article.is-away { grid-template-columns: 42px 34px 1fr; width: calc(100% - 4px); margin-inline-start: 4px; }
+    .sport-matches-page .sm-event-icon { width: 32px; height: 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sport-matches-page *, .sport-matches-page *::before, .sport-matches-page *::after { animation: none !important; transition: none !important; }
+}
+
+/* ========================================================================
+   Match centre / league v2 — broadcast desk
+   ======================================================================== */
+.sport-matches-page .sm-page--schedule-v2,
+.sport-matches-page .sm-page--league-v2 {
+    --sm-v2-night: #10061c;
+    --sm-v2-panel: #1d0d31;
+    --sm-v2-violet: #5b3198;
+    --sm-v2-yellow: #ffbd1f;
+    --sm-v2-cloud: #f4f1f7;
+    --sm-v2-line: rgba(25, 9, 43, .11);
+    background: var(--sm-v2-cloud);
+}
+
+/* Daily matches — newsroom dashboard */
+.sport-matches-page .sm-page--schedule-v2 .sm-hero--schedule {
+    min-height: 405px;
+    padding: 124px 0 92px;
+    background:
+        linear-gradient(104deg, rgba(16,6,28,.99) 0 58%, rgba(43,19,72,.94) 58% 100%),
+        var(--sm-v2-night);
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-hero--schedule::before {
+    inset-inline-end: 4vw;
+    bottom: -.19em;
+    color: rgba(255,255,255,.018);
+    -webkit-text-stroke: 0;
+    font-size: clamp(19rem, 35vw, 35rem);
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-hero--schedule::after {
+    opacity: .22;
+    background-size: 64px 64px;
+    mask-image: linear-gradient(90deg, transparent, #000 42%, #000);
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) 245px;
+    align-items: center;
+    gap: clamp(45px, 9vw, 140px);
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-schedule-intro {
+    position: relative;
+    padding-inline-start: 27px;
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-schedule-intro::before {
+    content: "";
+    position: absolute;
+    inset-block: 3px;
+    inset-inline-start: 0;
+    width: 4px;
+    background: linear-gradient(var(--sm-v2-yellow) 0 62%, rgba(255,255,255,.12) 62%);
+    transform: skewY(-10deg);
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-hero h1 {
+    max-width: 760px;
+    margin: 17px 0 14px;
+    font-size: clamp(3.2rem, 6vw, 6rem);
+    line-height: .95;
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-hero p { max-width: 580px; }
+.sport-matches-page .sm-schedule-snapshot {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-top: 24px;
+}
+.sport-matches-page .sm-schedule-snapshot span {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 7px;
+    color: rgba(255,255,255,.45);
+    font-size: 9px;
+    font-weight: 800;
+}
+.sport-matches-page .sm-schedule-snapshot b {
+    color: var(--sm-v2-yellow);
+    font: italic 900 28px/1 "Barlow Condensed", sans-serif;
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-date-ticket {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    place-items: center;
+    width: 220px;
+    min-width: 220px;
+    min-height: 205px;
+    padding: 25px;
+    overflow: hidden;
+    color: var(--sm-v2-night);
+    border: 0;
+    border-radius: 6px 34px 6px 6px;
+    background: var(--sm-v2-yellow);
+    box-shadow: 18px 20px 0 rgba(255,255,255,.055), 0 30px 65px -35px #000;
+    transform: rotate(-2deg);
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-date-ticket::after {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(16,6,28,.17);
+    border-radius: 4px 25px 4px 4px;
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-date-ticket span {
+    z-index: 1;
+    color: var(--sm-v2-night);
+    font-size: 11px;
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-date-ticket strong {
+    z-index: 1;
+    grid-row: auto;
+    grid-column: auto;
+    padding: 0;
+    color: var(--sm-v2-night);
+    font-size: 6.6rem;
+    line-height: .68;
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-date-ticket small {
+    z-index: 1;
+    color: rgba(16,6,28,.58);
+    font-size: 10px;
+    font-weight: 900;
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-section--schedule {
+    padding: 0 0 95px;
+    background:
+        linear-gradient(rgba(91,49,152,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(91,49,152,.035) 1px, transparent 1px),
+        var(--sm-v2-cloud);
+    background-size: 48px 48px;
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-day-tabs {
+    grid-template-columns: repeat(4,1fr);
+    margin: -41px 0 54px;
+    overflow: hidden;
+    border: 0;
+    border-radius: 7px 26px 7px 7px;
+    background: #fff;
+    box-shadow: 0 25px 60px -38px rgba(16,6,28,.7);
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-day-tabs a,
+.sport-matches-page .sm-page--schedule-v2 .sm-day-tabs button {
+    position: relative;
+    min-height: 82px;
+    padding: 15px 22px;
+    color: #746c7d !important;
+    border-inline-end: 1px solid var(--sm-v2-line);
+    background: #fff;
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-day-tabs a::after,
+.sport-matches-page .sm-page--schedule-v2 .sm-day-tabs button::after {
+    content: "";
+    position: absolute;
+    inset: auto 20px 0;
+    height: 4px;
+    background: var(--sm-v2-yellow);
+    transform: scaleX(0);
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-day-tabs a:hover,
+.sport-matches-page .sm-page--schedule-v2 .sm-day-tabs button:hover { color: var(--sm-v2-night) !important; }
+.sport-matches-page .sm-page--schedule-v2 .sm-day-tabs .is-active {
+    color: #fff !important;
+    background: var(--sm-v2-night);
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-day-tabs .is-active::after { transform: scaleX(1); }
+.sport-matches-page .sm-page--schedule-v2 .sm-day-tabs .is-active b { color: var(--sm-v2-yellow); }
+.sport-matches-page .sm-page--schedule-v2 .sm-date-filter {
+    margin-top: -34px;
+    border: 1px solid var(--sm-v2-line);
+    border-top: 3px solid var(--sm-v2-yellow);
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-results-heading {
+    position: relative;
+    align-items: center;
+    margin-bottom: 27px;
+    padding: 0 0 19px;
+    border-bottom: 1px solid var(--sm-v2-line);
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-results-heading::after {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    bottom: -1px;
+    width: 95px;
+    height: 3px;
+    background: var(--sm-v2-yellow);
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-results-heading h2 { font-size: clamp(2rem,4vw,3.4rem); }
+.sport-matches-page .sm-page--schedule-v2 .sm-results-heading > strong {
+    display: grid;
+    place-items: center;
+    width: 77px;
+    height: 77px;
+    color: var(--sm-v2-night);
+    border-radius: 50%;
+    background: var(--sm-v2-yellow);
+    font-size: 2.6rem;
+    line-height: .7;
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-results-heading > strong small { color: rgba(16,6,28,.58); }
+.sport-matches-page .sm-page--schedule-v2 .sm-league-group {
+    margin-bottom: 28px;
+    padding: 0 18px 18px;
+    overflow: hidden;
+    border: 1px solid var(--sm-v2-line);
+    border-radius: 7px 28px 7px 7px;
+    background: rgba(255,255,255,.72);
+    box-shadow: 0 22px 60px -50px rgba(16,6,28,.65);
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-league-group > header {
+    margin: 0 -18px 16px;
+    padding: 13px 18px;
+    border-radius: 0;
+    background: #fff;
+    border-bottom: 1px solid var(--sm-v2-line);
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-mini-logo {
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
+    color: var(--sm-v2-yellow);
+    border: 1px solid rgba(91,49,152,.14);
+    border-radius: 5px 15px 5px 5px;
+    background: rgba(91,49,152,.055);
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-league-group header small { color: #948b9e; }
+.sport-matches-page .sm-page--schedule-v2 .sm-league-group header h3 { color: var(--sm-v2-night); font-size: 15px; }
+.sport-matches-page .sm-page--schedule-v2 .sm-league-group header > a { color: var(--sm-v2-violet) !important; }
+
+/* Shared match card rebuilt as a score slip */
+.sport-matches-page .sm-page--schedule-v2 .sm-fixture-card,
+.sport-matches-page .sm-page--league-v2 .sm-fixture-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--sm-v2-line);
+    border-radius: 5px 19px 5px 5px;
+    background: #fff;
+    box-shadow: none;
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-fixture-card__accent,
+.sport-matches-page .sm-page--league-v2 .sm-fixture-card__accent {
+    position: absolute;
+    z-index: 3;
+    inset: 0 0 0 auto;
+    width: 4px;
+    background: var(--sm-v2-yellow);
+}
+[dir="ltr"] .sport-matches-page .sm-page--schedule-v2 .sm-fixture-card__accent,
+[dir="ltr"] .sport-matches-page .sm-page--league-v2 .sm-fixture-card__accent { inset: 0 auto 0 0; }
+.sport-matches-page .sm-page--schedule-v2 .sm-fixture-card.is-live .sm-fixture-card__accent,
+.sport-matches-page .sm-page--league-v2 .sm-fixture-card.is-live .sm-fixture-card__accent { background: #f0345b; }
+.sport-matches-page .sm-page--schedule-v2 .sm-fixture-card.is-finished .sm-fixture-card__accent,
+.sport-matches-page .sm-page--league-v2 .sm-fixture-card.is-finished .sm-fixture-card__accent { background: #6e6478; }
+.sport-matches-page .sm-page--schedule-v2 .sm-fixture-card:hover,
+.sport-matches-page .sm-page--league-v2 .sm-fixture-card:hover {
+    border-color: rgba(91,49,152,.35);
+    transform: translateY(-4px);
+    box-shadow: 0 22px 45px -35px rgba(16,6,28,.55);
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-fixture-card__meta,
+.sport-matches-page .sm-page--league-v2 .sm-fixture-card__meta {
+    min-height: 39px;
+    padding: 9px 15px;
+    background: #faf9fb;
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-fixture-card__contest,
+.sport-matches-page .sm-page--league-v2 .sm-fixture-card__contest {
+    grid-template-columns: 1fr 94px 1fr;
+    min-height: 126px;
+    padding: 17px 18px;
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-team-mark,
+.sport-matches-page .sm-page--league-v2 .sm-team-mark {
+    width: 48px;
+    height: 55px;
+    flex-basis: 48px;
+    color: var(--sm-v2-night);
+    clip-path: none;
+    border: 1px solid rgba(91,49,152,.13);
+    border-radius: 50% 50% 13px 50%;
+    background: #f3eff7;
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-team-mark img,
+.sport-matches-page .sm-page--league-v2 .sm-team-mark img { width: 36px; height: 36px; }
+.sport-matches-page .sm-page--schedule-v2 .sm-fixture-score,
+.sport-matches-page .sm-page--league-v2 .sm-fixture-score {
+    min-height: 68px;
+    border: 1px solid rgba(16,6,28,.08);
+    border-radius: 5px 15px 5px 5px;
+    background: var(--sm-v2-night);
+    box-shadow: 0 13px 24px -18px #10061c;
+}
+.sport-matches-page .sm-page--schedule-v2 .sm-fixture-score strong,
+.sport-matches-page .sm-page--league-v2 .sm-fixture-score strong { font-size: 25px; }
+.sport-matches-page .sm-page--schedule-v2 .sm-fixture-card__foot,
+.sport-matches-page .sm-page--league-v2 .sm-fixture-card__foot { min-height: 36px; padding: 8px 15px; }
+
+/* League — official competition identity */
+.sport-matches-page .sm-page--league-v2 .sm-league-hero {
+    min-height: 448px;
+    padding: 112px 0 0;
+    overflow: visible;
+    background:
+        radial-gradient(circle at 75% 8%, rgba(111,60,177,.55), transparent 34%),
+        linear-gradient(112deg, #0c0415 0 62%, #2c1549 62%);
+}
+.sport-matches-page .sm-league-hero__watermark {
+    position: absolute;
+    z-index: 0;
+    inset-inline-end: 4vw;
+    top: 112px;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(255,255,255,.05);
+    font: italic 900 clamp(15rem,28vw,28rem)/.75 "Barlow Condensed",sans-serif;
+    letter-spacing: -.09em;
+    pointer-events: none;
+}
+.sport-matches-page .sm-page--league-v2 .sm-league-hero::after { display: none; }
+.sport-matches-page .sm-page--league-v2 .sm-league-hero__crumbs { margin-bottom: 20px; }
+.sport-matches-page .sm-page--league-v2 .sm-league-hero__main {
+    grid-template-columns: 160px minmax(0,1fr) 240px;
+    gap: 38px;
+    min-height: 240px;
+    padding-bottom: 54px;
+}
+.sport-matches-page .sm-page--league-v2 .sm-league-badge {
+    position: relative;
+    width: 148px;
+    height: 166px;
+    clip-path: none;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 8px 38px 8px 8px;
+    background: #fff;
+    box-shadow: 14px 14px 0 var(--sm-v2-yellow), 0 30px 60px -35px #000;
+}
+.sport-matches-page .sm-page--league-v2 .sm-league-badge::after {
+    content: "";
+    position: absolute;
+    inset: 11px;
+    border: 1px solid rgba(91,49,152,.12);
+    border-radius: 4px 27px 4px 4px;
+}
+.sport-matches-page .sm-page--league-v2 .sm-league-badge img { z-index: 1; width: 100px; height: 100px; }
+.sport-matches-page .sm-page--league-v2 .sm-league-title h1 {
+    max-width: 720px;
+    margin: 9px 0 5px;
+    font-size: clamp(3rem,5.5vw,5.7rem);
+    line-height: .98;
+}
+.sport-matches-page .sm-league-title__facts {
+    display: flex;
+    gap: 25px;
+    margin-top: 22px;
+}
+.sport-matches-page .sm-league-title__facts span {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    color: rgba(255,255,255,.4);
+    font-size: 8px;
+    font-weight: 800;
+}
+.sport-matches-page .sm-league-title__facts b {
+    color: var(--sm-v2-yellow);
+    font: italic 900 24px/1 "Barlow Condensed",sans-serif;
+}
+.sport-matches-page .sm-page--league-v2 .sm-season-switcher {
+    position: relative;
+    padding: 23px;
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: 6px 22px 6px 6px;
+    background: rgba(255,255,255,.055);
+}
+.sport-matches-page .sm-page--league-v2 .sm-season-switcher::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: var(--sm-v2-yellow);
+}
+.sport-matches-page .sm-page--league-v2 .sm-season-switcher select { background-color: rgba(0,0,0,.15); }
+.sport-matches-page .sm-page--league-v2 .sm-league-tabs {
+    position: relative;
+    z-index: 4;
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    margin-bottom: -38px;
+    overflow: hidden;
+    border: 0;
+    border-radius: 7px 25px 7px 7px;
+    background: #fff;
+    box-shadow: 0 25px 60px -38px rgba(16,6,28,.85);
+}
+.sport-matches-page .sm-page--league-v2 .sm-league-tabs a {
+    min-width: 0;
+    min-height: 76px;
+    color: #776e81 !important;
+    border-inline-end: 1px solid var(--sm-v2-line);
+    background: #fff;
+}
+.sport-matches-page .sm-page--league-v2 .sm-league-tabs a::after {
+    inset: auto 25px 0;
+    height: 4px;
+}
+.sport-matches-page .sm-page--league-v2 .sm-league-tabs a.is-active {
+    color: #fff !important;
+    background: var(--sm-v2-night);
+}
+.sport-matches-page .sm-page--league-v2 .sm-league-tabs a.is-active i { color: var(--sm-v2-yellow); }
+.sport-matches-page .sm-page--league-v2 .sm-league-content {
+    padding: 96px 0 90px;
+    background:
+        linear-gradient(rgba(91,49,152,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(91,49,152,.03) 1px, transparent 1px),
+        var(--sm-v2-cloud);
+    background-size: 48px 48px;
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip {
+    gap: 1px;
+    margin-bottom: 62px;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: var(--sm-v2-line);
+    box-shadow: 0 24px 60px -42px rgba(16,6,28,.7);
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article {
+    min-height: 120px;
+    padding: 24px 27px;
+    overflow: hidden;
+    border: 0;
+    background: #fff;
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article:first-child { border-radius: 5px 22px 5px 5px; }
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3) {
+    color: var(--sm-v2-night);
+    background: var(--sm-v2-yellow);
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3) span,
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3) strong { color: var(--sm-v2-night); }
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article::after {
+    content: attr(data-number);
+    position: absolute;
+    inset-inline-end: -10px;
+    bottom: -20px;
+    color: rgba(91,49,152,.035);
+    font: italic 900 90px "Barlow Condensed",sans-serif;
+}
+.sport-matches-page .sm-page--league-v2 .sm-overview-grid { gap: 42px; }
+.sport-matches-page .sm-page--league-v2 .sm-match-columns > div {
+    padding: 16px;
+    border: 1px solid var(--sm-v2-line);
+    border-radius: 6px 22px 6px 6px;
+    background: rgba(255,255,255,.6);
+}
+.sport-matches-page .sm-page--league-v2 .sm-match-columns > div > h3 {
+    margin: -16px -16px 16px;
+    border-radius: 5px 20px 0 0;
+}
+.sport-matches-page .sm-page--league-v2 .sm-table-wrap { border-top: 4px solid var(--sm-v2-yellow); }
+.sport-matches-page .sm-page--league-v2 .sm-standings-table th { background: var(--sm-v2-night); }
+
+@media (max-width: 991px) {
+    .sport-matches-page .sm-page--schedule-v2 .sm-hero__inner { grid-template-columns: minmax(0,1fr) 190px; gap: 35px; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-date-ticket { width: 180px; min-width: 180px; min-height: 180px; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-date-ticket strong { font-size: 5.4rem; }
+    .sport-matches-page .sm-page--league-v2 .sm-league-hero__main { grid-template-columns: 125px minmax(0,1fr); }
+    .sport-matches-page .sm-page--league-v2 .sm-league-badge { width: 115px; height: 130px; }
+    .sport-matches-page .sm-page--league-v2 .sm-season-switcher { grid-column: 1/-1; display: grid; grid-template-columns: 90px 1fr; align-items: center; padding: 13px 18px; }
+    .sport-matches-page .sm-page--league-v2 .sm-league-tabs { grid-template-columns: repeat(5,minmax(125px,1fr)); overflow-x: auto; }
+}
+
+@media (max-width: 767px) {
+    .sport-matches-page .sm-page--schedule-v2 .sm-hero--schedule { min-height: 435px; padding: 104px 0 72px; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-hero__inner { grid-template-columns: 1fr 105px; align-items: end; gap: 15px; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-schedule-intro { padding-inline-start: 15px; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-hero h1 { font-size: 2.5rem; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-hero p { font-size: 9px; }
+    .sport-matches-page .sm-schedule-snapshot { gap: 14px; margin-top: 15px; }
+    .sport-matches-page .sm-schedule-snapshot b { font-size: 21px; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-date-ticket { width: 102px; min-width: 102px; min-height: 128px; padding: 15px 7px; border-radius: 4px 19px 4px 4px; box-shadow: 7px 8px 0 rgba(255,255,255,.05); }
+    .sport-matches-page .sm-page--schedule-v2 .sm-date-ticket::after { inset: 7px; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-date-ticket strong { font-size: 3.7rem; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-date-ticket span,
+    .sport-matches-page .sm-page--schedule-v2 .sm-date-ticket small { font-size: 7px; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-day-tabs { grid-template-columns: repeat(4,minmax(90px,1fr)); margin: -33px -12px 42px; border-radius: 0; overflow-x: auto; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-day-tabs a,
+    .sport-matches-page .sm-page--schedule-v2 .sm-day-tabs button { min-height: 68px; padding: 10px 12px; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-results-heading > strong { width: 62px; height: 62px; font-size: 2.1rem; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-league-group { margin-inline: -4px; padding: 0 9px 10px; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-league-group > header { margin: 0 -9px 10px; padding: 10px; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-fixtures-grid { gap: 9px; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-fixture-card__contest,
+    .sport-matches-page .sm-page--league-v2 .sm-fixture-card__contest { grid-template-columns: 1fr 76px 1fr; min-height: 119px; padding: 13px 8px; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-team-mark,
+    .sport-matches-page .sm-page--league-v2 .sm-team-mark { width: 42px; height: 46px; flex-basis: 46px; }
+    .sport-matches-page .sm-page--schedule-v2 .sm-fixture-score,
+    .sport-matches-page .sm-page--league-v2 .sm-fixture-score { min-height: 62px; }
+    .sport-matches-page .sm-page--league-v2 .sm-league-hero { min-height: 470px; padding-top: 98px; }
+    .sport-matches-page .sm-page--league-v2 .sm-league-hero__main { grid-template-columns: 82px 1fr; gap: 15px; padding-bottom: 25px; }
+    .sport-matches-page .sm-page--league-v2 .sm-league-badge { width: 76px; height: 88px; border-radius: 5px 20px 5px 5px; box-shadow: 6px 7px 0 var(--sm-v2-yellow); }
+    .sport-matches-page .sm-page--league-v2 .sm-league-badge img { width: 56px; height: 56px; }
+    .sport-matches-page .sm-page--league-v2 .sm-league-title h1 { font-size: 2rem; }
+    .sport-matches-page .sm-league-title__facts { gap: 12px; margin-top: 13px; }
+    .sport-matches-page .sm-league-title__facts b { font-size: 19px; }
+    .sport-matches-page .sm-page--league-v2 .sm-season-switcher { grid-template-columns: 65px 1fr; padding: 10px; }
+    .sport-matches-page .sm-page--league-v2 .sm-league-tabs { margin: 0 -12px -32px; border-radius: 0; }
+    .sport-matches-page .sm-page--league-v2 .sm-league-tabs a { min-width: 110px; min-height: 64px; }
+    .sport-matches-page .sm-page--league-v2 .sm-league-content { padding: 72px 0 62px; }
+    .sport-matches-page .sm-page--league-v2 .sm-stat-strip { gap: 1px; margin-bottom: 42px; }
+    .sport-matches-page .sm-page--league-v2 .sm-stat-strip article { min-height: 94px; padding: 17px; }
+}
+
+/* League overview v3 — season control room */
+.sport-matches-page .sm-page--league-v2 .sm-overview-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 25px;
+    margin-bottom: 20px;
+}
+.sport-matches-page .sm-page--league-v2 .sm-overview-heading .sm-eyebrow {
+    margin-bottom: 8px;
+    color: var(--sm-v2-violet);
+}
+.sport-matches-page .sm-page--league-v2 .sm-overview-heading h2 {
+    margin: 0;
+    color: var(--sm-v2-night);
+    font-size: clamp(2rem, 4vw, 3.7rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -.045em;
+}
+.sport-matches-page .sm-overview-season {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 43px;
+    padding: 9px 15px;
+    color: var(--sm-v2-night);
+    border: 1px solid rgba(91,49,152,.13);
+    border-radius: 4px 15px 4px 4px;
+    background: #fff;
+    box-shadow: 0 13px 28px -25px rgba(16,6,28,.65);
+    font-size: 9px;
+    font-weight: 900;
+}
+.sport-matches-page .sm-overview-season i {
+    display: grid;
+    place-items: center;
+    width: 27px;
+    height: 27px;
+    color: var(--sm-v2-night);
+    border-radius: 50%;
+    background: var(--sm-v2-yellow);
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip {
+    position: relative;
+    grid-template-columns: repeat(4,1fr);
+    gap: 10px;
+    margin-bottom: 48px;
+    padding: 11px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 7px 30px 7px 7px;
+    background:
+        radial-gradient(circle at 78% 0, rgba(104,56,168,.58), transparent 35%),
+        linear-gradient(115deg,#0f061a,#1d0c32 68%,#2c1549);
+    box-shadow: 0 30px 65px -45px rgba(16,6,28,.85);
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip::before {
+    content: "967";
+    position: absolute;
+    inset-inline-end: -18px;
+    bottom: -.28em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,.045);
+    font: italic 900 150px/.8 "Barlow Condensed",sans-serif;
+    pointer-events: none;
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article,
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article:first-child,
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3) {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    grid-template-rows: auto 1fr auto;
+    align-items: center;
+    column-gap: 12px;
+    min-height: 155px;
+    padding: 20px;
+    overflow: hidden;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 5px 19px 5px 5px;
+    background: rgba(255,255,255,.045);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3) {
+    color: var(--sm-v2-night);
+    border-color: var(--sm-v2-yellow);
+    background: var(--sm-v2-yellow);
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(4) {
+    background: linear-gradient(145deg,rgba(101,54,165,.75),rgba(73,36,123,.55));
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article::before {
+    content: attr(data-stat);
+    position: absolute;
+    inset-inline-end: 10px;
+    top: 7px;
+    color: rgba(255,255,255,.12);
+    font: italic 900 27px "Barlow Condensed",sans-serif;
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3)::before { color: rgba(16,6,28,.12); }
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article::after { display: none; }
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article > i {
+    grid-row: 1 / 3;
+    display: grid;
+    place-items: center;
+    width: 43px;
+    height: 43px;
+    color: var(--sm-v2-yellow);
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: 50% 50% 11px 50%;
+    background: rgba(255,255,255,.07);
+    font-size: 17px;
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3) > i {
+    color: #fff;
+    border-color: rgba(16,6,28,.12);
+    background: var(--sm-v2-night);
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article span,
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3) span {
+    align-self: end;
+    color: rgba(255,255,255,.6);
+    font-size: 8px;
+    font-weight: 900;
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3) span { color: rgba(16,6,28,.62); }
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article strong,
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3) strong {
+    align-self: start;
+    margin: 4px 0 0;
+    color: #fff;
+    font: italic 900 3.8rem/.8 "Barlow Condensed",sans-serif;
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3) strong { color: var(--sm-v2-night); }
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article small {
+    grid-column: 1 / -1;
+    align-self: end;
+    margin-top: 14px;
+    padding-top: 9px;
+    color: rgba(255,255,255,.34);
+    border-top: 1px solid rgba(255,255,255,.09);
+    font-size: 7px;
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3) small {
+    color: rgba(16,6,28,.52);
+    border-top-color: rgba(16,6,28,.1);
+}
+
+.sport-matches-page .sm-page--league-v2 .sm-overview-grid {
+    grid-template-columns: minmax(0,1.35fr) minmax(380px,.75fr);
+    align-items: start;
+    gap: 24px;
+}
+.sport-matches-page .sm-overview-panel {
+    position: relative;
+    min-width: 0;
+    padding: 24px;
+    overflow: hidden;
+    border: 1px solid var(--sm-v2-line);
+    border-radius: 7px 27px 7px 7px;
+    background: rgba(255,255,255,.86);
+    box-shadow: 0 24px 58px -48px rgba(16,6,28,.68);
+}
+.sport-matches-page .sm-overview-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 4px;
+    background: linear-gradient(90deg,var(--sm-v2-yellow) 0 28%,var(--sm-v2-night) 28%);
+}
+.sport-matches-page .sm-overview-panel--table::before {
+    background: linear-gradient(90deg,var(--sm-v2-violet) 0 70%,var(--sm-v2-yellow) 70%);
+}
+.sport-matches-page .sm-overview-panel .sm-section-heading--compact {
+    align-items: center;
+    min-height: 58px;
+    margin: 0 -24px 19px;
+    padding: 2px 24px 14px;
+    border-bottom: 1px solid var(--sm-v2-line);
+}
+.sport-matches-page .sm-overview-panel .sm-section-heading--compact h2 {
+    font-size: clamp(1.45rem,2.4vw,2rem);
+}
+.sport-matches-page .sm-overview-panel .sm-section-heading--compact > a {
+    padding: 8px 0;
+    font-size: 8px;
+}
+.sport-matches-page .sm-overview-panel--fixtures .sm-fixtures-stack { gap: 10px; }
+.sport-matches-page .sm-overview-panel--fixtures .sm-fixture-card__contest {
+    min-height: 115px;
+    padding-block: 13px;
+}
+.sport-matches-page .sm-overview-panel--table .sm-table-wrap {
+    border: 0;
+    border-radius: 4px 15px 4px 4px;
+    box-shadow: none;
+}
+.sport-matches-page .sm-overview-panel--table .sm-table-wrap.is-compact .sm-standings-table {
+    min-width: 0;
+    table-layout: fixed;
+}
+.sport-matches-page .sm-overview-panel--table .sm-table-wrap.is-compact th:nth-child(4),
+.sport-matches-page .sm-overview-panel--table .sm-table-wrap.is-compact th:nth-child(5),
+.sport-matches-page .sm-overview-panel--table .sm-table-wrap.is-compact th:nth-child(6),
+.sport-matches-page .sm-overview-panel--table .sm-table-wrap.is-compact td:nth-child(4),
+.sport-matches-page .sm-overview-panel--table .sm-table-wrap.is-compact td:nth-child(5),
+.sport-matches-page .sm-overview-panel--table .sm-table-wrap.is-compact td:nth-child(6) { display: none; }
+.sport-matches-page .sm-overview-panel--table .sm-table-wrap.is-compact th:nth-child(1),
+.sport-matches-page .sm-overview-panel--table .sm-table-wrap.is-compact td:nth-child(1) { width: 45px; }
+.sport-matches-page .sm-overview-panel--table .sm-table-wrap.is-compact th:nth-child(2),
+.sport-matches-page .sm-overview-panel--table .sm-table-wrap.is-compact td:nth-child(2) { width: 48%; }
+.sport-matches-page .sm-overview-panel--table .sm-table-wrap.is-compact .sm-table-team { min-width: 0; }
+.sport-matches-page .sm-overview-panel--table .sm-standings-table th { height: 43px; }
+.sport-matches-page .sm-overview-panel--table .sm-standings-table td { height: 57px; }
+.sport-matches-page .sm-page--league-v2 .sm-news-section {
+    position: relative;
+    margin-top: 60px;
+    padding-top: 35px;
+    border-top: 1px solid var(--sm-v2-line);
+}
+.sport-matches-page .sm-page--league-v2 .sm-news-section::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    top: -2px;
+    width: 105px;
+    height: 4px;
+    background: var(--sm-v2-yellow);
+}
+
+@media (max-width: 1199px) {
+    .sport-matches-page .sm-page--league-v2 .sm-stat-strip { grid-template-columns: repeat(2,1fr); }
+    .sport-matches-page .sm-page--league-v2 .sm-overview-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 767px) {
+    .sport-matches-page .sm-page--league-v2 .sm-overview-heading { align-items: flex-start; flex-direction: column; gap: 13px; }
+    .sport-matches-page .sm-page--league-v2 .sm-overview-heading h2 { font-size: 2rem; }
+    .sport-matches-page .sm-page--league-v2 .sm-stat-strip { gap: 7px; padding: 7px; border-radius: 5px 20px 5px 5px; }
+    .sport-matches-page .sm-page--league-v2 .sm-stat-strip article,
+    .sport-matches-page .sm-page--league-v2 .sm-stat-strip article:first-child,
+    .sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3) {
+        grid-template-columns: 34px 1fr;
+        min-height: 123px;
+        padding: 13px;
+        column-gap: 8px;
+    }
+    .sport-matches-page .sm-page--league-v2 .sm-stat-strip article > i { width: 33px; height: 33px; font-size: 13px; }
+    .sport-matches-page .sm-page--league-v2 .sm-stat-strip article strong,
+    .sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3) strong { font-size: 2.8rem; }
+    .sport-matches-page .sm-page--league-v2 .sm-stat-strip article small { margin-top: 9px; font-size: 6px; }
+    .sport-matches-page .sm-overview-panel { padding: 14px 10px; border-radius: 5px 19px 5px 5px; }
+    .sport-matches-page .sm-overview-panel .sm-section-heading--compact { margin: 0 -10px 12px; padding: 2px 10px 11px; }
+    .sport-matches-page .sm-overview-panel--fixtures .sm-fixture-card__contest { min-height: 108px; }
+}
+
+/* League v4 — consistent UI typography scale */
+.sport-matches-page .sm-page--league-v2 {
+    --sm-type-caption: 11px;
+    --sm-type-small: 12px;
+    --sm-type-body: 14px;
+    --sm-type-label: 13px;
+    --sm-type-subtitle: 18px;
+    --sm-type-section: clamp(26px, 2.2vw, 34px);
+    --sm-type-page: clamp(42px, 4.2vw, 64px);
+}
+.sport-matches-page .sm-page--league-v2 .sm-eyebrow {
+    gap: 9px;
+    font-size: var(--sm-type-small);
+    line-height: 1.4;
+    letter-spacing: .035em;
+}
+.sport-matches-page .sm-page--league-v2 .sm-league-hero__crumbs {
+    font-size: var(--sm-type-small);
+    line-height: 1.5;
+}
+.sport-matches-page .sm-page--league-v2 .sm-league-title h1 {
+    font-size: var(--sm-type-page);
+    line-height: 1.08;
+    letter-spacing: -.035em;
+}
+.sport-matches-page .sm-page--league-v2 .sm-league-title > p {
+    font-size: var(--sm-type-body);
+    line-height: 1.6;
+}
+.sport-matches-page .sm-page--league-v2 .sm-league-title__facts span {
+    gap: 7px;
+    font-size: var(--sm-type-small);
+    line-height: 1.4;
+}
+.sport-matches-page .sm-page--league-v2 .sm-league-title__facts b {
+    font-size: 24px;
+    line-height: 1;
+}
+.sport-matches-page .sm-page--league-v2 .sm-season-switcher label {
+    font-size: var(--sm-type-small);
+    line-height: 1.4;
+}
+.sport-matches-page .sm-page--league-v2 .sm-season-switcher select {
+    font-size: var(--sm-type-label);
+    line-height: 1.5;
+}
+.sport-matches-page .sm-page--league-v2 .sm-league-tabs a {
+    gap: 8px;
+    min-height: 70px;
+    font-size: var(--sm-type-label);
+    line-height: 1.4;
+}
+.sport-matches-page .sm-page--league-v2 .sm-league-tabs a i { font-size: 15px; }
+.sport-matches-page .sm-page--league-v2 .sm-league-content { padding-top: 74px; }
+.sport-matches-page .sm-page--league-v2 .sm-overview-heading { margin-bottom: 22px; }
+.sport-matches-page .sm-page--league-v2 .sm-overview-heading .sm-eyebrow { margin-bottom: 7px; }
+.sport-matches-page .sm-page--league-v2 .sm-overview-heading h2 {
+    font-size: var(--sm-type-section);
+    line-height: 1.2;
+    letter-spacing: -.025em;
+}
+.sport-matches-page .sm-page--league-v2 .sm-overview-season {
+    min-height: 44px;
+    font-size: var(--sm-type-small);
+    line-height: 1.4;
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article span,
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3) span {
+    font-size: var(--sm-type-small);
+    line-height: 1.45;
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article strong,
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3) strong {
+    margin-top: 6px;
+    font-size: clamp(44px, 4vw, 54px);
+    line-height: .9;
+    letter-spacing: -.025em;
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article small {
+    font-size: var(--sm-type-caption);
+    line-height: 1.4;
+}
+.sport-matches-page .sm-page--league-v2 .sm-stat-strip article::before {
+    font-size: 22px;
+    line-height: 1;
+}
+.sport-matches-page .sm-page--league-v2 .sm-section-heading > div > span {
+    margin-bottom: 6px;
+    font-size: var(--sm-type-small);
+    line-height: 1.4;
+    letter-spacing: .02em;
+}
+.sport-matches-page .sm-page--league-v2 .sm-section-heading h2,
+.sport-matches-page .sm-page--league-v2 .sm-overview-panel .sm-section-heading--compact h2 {
+    font-size: var(--sm-type-section);
+    line-height: 1.25;
+    letter-spacing: -.025em;
+}
+.sport-matches-page .sm-page--league-v2 .sm-section-heading > a,
+.sport-matches-page .sm-page--league-v2 .sm-overview-panel .sm-section-heading--compact > a {
+    font-size: var(--sm-type-small);
+    line-height: 1.4;
+}
+.sport-matches-page .sm-page--league-v2 .sm-fixture-card__meta {
+    font-size: var(--sm-type-caption);
+    line-height: 1.4;
+}
+.sport-matches-page .sm-page--league-v2 .sm-fixture-team > strong {
+    font-size: var(--sm-type-body);
+    line-height: 1.45;
+}
+.sport-matches-page .sm-page--league-v2 .sm-fixture-score strong {
+    font-size: 28px;
+    line-height: 1;
+}
+.sport-matches-page .sm-page--league-v2 .sm-fixture-score span {
+    font-size: var(--sm-type-caption);
+    line-height: 1.35;
+}
+.sport-matches-page .sm-page--league-v2 .sm-fixture-card__foot {
+    font-size: var(--sm-type-caption);
+    line-height: 1.4;
+}
+.sport-matches-page .sm-page--league-v2 .sm-standings-table th {
+    font-size: var(--sm-type-caption);
+    line-height: 1.4;
+}
+.sport-matches-page .sm-page--league-v2 .sm-standings-table td {
+    font-size: var(--sm-type-small);
+    line-height: 1.45;
+}
+.sport-matches-page .sm-page--league-v2 .sm-table-team strong { font-size: var(--sm-type-small); line-height: 1.45; }
+.sport-matches-page .sm-page--league-v2 .sm-standings-table td:first-child b,
+.sport-matches-page .sm-page--league-v2 .sm-standings-table td:last-child strong { font-size: 18px; line-height: 1; }
+.sport-matches-page .sm-page--league-v2 .sm-match-columns > div > h3 {
+    font-size: var(--sm-type-subtitle);
+    line-height: 1.4;
+}
+.sport-matches-page .sm-page--league-v2 .sm-statistics-board span { font-size: var(--sm-type-label); line-height: 1.4; }
+.sport-matches-page .sm-page--league-v2 .sm-statistics-board strong { font-size: clamp(52px, 6vw, 78px); line-height: .9; }
+.sport-matches-page .sm-page--league-v2 .sm-statistics-board small { font-size: var(--sm-type-small); line-height: 1.4; }
+.sport-matches-page .sm-page--league-v2 .sm-news-card__body small,
+.sport-matches-page .sm-page--league-v2 .sm-news-card__body em { font-size: var(--sm-type-caption); line-height: 1.4; }
+.sport-matches-page .sm-page--league-v2 .sm-news-card__body > strong { font-size: var(--sm-type-body); line-height: 1.6; }
+
+@media (max-width: 767px) {
+    .sport-matches-page .sm-page--league-v2 {
+        --sm-type-caption: 10px;
+        --sm-type-small: 11px;
+        --sm-type-body: 13px;
+        --sm-type-label: 12px;
+        --sm-type-subtitle: 16px;
+        --sm-type-section: 25px;
+        --sm-type-page: 34px;
+    }
+    .sport-matches-page .sm-page--league-v2 .sm-league-title h1 { font-size: var(--sm-type-page); }
+    .sport-matches-page .sm-page--league-v2 .sm-league-tabs a { min-height: 60px; font-size: var(--sm-type-label); }
+    .sport-matches-page .sm-page--league-v2 .sm-league-content { padding-top: 62px; }
+    .sport-matches-page .sm-page--league-v2 .sm-stat-strip article strong,
+    .sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3) strong { font-size: 38px; }
+    .sport-matches-page .sm-page--league-v2 .sm-stat-strip article span,
+    .sport-matches-page .sm-page--league-v2 .sm-stat-strip article:nth-child(3) span { font-size: 10px; }
+    .sport-matches-page .sm-page--league-v2 .sm-stat-strip article small { font-size: 9px; }
+    .sport-matches-page .sm-page--league-v2 .sm-section-heading h2,
+    .sport-matches-page .sm-page--league-v2 .sm-overview-panel .sm-section-heading--compact h2 { font-size: var(--sm-type-section); }
+}

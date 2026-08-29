@@ -10,229 +10,91 @@
         ['label' => __('backend.extraTimeScore'), 'home' => 'et_home_score', 'away' => 'et_away_score', 'code' => 'ET'],
         ['label' => __('backend.penaltyScore'), 'home' => 'pen_home', 'away' => 'pen_away', 'code' => 'PEN'],
     ];
-    $goalEvents = $match->events
-        ->whereIn('type', [\App\Models\FixtureEvent::TYPE_GOAL, \App\Models\FixtureEvent::TYPE_OWN_GOAL, \App\Models\FixtureEvent::TYPE_PENALTY])
-        ->sortBy('sort_order');
-    $playerName = function ($player) use ($nameVar, $fallbackNameVar) {
-        return $player?->{$nameVar} ?: $player?->{$fallbackNameVar} ?: $player?->common_name ?: '-';
-    };
+    $goalEvents = $match->events->whereIn('type', [\App\Models\FixtureEvent::TYPE_GOAL, \App\Models\FixtureEvent::TYPE_OWN_GOAL, \App\Models\FixtureEvent::TYPE_PENALTY])->sortBy('sort_order');
+    $cardEvents = $match->events->whereIn('type', [\App\Models\FixtureEvent::TYPE_YELLOW_CARD, \App\Models\FixtureEvent::TYPE_RED_CARD])->sortBy('sort_order');
+    $substitutionEvents = $match->events->where('type', \App\Models\FixtureEvent::TYPE_SUBSTITUTION)->sortBy('sort_order');
+    $playerName = fn ($player) => $player?->{$nameVar} ?: $player?->{$fallbackNameVar} ?: $player?->common_name ?: '-';
+    $activeMatchTab = in_array(request('match_tab'), ['overview', 'goals', 'cards', 'substitutions'], true) ? request('match_tab') : 'overview';
 @endphp
 
 @extends('dashboard.layouts.master')
 @section('title', __('backend.matchControl'))
 
 @section('content')
-    <div class="padding match-control-page">
-        <div class="box m-b-0">
-            <div class="box-header dker match-page-heading">
-                <div>
-                    <h3><i class="material-icons">sports_soccer</i> {{ __('backend.matchControl') }}</h3>
-                    <small>{{ __('backend.matchControlHint') }}</small>
-                </div>
-                <a class="btn white b-a" href="{{ route('leaguesRounds', ['league_id' => $match->league_id, 'season_id' => $match->season_id]) }}">
-                    <i class="material-icons md-18">arrow_back</i> {{ __('backend.back') }}
-                </a>
-            </div>
-        </div>
+<div class="padding match-control-page" data-active-tab="{{ $activeMatchTab }}">
+    <div class="box m-b-0"><div class="box-header dker match-page-heading"><div><h3><i class="material-icons">sports_soccer</i>{{ __('backend.matchControl') }}</h3><small>{{ __('backend.matchControlHint') }}</small></div><a class="btn white b-a" href="{{ route('leaguesRounds', ['league_id' => $match->league_id, 'season_id' => $match->season_id]) }}"><i class="material-icons md-18">arrow_back</i>{{ __('backend.back') }}</a></div></div>
+    @if(isset($errors) && $errors->any())<div class="alert alert-danger m-t"><ul class="m-b-0">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
 
-        @if(isset($errors) && $errors->any())
-            <div class="alert alert-danger m-t"><ul class="m-b-0">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>
-        @endif
-
-        <form method="POST" action="{{ route('matchUpdate', ['id' => $match->id]) }}" class="dashboard-form">
-            @csrf
-
-            <section class="match-scoreboard">
-                <div class="match-scoreboard-meta">
-                    <span>{{ $leagueName }}</span>
-                    <strong id="match-status-preview">{{ $matchStatuses[$match->state_code] ?? $match->state_name ?? __('backend.matchStatusNotStarted') }}</strong>
-                    <small>{{ $match->season?->name }} @if($match->round?->name) · {{ $match->round->name }} @endif</small>
-                </div>
-                <div class="match-scoreboard-body">
-                    <div class="match-scoreboard-team">
-                        <div class="match-team-logo">@if($match->homeTeam?->image_path)<img src="{{ $match->homeTeam->image_path }}" alt="{{ $homeName }}">@else<span>{{ mb_substr($homeName, 0, 1) }}</span>@endif</div>
-                        <b>{{ $homeName }}</b><small>{{ __('backend.home_team') }}</small>
-                    </div>
-                    <div class="match-scoreboard-result">
-                        <input type="number" name="home_score" min="0" max="99" value="{{ old('home_score', $match->home_score) }}" aria-label="{{ __('backend.homeGoals') }}" @readonly($goalEvents->isNotEmpty())>
-                        <em>:</em>
-                        <input type="number" name="away_score" min="0" max="99" value="{{ old('away_score', $match->away_score) }}" aria-label="{{ __('backend.awayGoals') }}" @readonly($goalEvents->isNotEmpty())>
-                        <span id="scoreboard-minute">@if($match->minute){{ $match->minute }}′@else VS @endif</span>
-                    </div>
-                    <div class="match-scoreboard-team">
-                        <div class="match-team-logo">@if($match->awayTeam?->image_path)<img src="{{ $match->awayTeam->image_path }}" alt="{{ $awayName }}">@else<span>{{ mb_substr($awayName, 0, 1) }}</span>@endif</div>
-                        <b>{{ $awayName }}</b><small>{{ __('backend.away_team') }}</small>
-                    </div>
-                </div>
-            </section>
-
-            <div class="match-control-grid">
-                <section class="match-control-card">
-                    <header><span class="match-card-icon"><i class="material-icons">tune</i></span><div><h4>{{ __('backend.matchStatus') }}</h4><small>{{ __('backend.matchSchedule') }}</small></div></header>
-                    <div class="match-card-body">
-                        <div class="form-group">
-                            <label for="state_code">{{ __('backend.matchStatus') }}</label>
-                            <select name="state_code" id="state_code" class="form-control select2" required>
-                                @foreach($matchStatuses as $statusCode => $statusLabel)<option value="{{ $statusCode }}" @selected(old('state_code', $match->state_code ?: 'NS') === $statusCode)>{{ $statusLabel }}</option>@endforeach
-                            </select>
-                        </div>
-                        <div class="form-group m-b-0"><label for="starting_at">{{ __('backend.matchSchedule') }}</label><input type="datetime-local" name="starting_at" id="starting_at" class="form-control" value="{{ old('starting_at', $match->starting_at?->format('Y-m-d\TH:i')) }}" required></div>
-                    </div>
-                </section>
-
-                <section class="match-control-card">
-                    <header><span class="match-card-icon"><i class="material-icons">timer</i></span><div><h4>{{ __('backend.matchTiming') }}</h4><small>{{ __('backend.minutesShort') }}</small></div></header>
-                    <div class="match-card-body match-time-fields">
-                        <label><span>{{ __('backend.matchMinute') }}</span><div><input type="number" name="minute" id="match_minute" min="0" max="180" value="{{ old('minute', $match->minute) }}"><small>′</small></div></label>
-                        <label><span>{{ __('backend.firstHalfAddedTime') }}</span><div><input type="number" name="first_half_added_time" min="0" max="60" value="{{ old('first_half_added_time', $match->first_half_added_time) }}"><small>+</small></div></label>
-                        <label><span>{{ __('backend.secondHalfAddedTime') }}</span><div><input type="number" name="second_half_added_time" min="0" max="60" value="{{ old('second_half_added_time', $match->second_half_added_time) }}"><small>+</small></div></label>
-                    </div>
-                </section>
-            </div>
-
-            <section class="match-control-card">
-                <header><span class="match-card-icon"><i class="material-icons">scoreboard</i></span><div><h4>{{ __('backend.scoreManagement') }}</h4><small>{{ $homeName }} × {{ $awayName }}</small></div></header>
-                <div class="match-card-body"><div class="match-phase-grid">
-                    @foreach($scorePhases as $phase)
-                        <div class="match-phase-card">
-                            <div class="match-phase-title"><span>{{ $phase['code'] }}</span><b>{{ $phase['label'] }}</b></div>
-                            <div class="match-phase-score">
-                                <label><span>{{ $homeName }}</span><input type="number" name="{{ $phase['home'] }}" min="0" max="99" value="{{ old($phase['home'], $match->{$phase['home']}) }}"></label>
-                                <em>:</em>
-                                <label><span>{{ $awayName }}</span><input type="number" name="{{ $phase['away'] }}" min="0" max="99" value="{{ old($phase['away'], $match->{$phase['away']}) }}"></label>
-                            </div>
-                        </div>
-                    @endforeach
-                </div></div>
-            </section>
-
-            <section class="match-control-card">
-                <header><span class="match-card-icon"><i class="material-icons">campaign</i></span><div><h4>{{ __('backend.matchPublishing') }}</h4><small>{{ __('backend.status') }}</small></div></header>
-                <div class="match-card-body match-publishing-options">
-                    <label class="match-toggle-option" for="is_home"><div><i class="material-icons">home</i><span><b>{{ __('backend.showMatchOnHome') }}</b><small>{{ __('backend.is_home') }}</small></span></div><input type="hidden" name="is_home" value="0"><input type="checkbox" id="is_home" name="is_home" value="1" @checked(old('is_home', $match->is_home))><span class="match-switch"></span></label>
-                    <label class="match-toggle-option" for="is_slider"><div><i class="material-icons">view_carousel</i><span><b>{{ __('backend.showMatchInSlider') }}</b><small>{{ __('backend.is_slider') }}</small></span></div><input type="hidden" name="is_slider" value="0"><input type="checkbox" id="is_slider" name="is_slider" value="1" @checked(old('is_slider', $match->is_slider))><span class="match-switch"></span></label>
-                </div>
-            </section>
-
-            <div class="match-form-actions"><button type="submit" class="btn btn-lg btn-primary"><i class="material-icons">save</i> {{ __('backend.saveMatchChanges') }}</button><a href="{{ route('leaguesRounds', ['league_id' => $match->league_id, 'season_id' => $match->season_id]) }}" class="btn btn-lg btn-default">{{ __('backend.cancel') }}</a></div>
-        </form>
-
-        <section class="match-control-card match-goals-card" id="match-goals">
-            <header>
-                <span class="match-card-icon match-goal-icon"><i class="material-icons">sports_soccer</i></span>
-                <div><h4>{{ __('backend.matchGoalsEvents') }}</h4><small>{{ __('backend.matchGoalsEventsHint') }}</small></div>
-                <span class="match-goals-count">{{ $goalEvents->count() }}</span>
-            </header>
-            <div class="match-card-body">
-                <form method="POST" action="{{ route('matchGoalsStore', ['fixture' => $match->id]) }}" class="goal-event-form goal-event-create">
-                    @csrf
-                    <div class="goal-field">
-                        <label for="goal_team_id">{{ __('backend.matchGoalTeam') }}</label>
-                        <select name="team_id" id="goal_team_id" class="form-control goal-team-select" required>
-                            <option value="">{{ __('backend.select') }}</option>
-                            <option value="{{ $match->home_team_id }}" @selected(old('team_id') == $match->home_team_id)>{{ $homeName }}</option>
-                            <option value="{{ $match->away_team_id }}" @selected(old('team_id') == $match->away_team_id)>{{ $awayName }}</option>
-                        </select>
-                    </div>
-                    <div class="goal-field goal-player-field">
-                        <label for="goal_player_id">{{ __('backend.matchGoalScorer') }}</label>
-                        <select name="player_id" id="goal_player_id" class="form-control goal-player-select select2" required>
-                            <option value="">{{ __('backend.matchGoalSelectPlayer') }}</option>
-                            @foreach($homePlayers as $player)
-                                <option value="{{ $player->id }}" data-team="{{ $match->home_team_id }}" @selected(old('player_id') == $player->id)>{{ $playerName($player) }}</option>
-                            @endforeach
-                            @foreach($awayPlayers as $player)
-                                <option value="{{ $player->id }}" data-team="{{ $match->away_team_id }}" @selected(old('player_id') == $player->id)>{{ $playerName($player) }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="goal-field goal-minute-field">
-                        <label for="goal_minute">{{ __('backend.matchGoalMinute') }}</label>
-                        <input type="number" name="minute" id="goal_minute" class="form-control" min="0" max="180" value="{{ old('minute') }}" required>
-                    </div>
-                    <div class="goal-field goal-minute-field">
-                        <label for="goal_extra_minute">{{ __('backend.matchGoalExtraMinute') }}</label>
-                        <input type="number" name="extra_minute" id="goal_extra_minute" class="form-control" min="0" max="60" value="{{ old('extra_minute') }}" placeholder="0">
-                    </div>
-                    <button type="submit" class="btn btn-primary goal-add-button"><i class="material-icons">add_circle</i>{{ __('backend.matchGoalAdd') }}</button>
-                </form>
-
-                <div class="goal-events-timeline">
-                    @forelse($goalEvents as $goalEvent)
-                        <article class="goal-event-row">
-                            <div class="goal-event-time">
-                                <i class="material-icons">sports_soccer</i>
-                                <strong>{{ $goalEvent->minute }}@if($goalEvent->extra_minute)+{{ $goalEvent->extra_minute }}@endif′</strong>
-                                <small>{{ $goalEvent->result }}</small>
-                            </div>
-                            <form method="POST" action="{{ route('matchGoalsUpdate', ['fixture' => $match->id, 'event' => $goalEvent->id]) }}" class="goal-event-form goal-event-update">
-                                @csrf
-                                <div class="goal-field">
-                                    <label>{{ __('backend.matchGoalTeam') }}</label>
-                                    <select name="team_id" class="form-control goal-team-select" required>
-                                        <option value="{{ $match->home_team_id }}" @selected($goalEvent->team_id == $match->home_team_id)>{{ $homeName }}</option>
-                                        <option value="{{ $match->away_team_id }}" @selected($goalEvent->team_id == $match->away_team_id)>{{ $awayName }}</option>
-                                    </select>
-                                </div>
-                                <div class="goal-field goal-player-field">
-                                    <label>{{ __('backend.matchGoalScorer') }}</label>
-                                    <select name="player_id" class="form-control goal-player-select select2" required>
-                                        @foreach($homePlayers as $player)
-                                            <option value="{{ $player->id }}" data-team="{{ $match->home_team_id }}" @selected($goalEvent->player_id == $player->id)>{{ $playerName($player) }}</option>
-                                        @endforeach
-                                        @foreach($awayPlayers as $player)
-                                            <option value="{{ $player->id }}" data-team="{{ $match->away_team_id }}" @selected($goalEvent->player_id == $player->id)>{{ $playerName($player) }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="goal-field goal-minute-field"><label>{{ __('backend.matchGoalMinute') }}</label><input type="number" name="minute" class="form-control" min="0" max="180" value="{{ $goalEvent->minute }}" required></div>
-                                <div class="goal-field goal-minute-field"><label>{{ __('backend.matchGoalExtraMinute') }}</label><input type="number" name="extra_minute" class="form-control" min="0" max="60" value="{{ $goalEvent->extra_minute }}" placeholder="0"></div>
-                                <button type="submit" class="btn btn-sm btn-primary goal-save-button" title="{{ __('backend.save') }}"><i class="material-icons">save</i></button>
-                            </form>
-                            <form method="POST" action="{{ route('matchGoalsDestroy', ['fixture' => $match->id, 'event' => $goalEvent->id]) }}" class="goal-delete-form" onsubmit="return confirm(@js(__('backend.matchGoalDeleteConfirm')))">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" title="{{ __('backend.delete') }}"><i class="material-icons">delete</i></button>
-                            </form>
-                        </article>
-                    @empty
-                        <div class="goal-events-empty"><i class="material-icons">sports_soccer</i><strong>{{ __('backend.matchGoalsEmpty') }}</strong><span>{{ __('backend.matchGoalsEmptyHint') }}</span></div>
-                    @endforelse
-                </div>
+    <form id="match-main-form" method="POST" action="{{ route('matchUpdate', ['id' => $match->id]) }}" class="dashboard-form">
+        @csrf
+        <section class="match-scoreboard">
+            <div class="match-scoreboard-meta"><span>{{ $leagueName }}</span><strong id="match-status-preview">{{ $matchStatuses[$match->state_code] ?? $match->state_name ?? __('backend.matchStatusNotStarted') }}</strong><small>{{ $match->season?->name }} @if($match->round?->name) · {{ $match->round->name }} @endif</small></div>
+            <div class="match-scoreboard-body">
+                <div class="match-scoreboard-team"><div class="match-team-logo">@if($match->homeTeam?->image_path)<img src="{{ $match->homeTeam->image_path }}" alt="{{ $homeName }}">@else<span>{{ mb_substr($homeName, 0, 1) }}</span>@endif</div><b>{{ $homeName }}</b><small>{{ __('backend.home_team') }}</small></div>
+                <div class="match-scoreboard-result"><input type="number" name="home_score" min="0" max="99" value="{{ old('home_score', $match->home_score) }}" aria-label="{{ __('backend.homeGoals') }}" @readonly($goalEvents->isNotEmpty())><em>:</em><input type="number" name="away_score" min="0" max="99" value="{{ old('away_score', $match->away_score) }}" aria-label="{{ __('backend.awayGoals') }}" @readonly($goalEvents->isNotEmpty())><span id="scoreboard-minute">@if($match->minute){{ $match->minute }}′@else VS @endif</span></div>
+                <div class="match-scoreboard-team"><div class="match-team-logo">@if($match->awayTeam?->image_path)<img src="{{ $match->awayTeam->image_path }}" alt="{{ $awayName }}">@else<span>{{ mb_substr($awayName, 0, 1) }}</span>@endif</div><b>{{ $awayName }}</b><small>{{ __('backend.away_team') }}</small></div>
             </div>
         </section>
-    </div>
+
+        <nav class="match-tabs" aria-label="{{ __('backend.matchManagementTabs') }}">
+            <button type="button" data-match-tab="overview"><i class="material-icons">tune</i><span>{{ __('backend.matchTabOverview') }}</span></button>
+            <button type="button" data-match-tab="goals"><i class="material-icons">sports_soccer</i><span>{{ __('backend.matchTabScoreGoals') }}</span><b>{{ $goalEvents->count() }}</b></button>
+            <button type="button" data-match-tab="cards"><i class="material-icons">style</i><span>{{ __('backend.matchTabCards') }}</span><b>{{ $cardEvents->count() }}</b></button>
+            <button type="button" data-match-tab="substitutions"><i class="material-icons">swap_horiz</i><span>{{ __('backend.matchTabSubstitutions') }}</span><b>{{ $substitutionEvents->count() }}</b></button>
+        </nav>
+
+        <div class="match-tab-panel" data-match-panel="overview">
+            <div class="match-control-grid">
+                <section class="match-control-card"><header><span class="match-card-icon"><i class="material-icons">tune</i></span><div><h4>{{ __('backend.matchStatus') }}</h4><small>{{ __('backend.matchSchedule') }}</small></div></header><div class="match-card-body"><div class="form-group"><label for="state_code">{{ __('backend.matchStatus') }}</label><select name="state_code" id="state_code" class="form-control select2" required>@foreach($matchStatuses as $code => $label)<option value="{{ $code }}" @selected(old('state_code', $match->state_code ?: 'NS') === $code)>{{ $label }}</option>@endforeach</select></div><div class="form-group m-b-0"><label for="starting_at">{{ __('backend.matchSchedule') }}</label><input type="datetime-local" name="starting_at" id="starting_at" class="form-control" value="{{ old('starting_at', $match->starting_at?->format('Y-m-d\TH:i')) }}" required></div></div></section>
+                <section class="match-control-card"><header><span class="match-card-icon"><i class="material-icons">timer</i></span><div><h4>{{ __('backend.matchTiming') }}</h4><small>{{ __('backend.minutesShort') }}</small></div></header><div class="match-card-body match-time-fields"><label><span>{{ __('backend.matchMinute') }}</span><div><input type="number" name="minute" id="match_minute" min="0" max="180" value="{{ old('minute', $match->minute) }}"><small>′</small></div></label><label><span>{{ __('backend.firstHalfAddedTime') }}</span><div><input type="number" name="first_half_added_time" min="0" max="60" value="{{ old('first_half_added_time', $match->first_half_added_time) }}"><small>+</small></div></label><label><span>{{ __('backend.secondHalfAddedTime') }}</span><div><input type="number" name="second_half_added_time" min="0" max="60" value="{{ old('second_half_added_time', $match->second_half_added_time) }}"><small>+</small></div></label></div></section>
+            </div>
+
+            <section class="match-control-card match-standings-card">
+                <header><span class="match-card-icon"><i class="material-icons">leaderboard</i></span><div><h4>{{ __('backend.matchStandingsImpact') }}</h4><small>{{ __('backend.matchStandingsImpactHint') }}</small></div></header>
+                <div class="match-card-body">
+                    <label class="match-toggle-option standings-count-toggle" for="counts_for_standings"><div><i class="material-icons">fact_check</i><span><b>{{ __('backend.countMatchForStandings') }}</b><small>{{ __('backend.countMatchForStandingsHint') }}</small></span></div><input type="hidden" name="counts_for_standings" value="0"><input type="checkbox" id="counts_for_standings" name="counts_for_standings" value="1" @checked(old('counts_for_standings', $match->counts_for_standings ?? true))><span class="match-switch"></span></label>
+                    <div class="match-standings-fields">
+                        <div class="standings-field-group"><h5>{{ __('backend.officialStandingsScore') }}</h5><small>{{ __('backend.officialStandingsScoreHint') }}</small><div class="standings-pair"><label><span>{{ $homeName }}</span><input class="form-control" type="number" name="standing_home_score" min="0" max="99" value="{{ old('standing_home_score', $match->standing_home_score) }}" placeholder="{{ $match->ft_home_score ?? $match->home_score ?? 0 }}"></label><em>:</em><label><span>{{ $awayName }}</span><input class="form-control" type="number" name="standing_away_score" min="0" max="99" value="{{ old('standing_away_score', $match->standing_away_score) }}" placeholder="{{ $match->ft_away_score ?? $match->away_score ?? 0 }}"></label></div></div>
+                        <div class="standings-field-group"><h5>{{ __('backend.matchPointsAdjustment') }}</h5><small>{{ __('backend.matchPointsAdjustmentHint') }}</small><div class="standings-adjustments"><label><span>{{ $homeName }}</span><input class="form-control" type="number" name="standing_home_points_adjustment" min="-99" max="99" value="{{ old('standing_home_points_adjustment', $match->standing_home_points_adjustment ?? 0) }}"></label><label><span>{{ $awayName }}</span><input class="form-control" type="number" name="standing_away_points_adjustment" min="-99" max="99" value="{{ old('standing_away_points_adjustment', $match->standing_away_points_adjustment ?? 0) }}"></label></div></div>
+                    </div>
+                    <div class="form-group m-b-0 m-t"><label for="standing_adjustment_notes">{{ __('backend.standingsAdjustmentNotes') }}</label><textarea class="form-control" id="standing_adjustment_notes" name="standing_adjustment_notes" rows="2" maxlength="500" placeholder="{{ __('backend.standingsAdjustmentNotesHint') }}">{{ old('standing_adjustment_notes', $match->standing_adjustment_notes) }}</textarea></div>
+                </div>
+            </section>
+            <section class="match-control-card"><header><span class="match-card-icon"><i class="material-icons">campaign</i></span><div><h4>{{ __('backend.matchPublishing') }}</h4><small>{{ __('backend.status') }}</small></div></header><div class="match-card-body match-publishing-options"><label class="match-toggle-option" for="is_home"><div><i class="material-icons">home</i><span><b>{{ __('backend.showMatchOnHome') }}</b><small>{{ __('backend.is_home') }}</small></span></div><input type="hidden" name="is_home" value="0"><input type="checkbox" id="is_home" name="is_home" value="1" @checked(old('is_home', $match->is_home))><span class="match-switch"></span></label><label class="match-toggle-option" for="is_slider"><div><i class="material-icons">view_carousel</i><span><b>{{ __('backend.showMatchInSlider') }}</b><small>{{ __('backend.is_slider') }}</small></span></div><input type="hidden" name="is_slider" value="0"><input type="checkbox" id="is_slider" name="is_slider" value="1" @checked(old('is_slider', $match->is_slider))><span class="match-switch"></span></label></div></section>
+            <div class="match-form-actions"><button type="submit" class="btn btn-lg btn-primary"><i class="material-icons">save</i>{{ __('backend.saveMatchChanges') }}</button><a href="{{ route('leaguesRounds', ['league_id' => $match->league_id, 'season_id' => $match->season_id]) }}" class="btn btn-lg btn-default">{{ __('backend.cancel') }}</a></div>
+        </div>
+    </form>
+
+    <div class="match-tab-panel" data-match-panel="goals">@include('dashboard.football.rounds.events.goals')</div>
+    <div class="match-tab-panel" data-match-panel="cards">@include('dashboard.football.rounds.events.cards')</div>
+    <div class="match-tab-panel" data-match-panel="substitutions">@include('dashboard.football.rounds.events.substitutions')</div>
+</div>
 @endsection
 
 @push('after-styles')
 <style>
-.match-control-page{--mc-purple:#4d2c85;--mc-dark:#180d2b;--mc-yellow:#febb22}.match-page-heading{display:flex;align-items:center;justify-content:space-between;gap:20px}.match-page-heading h3{display:flex;align-items:center;gap:9px;margin-bottom:4px}.match-page-heading h3 i{color:var(--mc-yellow)}
-.match-scoreboard{position:relative;overflow:hidden;margin:20px 0;color:#fff;border-radius:12px;background:linear-gradient(125deg,#10071e,#281344);box-shadow:0 18px 45px rgba(24,13,43,.2)}.match-scoreboard:after{content:"967";position:absolute;inset-inline-end:-25px;bottom:-55px;color:rgba(255,255,255,.035);font-size:190px;font-weight:900;font-style:italic;line-height:1;pointer-events:none}.match-scoreboard-meta{position:relative;z-index:1;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:15px;padding:13px 22px;border-bottom:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.62);font-size:11px}.match-scoreboard-meta strong{padding:7px 13px;color:var(--mc-dark);border-radius:20px;background:var(--mc-yellow);font-size:10px}.match-scoreboard-meta small{text-align:end}.match-scoreboard-body{position:relative;z-index:1;display:grid;grid-template-columns:1fr 210px 1fr;align-items:center;min-height:240px;padding:28px 7%}.match-scoreboard-team{display:grid;justify-items:center;gap:8px;min-width:0;text-align:center}.match-team-logo{display:grid;place-items:center;width:86px;height:86px;padding:8px;border-radius:50%;background:#fff;box-shadow:0 0 0 8px rgba(255,255,255,.07)}.match-team-logo img{width:100%;height:100%;object-fit:contain}.match-team-logo span{color:var(--mc-purple);font-size:30px;font-weight:900}.match-scoreboard-team b{max-width:100%;color:#fff;font-size:17px}.match-scoreboard-team small{color:rgba(255,255,255,.43);font-size:9px}.match-scoreboard-result{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;justify-items:center;gap:9px;direction:ltr}.match-scoreboard-result input{width:74px;height:82px;padding:0;border:1px solid rgba(255,255,255,.14);border-radius:10px;color:#fff;outline:0;background:rgba(255,255,255,.07);text-align:center;font-size:40px;font-weight:900}.match-scoreboard-result input:focus{border-color:var(--mc-yellow);box-shadow:0 0 0 3px rgba(254,187,34,.15)}.match-scoreboard-result em{color:var(--mc-yellow);font-size:34px;font-style:normal;font-weight:900}.match-scoreboard-result span{grid-column:1/-1;color:rgba(255,255,255,.45);font-size:10px;font-weight:900}
-.match-control-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}.match-control-card{overflow:hidden;margin-bottom:18px;border:1px solid #e0dce4;border-radius:10px;background:#fff;box-shadow:0 7px 22px rgba(24,13,43,.055)}.match-control-card>header{display:flex;align-items:center;gap:11px;padding:15px 18px;border-bottom:1px solid #ece8ef;background:#faf9fb}.match-card-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:9px;color:var(--mc-purple);background:#eee8f5}.match-control-card header h4{margin:0 0 2px;color:var(--mc-dark);font-size:14px;font-weight:800}.match-control-card header small{color:#98909f;font-size:9px}.match-card-body{padding:18px}.match-card-body label{color:#5f5765;font-size:11px;font-weight:700}.match-card-body .form-control{min-height:43px;border-color:#ddd8e1}
-.match-time-fields{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.match-time-fields label{margin:0}.match-time-fields label>span{display:block;min-height:33px;margin-bottom:7px}.match-time-fields label>div{position:relative}.match-time-fields input{width:100%;height:50px;padding:0 30px 0 10px;border:1px solid #ddd8e1;border-radius:7px;color:var(--mc-dark);background:#faf9fb;text-align:center;font-size:19px;font-weight:900}.match-time-fields small{position:absolute;top:50%;inset-inline-end:11px;color:var(--mc-purple);transform:translateY(-50%);font-size:14px}
-.match-phase-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.match-phase-card{overflow:hidden;border:1px solid #e1dce5;border-radius:9px;background:#faf9fb}.match-phase-title{display:flex;align-items:center;gap:9px;padding:10px 12px;border-bottom:1px solid #e7e2ea}.match-phase-title span{padding:5px 7px;color:var(--mc-dark);border-radius:4px;background:var(--mc-yellow);font-size:8px;font-weight:900}.match-phase-title b{color:#574e5e;font-size:10px}.match-phase-score{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:7px;padding:13px 10px;direction:ltr}.match-phase-score label{display:grid;gap:6px;margin:0;text-align:center}.match-phase-score label span{overflow:hidden;color:#918997;font-size:8px;white-space:nowrap;text-overflow:ellipsis}.match-phase-score input{width:100%;height:48px;padding:0;border:1px solid #dad4de;border-radius:7px;color:var(--mc-dark);background:#fff;text-align:center;font-size:22px;font-weight:900}.match-phase-score em{padding-bottom:13px;color:var(--mc-yellow);font-size:19px;font-style:normal;font-weight:900}
-.match-publishing-options{display:grid;grid-template-columns:1fr 1fr;gap:14px}.match-toggle-option{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:0;padding:15px;border:1px solid #e1dce5;border-radius:9px;cursor:pointer}.match-toggle-option>div{display:flex;align-items:center;gap:10px}.match-toggle-option>div>i{color:var(--mc-purple)}.match-toggle-option b,.match-toggle-option small{display:block}.match-toggle-option b{color:var(--mc-dark);font-size:11px}.match-toggle-option small{margin-top:3px;color:#9a929f;font-size:8px}.match-toggle-option input[type=checkbox]{position:absolute;opacity:0}.match-switch{position:relative;flex:none;width:45px;height:24px;border-radius:20px;background:#d8d2dc;transition:.25s}.match-switch:after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.2);transition:.25s}.match-toggle-option input:checked+.match-switch{background:var(--mc-purple)}.match-toggle-option input:checked+.match-switch:after{transform:translateX(21px)}[dir=rtl] .match-toggle-option input:checked+.match-switch:after{transform:translateX(-21px)}.match-form-actions{display:flex;align-items:center;gap:10px;padding:5px 0 25px}.match-form-actions .btn{display:inline-flex;align-items:center;gap:7px}
-.match-goals-card>header{position:relative}.match-goal-icon{color:var(--mc-dark);background:var(--mc-yellow)}.match-goals-count{display:grid;place-items:center;margin-inline-start:auto;width:34px;height:34px;border-radius:50%;color:#fff;background:var(--mc-purple);font-size:12px;font-weight:900}.goal-event-form{display:grid;align-items:end;gap:12px}.goal-event-create{grid-template-columns:1fr minmax(220px,1.6fr) 100px 110px auto;padding:15px;border:1px solid #e3dce9;border-radius:10px;background:#faf8fc}.goal-field{min-width:0}.goal-field label{display:block;margin-bottom:7px}.goal-field .form-control{width:100%;height:43px}.goal-add-button{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:43px;white-space:nowrap}.goal-add-button i{font-size:18px}.goal-events-timeline{display:grid;gap:10px;margin-top:18px}.goal-event-row{display:grid;grid-template-columns:96px minmax(0,1fr) auto;align-items:center;gap:12px;padding:11px;border:1px solid #e5e0e8;border-radius:10px;background:#fff}.goal-event-time{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:2px 7px;padding:10px;border-radius:8px;color:#fff;background:var(--mc-dark)}.goal-event-time i{grid-row:1/3;color:var(--mc-yellow);font-size:22px}.goal-event-time strong{font-size:14px}.goal-event-time small{color:rgba(255,255,255,.55);font-size:9px}.goal-event-update{grid-template-columns:1fr minmax(190px,1.5fr) 82px 90px 42px}.goal-save-button,.goal-delete-form .btn{display:grid;place-items:center;width:40px;height:40px;padding:0}.goal-save-button i,.goal-delete-form i{font-size:18px}.goal-events-empty{display:grid;justify-items:center;gap:5px;padding:30px;color:#928a98;border:1px dashed #d9d1df;border-radius:10px;background:#fcfbfd;text-align:center}.goal-events-empty i{color:#c4b9ce;font-size:34px}.goal-events-empty strong{color:#5b5260;font-size:12px}.goal-events-empty span{font-size:9px}
-@media(max-width:991px){.match-scoreboard-body{grid-template-columns:1fr 160px 1fr;padding-inline:4%}.match-phase-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:1100px){.goal-event-create{grid-template-columns:1fr 1.5fr 90px 100px}.goal-add-button{grid-column:1/-1}.goal-event-row{grid-template-columns:86px minmax(0,1fr) auto}.goal-event-update{grid-template-columns:1fr 1.5fr 75px 85px}.goal-save-button{grid-column:1/-1;width:100%}}
-@media(max-width:767px){.match-page-heading{align-items:flex-start}.match-scoreboard-meta{grid-template-columns:1fr auto}.match-scoreboard-meta small{display:none}.match-scoreboard-body{grid-template-columns:1fr 110px 1fr;min-height:205px;padding:22px 10px}.match-team-logo{width:62px;height:62px}.match-scoreboard-team b{font-size:11px}.match-scoreboard-result input{width:44px;height:60px;font-size:28px}.match-control-grid,.match-publishing-options{grid-template-columns:1fr}.match-time-fields{grid-template-columns:1fr}.match-time-fields label>span{min-height:0}.match-phase-grid{grid-template-columns:1fr}.match-form-actions{align-items:stretch;flex-direction:column}.match-form-actions .btn{justify-content:center}.goal-event-create,.goal-event-update{grid-template-columns:1fr 1fr}.goal-player-field{grid-column:1/-1}.goal-event-row{grid-template-columns:1fr auto}.goal-event-time{grid-column:1/-1}.goal-event-update{grid-column:1/-1}.goal-save-button{grid-column:1/-1}.goal-delete-form{align-self:end}}
+.match-control-page{--mc-purple:#4d2c85;--mc-dark:#180d2b;--mc-yellow:#febb22;--mc-border:#e2dde6}.match-page-heading{display:flex;align-items:center;justify-content:space-between;gap:20px}.match-page-heading h3,.match-page-heading a{display:flex;align-items:center;gap:8px}.match-page-heading h3{margin-bottom:4px}.match-page-heading h3 i{color:var(--mc-yellow)}
+.match-scoreboard{position:relative;overflow:hidden;margin:20px 0 0;color:#fff;border-radius:13px 13px 0 0;background:linear-gradient(125deg,#10071e,#281344);box-shadow:0 16px 42px rgba(24,13,43,.18)}.match-scoreboard:after{content:"967";position:absolute;inset-inline-end:-25px;bottom:-55px;color:rgba(255,255,255,.035);font-size:180px;font-weight:900;font-style:italic;line-height:1}.match-scoreboard-meta{position:relative;z-index:1;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:15px;padding:12px 22px;border-bottom:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.62);font-size:11px}.match-scoreboard-meta strong{padding:7px 13px;color:var(--mc-dark);border-radius:20px;background:var(--mc-yellow);font-size:10px}.match-scoreboard-meta small{text-align:end}.match-scoreboard-body{position:relative;z-index:1;display:grid;grid-template-columns:1fr 210px 1fr;align-items:center;min-height:220px;padding:25px 7%}.match-scoreboard-team{display:grid;justify-items:center;gap:7px;min-width:0;text-align:center}.match-team-logo{display:grid;place-items:center;width:78px;height:78px;padding:8px;border-radius:50%;background:#fff;box-shadow:0 0 0 7px rgba(255,255,255,.07)}.match-team-logo img{width:100%;height:100%;object-fit:contain}.match-team-logo span{color:var(--mc-purple);font-size:28px;font-weight:900}.match-scoreboard-team b{color:#fff;font-size:16px}.match-scoreboard-team small{color:rgba(255,255,255,.43);font-size:9px}.match-scoreboard-result{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;justify-items:center;gap:9px;direction:ltr}.match-scoreboard-result input{width:70px;height:76px;padding:0;border:1px solid rgba(255,255,255,.14);border-radius:10px;color:#fff;outline:0;background:rgba(255,255,255,.07);text-align:center;font-size:36px;font-weight:900}.match-scoreboard-result em{color:var(--mc-yellow);font-size:32px;font-style:normal;font-weight:900}.match-scoreboard-result span{grid-column:1/-1;color:rgba(255,255,255,.45);font-size:10px;font-weight:900}
+.match-tabs{position:sticky;z-index:15;top:0;display:grid;grid-template-columns:repeat(4,1fr);margin:0 0 20px;border:1px solid var(--mc-border);border-top:0;border-radius:0 0 12px 12px;background:#fff;box-shadow:0 10px 25px rgba(24,13,43,.08)}.match-tabs button{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;min-height:62px;padding:10px;border:0;border-inline-end:1px solid #eeeaf1;color:#776f7c;outline:0;background:transparent;font-size:11px;font-weight:800;cursor:pointer}.match-tabs button:last-child{border-inline-end:0}.match-tabs button i{font-size:19px}.match-tabs button b{display:grid;place-items:center;min-width:21px;height:21px;padding:0 5px;border-radius:11px;color:#756e79;background:#eeeaf1;font-size:9px}.match-tabs button.is-active{color:#fff;background:var(--mc-dark)}.match-tabs button.is-active:after{content:"";position:absolute;right:20%;bottom:0;left:20%;height:3px;background:var(--mc-yellow)}.match-tabs button.is-active b{color:var(--mc-dark);background:var(--mc-yellow)}.match-tab-panel{display:none}.match-tab-panel.is-active{display:block}
+.match-control-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.match-control-card{overflow:hidden;margin-bottom:18px;border:1px solid var(--mc-border);border-radius:11px;background:#fff;box-shadow:0 7px 22px rgba(24,13,43,.055)}.match-control-card>header{display:flex;align-items:center;gap:11px;padding:14px 18px;border-bottom:1px solid #ece8ef;background:#faf9fb}.match-card-icon{display:grid;place-items:center;flex:none;width:38px;height:38px;border-radius:9px;color:var(--mc-purple);background:#eee8f5}.match-control-card header h4{margin:0 0 2px;color:var(--mc-dark);font-size:14px;font-weight:800}.match-control-card header small{color:#98909f;font-size:9px}.match-card-body{padding:18px}.match-card-body label{color:#5f5765;font-size:11px;font-weight:700}.match-card-body .form-control{min-height:43px;border-color:#ddd8e1}.match-time-fields{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.match-time-fields label{margin:0}.match-time-fields label>span{display:block;min-height:33px;margin-bottom:7px}.match-time-fields label>div{position:relative}.match-time-fields input{width:100%;height:50px;padding:0 28px 0 8px;border:1px solid #ddd8e1;border-radius:7px;color:var(--mc-dark);background:#faf9fb;text-align:center;font-size:18px;font-weight:900}.match-time-fields small{position:absolute;top:50%;inset-inline-end:10px;color:var(--mc-purple);transform:translateY(-50%)}
+.match-toggle-option{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:0;padding:14px;border:1px solid var(--mc-border);border-radius:9px;cursor:pointer}.match-toggle-option>div{display:flex;align-items:center;gap:10px}.match-toggle-option>div>i{color:var(--mc-purple)}.match-toggle-option b,.match-toggle-option small{display:block}.match-toggle-option b{color:var(--mc-dark);font-size:11px}.match-toggle-option small{margin-top:3px;color:#9a929f;font-size:8px}.match-toggle-option input[type=checkbox]{position:absolute;opacity:0}.match-switch{position:relative;flex:none;width:45px;height:24px;border-radius:20px;background:#d8d2dc;transition:.25s}.match-switch:after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.2);transition:.25s}.match-toggle-option input:checked+.match-switch{background:var(--mc-purple)}.match-toggle-option input:checked+.match-switch:after{transform:translateX(21px)}[dir=rtl] .match-toggle-option input:checked+.match-switch:after{transform:translateX(-21px)}.match-publishing-options,.match-standings-fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}.match-standings-card{border-top:3px solid var(--mc-yellow)}.standings-count-toggle{margin-bottom:16px;background:#fbf9fd}.standings-field-group{padding:15px;border:1px solid var(--mc-border);border-radius:9px;background:#faf9fb}.standings-field-group h5{margin:0 0 4px;color:var(--mc-dark);font-size:12px;font-weight:800}.standings-field-group>small{display:block;margin-bottom:14px;color:#98909f;font-size:9px}.standings-pair{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:10px;direction:ltr}.standings-pair label,.standings-adjustments label{display:grid;gap:6px;margin:0}.standings-pair label span,.standings-adjustments label span{overflow:hidden;font-size:9px;text-align:center;white-space:nowrap;text-overflow:ellipsis}.standings-pair em{padding-bottom:11px;color:var(--mc-yellow);font-size:20px;font-style:normal;font-weight:900}.standings-pair input,.standings-adjustments input{text-align:center;font-size:18px;font-weight:900}.standings-adjustments{display:grid;grid-template-columns:1fr 1fr;gap:10px}.match-form-actions{display:flex;gap:10px;padding:4px 0 24px}.match-form-actions .btn,.match-inline-save{display:inline-flex;align-items:center;justify-content:center;gap:7px}.match-inline-save{margin-inline-start:auto}
+.match-phase-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.match-phase-card{overflow:hidden;border:1px solid var(--mc-border);border-radius:9px;background:#faf9fb}.match-phase-title{display:flex;align-items:center;gap:9px;padding:10px 12px;border-bottom:1px solid #e7e2ea}.match-phase-title span{padding:5px 7px;color:var(--mc-dark);border-radius:4px;background:var(--mc-yellow);font-size:8px;font-weight:900}.match-phase-title b{color:#574e5e;font-size:10px}.match-phase-score{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:7px;padding:13px 10px;direction:ltr}.match-phase-score label{display:grid;gap:6px;margin:0;text-align:center}.match-phase-score label span{overflow:hidden;color:#918997;font-size:8px;white-space:nowrap;text-overflow:ellipsis}.match-phase-score input{width:100%;height:48px;padding:0;border:1px solid #dad4de;border-radius:7px;color:var(--mc-dark);background:#fff;text-align:center;font-size:21px;font-weight:900}.match-phase-score em{padding-bottom:13px;color:var(--mc-yellow);font-size:19px;font-style:normal;font-weight:900}
+.match-events-card>header{position:relative}.event-icon-goal{color:var(--mc-dark);background:var(--mc-yellow)}.event-icon-card{color:#7b5500;background:#ffe6a4}.event-icon-sub{color:#126341;background:#dff5eb}.match-events-count{display:grid;place-items:center;margin-inline-start:auto;width:34px;height:34px;border-radius:50%;color:#fff;background:var(--mc-purple);font-size:12px;font-weight:900}.match-event-form{display:grid;align-items:end;gap:11px}.event-create-form{grid-template-columns:1fr minmax(210px,1.5fr) 90px 95px auto}.card-create-form{grid-template-columns:1fr minmax(190px,1.35fr) 130px 80px 90px auto}.substitution-create-form{grid-template-columns:1fr minmax(175px,1.2fr) minmax(175px,1.2fr) 80px 90px auto}.event-create-form,.card-create-form,.substitution-create-form{padding:15px;border:1px solid #e3dce9;border-radius:10px;background:#faf8fc}.event-field{min-width:0}.event-field label{display:block;margin-bottom:7px}.event-field .form-control{width:100%;height:43px}.event-add-button{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:43px;white-space:nowrap}.match-event-list{display:grid;gap:10px;margin-top:18px}.match-event-row{display:grid;grid-template-columns:96px minmax(0,1fr) auto;align-items:center;gap:11px;padding:11px;border:1px solid #e5e0e8;border-radius:10px;background:#fff}.event-summary{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:2px 7px;padding:10px;border-radius:8px;color:#fff;background:var(--mc-dark)}.event-summary i{grid-row:1/3;font-size:21px}.event-summary strong{font-size:14px}.event-summary small{overflow:hidden;color:rgba(255,255,255,.7);font-size:8px;white-space:nowrap;text-overflow:ellipsis}.event-summary-goal i{color:var(--mc-yellow)}.event-summary-yellow{color:#241700;background:#f7c843}.event-summary-yellow small{color:#6f571b}.event-summary-red{background:#b72837}.event-summary-sub{background:#176746}.event-update-form{grid-template-columns:1fr minmax(180px,1.4fr) 76px 84px 42px}.card-update-form{grid-template-columns:1fr minmax(160px,1.25fr) 120px 70px 80px 42px}.substitution-update-form{grid-template-columns:1fr minmax(150px,1fr) minmax(150px,1fr) 70px 80px 42px}.event-save-button,.event-delete-form .btn{display:grid;place-items:center;width:40px;height:40px;padding:0}.event-save-button i,.event-delete-form i{font-size:18px}.match-events-empty{display:grid;justify-items:center;gap:5px;padding:30px;color:#928a98;border:1px dashed #d9d1df;border-radius:10px;background:#fcfbfd;text-align:center}.match-events-empty i{color:#c4b9ce;font-size:34px}.match-events-empty strong{color:#5b5260;font-size:12px}.match-events-empty span{font-size:9px}
+@media(max-width:1100px){.match-phase-grid{grid-template-columns:repeat(2,1fr)}.event-create-form,.card-create-form,.substitution-create-form{grid-template-columns:repeat(2,1fr)}.event-add-button{grid-column:1/-1}.match-event-row{grid-template-columns:86px minmax(0,1fr) auto}.event-update-form,.card-update-form,.substitution-update-form{grid-template-columns:repeat(2,1fr)}.event-save-button{grid-column:1/-1;width:100%}}
+@media(max-width:767px){.match-page-heading{align-items:flex-start}.match-scoreboard-meta{grid-template-columns:1fr auto}.match-scoreboard-meta small{display:none}.match-scoreboard-body{grid-template-columns:1fr 105px 1fr;min-height:190px;padding:20px 8px}.match-team-logo{width:58px;height:58px}.match-scoreboard-team b{font-size:11px}.match-scoreboard-result input{width:42px;height:57px;font-size:27px}.match-tabs{grid-template-columns:repeat(4,minmax(72px,1fr));overflow-x:auto}.match-tabs button{min-height:58px;padding:8px 5px;font-size:9px}.match-tabs button i{font-size:17px}.match-tabs button b{display:none}.match-control-grid,.match-publishing-options,.match-standings-fields{grid-template-columns:1fr}.match-time-fields{grid-template-columns:1fr}.match-time-fields label>span{min-height:0}.match-phase-grid{grid-template-columns:1fr}.match-inline-save{font-size:0;width:42px;height:40px;padding:0}.match-inline-save i{font-size:19px}.match-form-actions{align-items:stretch;flex-direction:column}.match-event-row{grid-template-columns:1fr auto}.event-summary{grid-column:1/-1}.event-update-form{grid-column:1/-1}.event-delete-form{align-self:end}.event-create-form,.card-create-form,.substitution-create-form,.event-update-form,.card-update-form,.substitution-update-form{grid-template-columns:1fr 1fr}.event-player-field{grid-column:1/-1}.event-save-button{grid-column:1/-1}.event-minute{min-width:0}}
 </style>
 @endpush
 
 @push('after-scripts')
 <script>
 document.addEventListener('DOMContentLoaded',function(){
+    var page=document.querySelector('.match-control-page'),tabs=document.querySelectorAll('[data-match-tab]'),panels=document.querySelectorAll('[data-match-panel]');
+    function activateTab(name,updateUrl){tabs.forEach(function(tab){var active=tab.dataset.matchTab===name;tab.classList.toggle('is-active',active);tab.setAttribute('aria-selected',active?'true':'false');});panels.forEach(function(panel){panel.classList.toggle('is-active',panel.dataset.matchPanel===name);});if(updateUrl&&window.history&&window.URL){var url=new URL(window.location.href);url.searchParams.set('match_tab',name);url.hash='';history.replaceState({},'',url);}}
+    activateTab(page?page.dataset.activeTab:'overview',false);tabs.forEach(function(tab){tab.addEventListener('click',function(){activateTab(tab.dataset.matchTab,true);});});
     var status=document.getElementById('state_code'),minute=document.getElementById('match_minute'),statusPreview=document.getElementById('match-status-preview'),minutePreview=document.getElementById('scoreboard-minute');
-    function refreshPreview(){if(status&&statusPreview)statusPreview.textContent=status.options[status.selectedIndex].text;if(minutePreview)minutePreview.textContent=minute&&minute.value!==''?minute.value+'′':'VS'}
-    if(status)status.addEventListener('change',refreshPreview);if(minute)minute.addEventListener('input',refreshPreview);
-    function filterPlayers(teamSelect){
-        var form=teamSelect.closest('.goal-event-form'),playerSelect=form?form.querySelector('.goal-player-select'):null,team=teamSelect.value;
-        if(!playerSelect)return;
-        Array.prototype.forEach.call(playerSelect.options,function(option){if(!option.value)return;option.disabled=!!team&&option.getAttribute('data-team')!==team;});
-        if(playerSelect.selectedOptions.length&&playerSelect.selectedOptions[0].disabled)playerSelect.value='';
-        if(window.jQuery&&jQuery.fn.select2&&jQuery(playerSelect).hasClass('select2-hidden-accessible'))jQuery(playerSelect).trigger('change.select2');
-    }
-    document.querySelectorAll('.goal-team-select').forEach(function(select){filterPlayers(select);select.addEventListener('change',function(){filterPlayers(select);});});
+    function refreshPreview(){if(status&&statusPreview)statusPreview.textContent=status.options[status.selectedIndex].text;if(minutePreview)minutePreview.textContent=minute&&minute.value!==''?minute.value+'′':'VS';}if(status)status.addEventListener('change',refreshPreview);if(minute)minute.addEventListener('input',refreshPreview);
+    function filterPlayers(teamSelect){var form=teamSelect.closest('[data-event-form]'),team=teamSelect.value;if(!form)return;form.querySelectorAll('.event-player-select').forEach(function(playerSelect){Array.prototype.forEach.call(playerSelect.options,function(option){if(option.value)option.disabled=!!team&&option.dataset.team!==team;});if(playerSelect.selectedOptions.length&&playerSelect.selectedOptions[0].disabled)playerSelect.value='';if(window.jQuery&&jQuery.fn.select2&&jQuery(playerSelect).hasClass('select2-hidden-accessible'))jQuery(playerSelect).trigger('change.select2');});}
+    document.querySelectorAll('.event-team-select').forEach(function(select){filterPlayers(select);select.addEventListener('change',function(){filterPlayers(select);});});
 });
 </script>
 @endpush

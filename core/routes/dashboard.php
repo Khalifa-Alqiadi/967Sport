@@ -160,6 +160,12 @@ Route::Group(['prefix' => config('smartend.backend_path'), 'middleware' => ['aut
     Route::post('/leagues/matches/{fixture}/goals', [RoundsController::class, 'storeGoal'])->name('matchGoalsStore');
     Route::post('/leagues/matches/{fixture}/goals/{event}/update', [RoundsController::class, 'updateGoal'])->name('matchGoalsUpdate');
     Route::delete('/leagues/matches/{fixture}/goals/{event}', [RoundsController::class, 'destroyGoal'])->name('matchGoalsDestroy');
+    Route::post('/leagues/matches/{fixture}/cards', [RoundsController::class, 'storeCard'])->name('matchCardsStore');
+    Route::post('/leagues/matches/{fixture}/cards/{event}/update', [RoundsController::class, 'updateCard'])->name('matchCardsUpdate');
+    Route::delete('/leagues/matches/{fixture}/cards/{event}', [RoundsController::class, 'destroyCard'])->name('matchCardsDestroy');
+    Route::post('/leagues/matches/{fixture}/substitutions', [RoundsController::class, 'storeSubstitution'])->name('matchSubstitutionsStore');
+    Route::post('/leagues/matches/{fixture}/substitutions/{event}/update', [RoundsController::class, 'updateSubstitution'])->name('matchSubstitutionsUpdate');
+    Route::delete('/leagues/matches/{fixture}/substitutions/{event}', [RoundsController::class, 'destroySubstitution'])->name('matchSubstitutionsDestroy');
     Route::post('/leagues/{league_id}/matches/list', [RoundsController::class, 'list'])->name('leagues.matches.list');
     // Seasons
     Route::get('/leagues/{league_id?}/seasons', [SeasonsController::class, 'index'])->name('seasons');

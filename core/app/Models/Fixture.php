@@ -26,8 +26,14 @@ class Fixture extends Model
         'ht_home_score',
         'ht_away_score',
         'is_finished',
+        'counts_for_standings',
         'ft_home_score',
         'ft_away_score',
+        'standing_home_score',
+        'standing_away_score',
+        'standing_home_points_adjustment',
+        'standing_away_points_adjustment',
+        'standing_adjustment_notes',
         'et_home_score',
         'et_away_score',
         'pen_home',
@@ -53,6 +59,8 @@ class Fixture extends Model
         'injuries_json' => 'array',
         'suspensions_json' => 'array',
         'venue_json' => 'array',
+        'is_finished' => 'boolean',
+        'counts_for_standings' => 'boolean',
     ];
 
     public function league()

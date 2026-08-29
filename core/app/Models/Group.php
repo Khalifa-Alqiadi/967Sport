@@ -59,4 +59,9 @@ class Group extends Model
     {
         return $this->hasMany(Standing::class, 'group_id');
     }
+
+    public function calculatedStandings(): HasMany
+    {
+        return $this->hasMany(LeagueStanding::class);
+    }
 }

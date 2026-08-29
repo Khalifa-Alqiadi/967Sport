@@ -47,4 +47,9 @@ class League extends Model
     {
         return $this->hasMany(Fixture::class, 'league_id', 'id');
     }
+
+    public function calculatedStandings()
+    {
+        return $this->hasMany(LeagueStanding::class);
+    }
 }

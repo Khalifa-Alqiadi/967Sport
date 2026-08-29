@@ -21,4 +21,9 @@ class Season extends Model
         'ending_at',
         'is_current',
     ];
+
+    public function calculatedStandings()
+    {
+        return $this->hasMany(LeagueStanding::class);
+    }
 }

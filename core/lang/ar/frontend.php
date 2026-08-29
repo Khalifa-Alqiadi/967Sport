@@ -113,7 +113,7 @@ return [
     'sportGatewayTitleAccent' => 'بلمسة واحدة',
     'sportGatewayDescription' => 'انتقل مباشرة إلى البطولة أو المنتخب أو القصة التي تهمك، وتابع آخر المستجدات من قلب الحدث.',
     'designedBy' => 'تصميم وتطوير',
-    'yemenHostingName' => 'يمن هوستنج',
+    'yemenHostingName' => 'الاستضافة اليمنية',
     'whatsappAria' => 'واتساب',
 ];
 

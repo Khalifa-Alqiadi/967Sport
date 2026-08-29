@@ -95,4 +95,9 @@ class Team extends Model
               ->orWhere('away_team_id', $this->id);
             });
     }
+
+    public function leagueStandings()
+    {
+        return $this->hasMany(LeagueStanding::class);
+    }
 }
