@@ -21,7 +21,7 @@
                     <li class="{{ (@$MenuLink->sub)?"dropdown":"" }} {{ $isMegaMenu ? 'mega-dropdown' : '' }}"><a
                             class="nav-link {{ \App\Helpers\SiteMenu::ActiveLink(url()->current(),@$MenuLink,@$WebmasterSection) }}"
                             href="{{ @$MenuLink->url }}" target="{{ @$MenuLink->target }}">
-                            {!! (@$MenuLink->icon)?"<i class='".@$MenuLink->icon."'></i> ":"" !!} {{ @$MenuLink->title }}
+                            {!! (@$MenuLink->icon)?"<i class='".@$MenuLink->icon." mx-2'></i> ":"" !!} {{ @$MenuLink->title }}
                             @if(@$MenuLink->sub)
                                 <i class="drop-arrow bi bi-chevron-down"></i>
                             @endif
@@ -203,6 +203,6 @@
                 syncMenuState();
             });
         </script>
-        
+
     @endif
 @endif
