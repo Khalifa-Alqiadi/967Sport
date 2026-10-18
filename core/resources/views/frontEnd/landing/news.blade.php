@@ -75,11 +75,11 @@ if (@$TopicBlockContents->module_id) {
                                 <span class="meu-post-cat">{{ @$Topic->category(@$Topic->id)->$title_var }}</span>
                             @endif
                             <h3 class="item-title">{!! $title !!}</h3>
-                            @if(strip_tags(@$Topic->$details) !="")
+                            {{-- @if(strip_tags(@$Topic->$details) !="")
                                 <p class="mb-0">
                                     {!! mb_substr(strip_tags(@$Topic->$details),0, 200)."..." !!}
                                 </p>
-                            @endif
+                            @endif --}}
                         </div>
                     </a>
                 </div>
