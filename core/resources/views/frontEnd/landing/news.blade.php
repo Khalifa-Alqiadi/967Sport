@@ -17,6 +17,7 @@ if (@$TopicBlock->image_status && @$TopicBlockContents->{"bg_".@Helper::currentL
 }
 $BlockTopics = [];
 $section_url = "";
+$isHomepageNews = (bool) ($isSportHome ?? false);
 if (@$TopicBlockContents->module_id) {
     $BlockTopics = Helper::Topics(@$TopicBlockContents->module_id, @$TopicBlockContents->category_ids,
         @$TopicBlockContents->records_count, 0, @$TopicBlockContents->records_order);
@@ -40,8 +41,8 @@ if (@$TopicBlockContents->module_id) {
                     </div>
                 </div>
             @endif
-            <div class="row g-4">
-                <div class="col-lg-6 meu-reveal meu-reveal-left">
+            <div class="row g-4 sport-news-layout">
+                <div class="{{ $isHomepageNews ? 'col-lg-7' : 'col-lg-6' }} meu-reveal meu-reveal-left">
                         <?php
                         $Topic = @$BlockTopics->first();
                         if (@$Topic->$title_var != "") {
@@ -61,11 +62,11 @@ if (@$TopicBlockContents->module_id) {
                         }
                         $Category = @$Topic->category(@$Topic->id);
                         ?>
-                    <a href="{{ $topic_link_url }}" class="meu-feature-card h-100">
+                    <a href="{{ $topic_link_url }}" class="{{ $isHomepageNews ? 'sport-news-lead' : 'meu-feature-card' }} h-100">
                         @if(@$Topic->photo_file !="")
                             <div class="meu-post-media">
                                 <img loading="lazy"
-                                     src="{{ route("fileView",["path" =>'topics/'.@$Topic->photo_file ]) }}?w=800&h=650&r=fit"
+                                     src="{{ route("fileView",["path" =>'topics/'.@$Topic->photo_file ]) }}?w=1200&h=675&r=fit"
                                      alt="{{ $title }}"/>
                             </div>
                         @endif
@@ -82,9 +83,9 @@ if (@$TopicBlockContents->module_id) {
                         </div>
                     </a>
                 </div>
-                <div class="col-lg-6">
-                    <div class="meu-editorial meu-stagger">
-                        @foreach($BlockTopics->slice(1) as $Topic)
+                <div class="{{ $isHomepageNews ? 'col-lg-5' : 'col-lg-6' }}">
+                    <div class="{{ $isHomepageNews ? 'sport-news-list' : 'meu-editorial' }} meu-stagger">
+                        @foreach($BlockTopics->slice(1, $isHomepageNews ? 3 : null) as $Topic)
                                 <?php
                                 if ($Topic->$title_var != "") {
                                     $title = $Topic->$title_var;
@@ -103,9 +104,11 @@ if (@$TopicBlockContents->module_id) {
                                 }
                                 $Category = @$Topic->category($Topic->id);
                                 ?>
-                            <article class="meu-editorial-row">
-                                <div class="meu-editorial-num">{{ sprintf('%02d', $loop->iteration) }}</div>
-                                <div class="meu-editorial-body">
+                            <article class="{{ $isHomepageNews ? 'sport-news-row' : 'meu-editorial-row' }}">
+                                @if(!$isHomepageNews)
+                                    <div class="meu-editorial-num">{{ sprintf('%02d', $loop->iteration) }}</div>
+                                @endif
+                                <div class="{{ $isHomepageNews ? 'sport-news-item-body' : 'meu-editorial-body' }}">
                                     @if($Category)
                                         <span class="meu-post-cat">{{ @$Topic->category($Topic->id)->$title_var }}</span>
                                     @endif
@@ -121,7 +124,7 @@ if (@$TopicBlockContents->module_id) {
                                     @endif
                                 </div>
                                 @if(@$Topic->photo_file !="")
-                                    <a href="{{ $topic_link_url }}" class="meu-editorial-media" aria-label="{{ strip_tags($title) }}">
+                                    <a href="{{ $topic_link_url }}" class="{{ $isHomepageNews ? 'sport-news-thumb' : 'meu-editorial-media' }}" aria-label="{{ strip_tags($title) }}">
                                         <img loading="lazy"
                                              src="{{ route("fileView",["path" =>'topics/'.@$Topic->photo_file ]) }}?w=340&h=240&r=fit"
                                              alt="{{ strip_tags($title) }}"/>

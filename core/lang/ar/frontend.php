@@ -98,6 +98,7 @@ return [
     'homeMatchesSelected' => 'مباريات مختارة',
     'homeMatchesMatch' => 'مباراة',
     'homeMatchesLocalTime' => 'بتوقيت اليمن',
+    'homeMatchesVersus' => 'ضد',
     'homeMatchesOfficial' => 'بيانات المباراة',
     'homeMatchesSwipe' => 'اسحب لاستعراض بقية المباريات',
     'sportBrandWord' => 'SPORT',

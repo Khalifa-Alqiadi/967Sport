@@ -25,17 +25,17 @@
 ?>
 
 @if($homeMatches->isNotEmpty())
-    <section class="home-fixtures home-fixtures-v4 pt-0" aria-labelledby="home-fixtures-title">
+    <section class="home-fixtures-v6 home-fixtures-v10" aria-labelledby="home-fixtures-title">
         <div class="container">
             <header class="home-fixtures-head">
                 <div>
-                    <span class="home-fixtures-eyebrow"><i></i>{{ __('frontend.homeMatchesEyebrow') }}</span>
+                    <span class="home-fixtures-eyebrow">{{ __('frontend.homeMatchesEyebrow') }}</span>
                     <h2 id="home-fixtures-title">{{ __('frontend.homeMatchesTitle') }}</h2>
                     <p>{{ __('frontend.homeMatchesDescription') }}</p>
                 </div>
                 <div class="home-fixtures-actions">
                     <div class="home-fixtures-count">
-                        <strong>{{ str_pad($homeMatches->count(), 2, '0', STR_PAD_LEFT) }}</strong>
+                        <strong>{{ $homeMatches->count() }}</strong>
                         <span>{{ __('frontend.homeMatchesSelected') }}</span>
                     </div>
                     <button type="button" class="home-fixtures-prev" aria-label="{{ __('frontend.heroPrevious') }}"><i class="bi bi-arrow-right"></i></button>
@@ -59,11 +59,16 @@
                         $matchState = $isLiveMatch ? 'live' : ($homeMatch->is_finished ? 'finished' : 'upcoming');
                         $homeResult = !is_null($homeMatch->ft_home_score) ? $homeMatch->ft_home_score : $homeMatch->home_score;
                         $awayResult = !is_null($homeMatch->ft_away_score) ? $homeMatch->ft_away_score : $homeMatch->away_score;
+                        $homeMatchUrl = $isEnglishMatches
+                            ? route('sport.localized.match', ['lang' => 'en', 'fixture' => $homeMatch->id])
+                            : route('sport.match', ['fixture' => $homeMatch->id]);
                     ?>
                     <div class="swiper-slide">
-                    <article class="home-fixture-card is-{{ $matchState }}">
+                    <a href="{{ $homeMatchUrl }}"
+                       class="home-fixture-card is-{{ $matchState }}"
+                       aria-label="{{ __('matches.matchDetails') }}: {{ $homeName }} - {{ $awayName }}">
                         <div class="home-fixture-meta">
-                            <span>{{ $leagueName }}@if($homeMatch->season?->name) <small>/ {{ $homeMatch->season->name }}</small>@endif</span>
+                            <span>{{ $leagueName }}</span>
                             <b>
                                 @if($isLiveMatch)
                                     <i></i>{{ __('frontend.sliderMatchLive') }}@if($homeMatch->minute) {{ $homeMatch->minute }}′@endif
@@ -75,23 +80,26 @@
                             </b>
                         </div>
 
-                        <div class="home-fixture-date">
-                            <span>{{ $homeMatch->round?->name ?: __('frontend.homeMatchesMatch') }}</span>
-                            <time datetime="{{ $homeMatch->starting_at?->toIso8601String() }}">
-                                {{ $homeMatch->starting_at?->translatedFormat('l، d M Y') }}
-                            </time>
-                        </div>
-
-                        <div class="home-fixture-teams">
-                            <div class="home-fixture-team">
-                                @if($homeTeam->image_path)
-                                    <img src="{{ $homeTeam->image_path }}" alt="{{ $homeName }}">
-                                @else
-                                    <span>{{ mb_substr($homeName, 0, 1) }}</span>
-                                @endif
-                                <strong>{{ $homeName }}</strong>
+                        <div class="home-fixture-ticket">
+                            <div class="home-fixture-clubs">
+                                <div class="home-fixture-team">
+                                    @if($homeTeam->image_path)
+                                        <img src="{{ $homeTeam->image_path }}" alt="{{ $homeName }}">
+                                    @else
+                                        <span>{{ mb_substr($homeName, 0, 1) }}</span>
+                                    @endif
+                                    <strong>{{ $homeName }}</strong>
+                                </div>
+                                <span class="home-fixture-versus">{{ __('frontend.homeMatchesVersus') }}</span>
+                                <div class="home-fixture-team">
+                                    @if($awayTeam->image_path)
+                                        <img src="{{ $awayTeam->image_path }}" alt="{{ $awayName }}">
+                                    @else
+                                        <span>{{ mb_substr($awayName, 0, 1) }}</span>
+                                    @endif
+                                    <strong>{{ $awayName }}</strong>
+                                </div>
                             </div>
-
                             <div class="home-fixture-result">
                                 @if($homeMatch->is_finished || $isLiveMatch || !is_null($homeResult) || !is_null($awayResult))
                                     <div><b>{{ $homeResult ?? 0 }}</b><em>:</em><b>{{ $awayResult ?? 0 }}</b></div>
@@ -104,17 +112,21 @@
                                 @endif
                             </div>
 
-                            <div class="home-fixture-team">
-                                @if($awayTeam->image_path)
-                                    <img src="{{ $awayTeam->image_path }}" alt="{{ $awayName }}">
-                                @else
-                                    <span>{{ mb_substr($awayName, 0, 1) }}</span>
-                                @endif
-                                <strong>{{ $awayName }}</strong>
-                            </div>
                         </div>
 
-                    </article>
+                        <div class="home-fixture-link">
+                            <div class="home-fixture-date">
+                                <span>{{ $homeMatch->round?->name ?: __('frontend.homeMatchesMatch') }}</span>
+                                <time datetime="{{ $homeMatch->starting_at?->toIso8601String() }}">
+                                    {{ $homeMatch->starting_at?->translatedFormat('l، d M Y') }}
+                                </time>
+                            </div>
+                            <span class="home-fixture-details">
+                                {{ __('matches.matchDetails') }}
+                                <i class="bi bi-arrow-up-left" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                    </a>
                     </div>
                     @endforeach
                 </div>
@@ -132,13 +144,13 @@
                 var slider = document.querySelector('.home-fixtures-swiper');
                 if (!slider || typeof Swiper === 'undefined') return;
 
-                var section = slider.closest('.home-fixtures');
+                var section = slider.closest('.home-fixtures-v6');
                 new Swiper(slider, {
                     speed: 700,
                     grabCursor: true,
                     watchOverflow: true,
-                    slidesPerView: 1.08,
-                    spaceBetween: 14,
+                    slidesPerView: 1.03,
+                    spaceBetween: 16,
                     navigation: {
                         nextEl: section.querySelector('.home-fixtures-next'),
                         prevEl: section.querySelector('.home-fixtures-prev')
@@ -148,9 +160,9 @@
                         type: 'progressbar'
                     },
                     breakpoints: {
-                        576: {slidesPerView: 1.4, spaceBetween: 16},
-                        900: {slidesPerView: 2.1, spaceBetween: 18},
-                        1300: {slidesPerView: 3, spaceBetween: 20}
+                        576: {slidesPerView: 1.15, spaceBetween: 18},
+                        900: {slidesPerView: 1.6, spaceBetween: 20},
+                        1200: {slidesPerView: 2.05, spaceBetween: 22}
                     }
                 });
             });

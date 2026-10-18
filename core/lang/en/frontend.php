@@ -97,6 +97,7 @@ return [
     'homeMatchesSelected' => 'selected matches',
     'homeMatchesMatch' => 'Match',
     'homeMatchesLocalTime' => 'Yemen time',
+    'homeMatchesVersus' => 'VS',
     'homeMatchesOfficial' => 'Match data',
     'homeMatchesSwipe' => 'Swipe to explore more matches',
     'sportBrandWord' => 'SPORT',
