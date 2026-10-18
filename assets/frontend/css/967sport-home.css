@@ -1149,7 +1149,7 @@
 
 /* Homepage newsroom v2 — image-led editorial cover. */
 .sport-home .landing-block.news.sport-news-modern {
-    padding-block: 72px;
+    padding: 72px 0 48px;
     background: #fff !important;
 }
 
@@ -1355,6 +1355,61 @@
     -webkit-line-clamp: 2;
 }
 
+.sport-home .landing-block.news.sport-news-modern .sport-news-more {
+    display: flex;
+    margin-top: 24px;
+    align-items: center;
+    gap: 18px;
+}
+
+.sport-home .landing-block.news.sport-news-modern .sport-news-more > span {
+    height: 1px;
+    background: #e4dfe6;
+    flex: 1;
+}
+
+.sport-home .landing-block.news.sport-news-modern .sport-news-more > a {
+    display: inline-flex;
+    min-height: 46px;
+    padding: 0 17px 0 8px;
+    border: 1px solid #211329;
+    border-radius: 9px;
+    color: #fff;
+    background: #211329;
+    font-size: 12px;
+    font-weight: 850;
+    text-decoration: none;
+    align-items: center;
+    gap: 14px;
+    transition: color .2s ease, background-color .2s ease, transform .2s ease;
+}
+
+.sport-home .landing-block.news.sport-news-modern .sport-news-more > a i {
+    display: grid;
+    width: 31px;
+    height: 31px;
+    border-radius: 7px;
+    color: #211329;
+    background: #ffc32b;
+    font-size: 13px;
+    place-items: center;
+}
+
+.sport-home .landing-block.news.sport-news-modern .sport-news-more > a:hover {
+    color: #211329;
+    background: #ffc32b;
+    transform: translateY(-2px);
+}
+
+.sport-home .landing-block.news.sport-news-modern .sport-news-more > a:hover i {
+    color: #fff;
+    background: #211329;
+}
+
+[dir="ltr"] .sport-home .landing-block.news.sport-news-modern .sport-news-more > a i {
+    transform: scaleX(-1);
+}
+
 @media (max-width: 991.98px) {
     .sport-home .sport-news-v2 {
         grid-template-columns: 1fr;
@@ -1376,7 +1431,7 @@
 
 @media (max-width: 575.98px) {
     .sport-home .landing-block.news.sport-news-modern {
-        padding-block: 46px;
+        padding: 46px 0 36px;
     }
 
     .sport-home .sport-news-v2 .sport-news-lead {
@@ -1408,6 +1463,16 @@
 
     .sport-home .sport-news-v2 .sport-news-list .sport-news-item-body {
         padding: 20px;
+    }
+
+    .sport-home .landing-block.news.sport-news-modern .sport-news-more {
+        margin-top: 18px;
+        gap: 12px;
+    }
+
+    .sport-home .landing-block.news.sport-news-modern .sport-news-more > a {
+        min-height: 43px;
+        padding-inline-start: 14px;
     }
 }
 
