@@ -813,6 +813,7 @@ return array(
 
     // v12
     'featured'=>'Featured',
+    'sportFeaturedSlider' => 'Featured news slider',
     'notFeatured'=>'Not featured',
     'convertTo'=>'Convert to',
     'featuredField' => 'Featured Field',

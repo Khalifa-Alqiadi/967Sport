@@ -11,6 +11,8 @@ return [
     'heroStories' => 'Slider stories',
     'heroPrevious' => 'Previous story',
     'heroNext' => 'Next story',
+    'featuredNews' => 'Featured news',
+    'slideNumber' => 'Slide :number',
     'viewMore' => 'View More',
     'readMore' => 'Read More',
     'downloadAttach' => 'Download Attachment',

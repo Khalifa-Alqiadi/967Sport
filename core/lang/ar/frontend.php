@@ -11,6 +11,8 @@ return [
     'heroStories' => 'قصص السلايدر',
     'heroPrevious' => 'القصة السابقة',
     'heroNext' => 'القصة التالية',
+    'featuredNews' => 'أخبار مميزة',
+    'slideNumber' => 'الشريحة رقم :number',
     'viewMore' => 'مشاهدة المزيد',
     'readMore' => ' إقرأ المزيد ',
     'downloadAttach' => 'تحمل المرفقات',

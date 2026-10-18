@@ -14,7 +14,7 @@
 @endphp
 
 <section id="landing-block-{{ @$TopicBlock->id }}"
-         class="sport-hub sport-gateway-section {{ @$TopicBlock->css_classes }}"
+         class="sport-hub p-0 sport-gateway-section {{ @$TopicBlock->css_classes }}"
          aria-label="{{ __('frontend.sportHubAria') }}">
     <div class="container sport-gateway-wrap">
         @if((@$TopicBlock->title_status && $gatewayHeading) || (@$TopicBlock->desc_status && $gatewayDescription))

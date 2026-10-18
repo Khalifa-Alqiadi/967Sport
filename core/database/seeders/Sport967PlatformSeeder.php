@@ -146,6 +146,41 @@ class Sport967PlatformSeeder extends Seeder
             DB::table('topic_blocks')->where('id', 7)->update(['row_no' => 6, 'updated_by' => 1, 'updated_at' => $now]);
 
             DB::table('topic_blocks')->updateOrInsert(
+                ['id' => 5],
+                [
+                    'topic_id' => 5,
+                    'row_no' => 1,
+                    'block_name' => '967Sport Featured News Slider',
+                    'type' => 3,
+                    'content' => json_encode([
+                        'title_ar' => 'الأخبار المميزة',
+                        'desc_ar' => 'أبرز أخبار الرياضة اليمنية',
+                        'bg_ar' => null,
+                        'title_en' => 'Featured News',
+                        'desc_en' => 'Top stories from Yemeni sport',
+                        'bg_en' => null,
+                        'module_id' => '3',
+                        'category_ids' => null,
+                        'records_count' => '5',
+                        'records_order' => '1',
+                        'view_style' => 'SportFeaturedSlider',
+                    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                    'title_status' => 0,
+                    'desc_status' => 0,
+                    'image_status' => 0,
+                    'divider_status' => 0,
+                    'more_btn_status' => 0,
+                    'bg_color' => null,
+                    'css_classes' => 'sport-featured-slider-block',
+                    'status' => 1,
+                    'created_by' => 1,
+                    'updated_by' => 1,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]
+            );
+
+            DB::table('topic_blocks')->updateOrInsert(
                 ['id' => 9673299],
                 [
                     'topic_id' => 5,

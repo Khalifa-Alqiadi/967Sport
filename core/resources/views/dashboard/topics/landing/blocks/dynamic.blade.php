@@ -15,6 +15,14 @@
                         </label>
                         <div class="col-sm-12">
                             <div class="img-radio-group" id="view-styles">
+                                <input type="radio" name="view_style" id="SportFeaturedSlider" class="radio-input"
+                                       value="SportFeaturedSlider"
+                                       {{ (@$TopicBlockContents->view_style === 'SportFeaturedSlider') ? 'checked' : '' }} required>
+                                <label for="SportFeaturedSlider" class="radio-label">
+                                    <img src="{{ asset('assets/dashboard/images/blocks/slider.png') }}"
+                                         alt="{{ __('backend.sportFeaturedSlider') }}">
+                                    <div class="text">{{ __('backend.sportFeaturedSlider') }}</div>
+                                </label>
                                 @php
                                     use Illuminate\Support\Facades\File;
 

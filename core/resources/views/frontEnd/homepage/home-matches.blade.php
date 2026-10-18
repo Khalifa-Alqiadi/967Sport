@@ -25,7 +25,7 @@
 ?>
 
 @if($homeMatches->isNotEmpty())
-    <section class="home-fixtures home-fixtures-v4" aria-labelledby="home-fixtures-title">
+    <section class="home-fixtures home-fixtures-v4 pt-0" aria-labelledby="home-fixtures-title">
         <div class="container">
             <header class="home-fixtures-head">
                 <div>

@@ -28,5 +28,12 @@ class DatabaseSeeder extends Seeder
         $this->call(CategoriesSeeder::class);
         $this->call(TopicsSeeder::class);
         $this->call(WebmailGroupsSeeder::class);
+        $this->call(MiddleEastUnionContentSeeder::class);
+        $this->call(Rebrand967SportSeeder::class);
+        $this->call(Sport967NavigationBannersSeeder::class);
+        $this->call(Sport967ContentSeeder::class);
+        $this->call(YemeniLeague2023_2024Seeder::class);
+        $this->call(YemeniCurrentCompetitionsSeeder::class);
+        $this->call(YemeniCurrentPlayersSeeder::class);
     }
 }

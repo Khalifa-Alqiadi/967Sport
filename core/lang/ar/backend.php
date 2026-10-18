@@ -815,6 +815,7 @@ return array(
 
     // v12
     'featured'=>'مميز',
+    'sportFeaturedSlider' => 'سلايدر الأخبار المميزة',
     'notFeatured'=>'غير مميز',
     'convertTo'=>'تحويل إلى',
     'featuredField' => 'حقل موضوع مميز',

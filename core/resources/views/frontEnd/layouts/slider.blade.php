@@ -1,285 +1,170 @@
-@if(@$BannersSettingsId >0)
-        <?php
-        $SliderBanners = Helper::BannersList($BannersSettingsId);
-        $SliderBannersCount = count($SliderBanners);
-        ?>
-    @if(count($SliderBanners)>0)
-        <section id="matchday" class="matchday-hero">
-            <div class="matchday-stage">
-                @foreach($SliderBanners->slice(0,1) as $SliderBanner)
-                        <?php
-                        try {
-                            $SliderBanner_type = $SliderBanner->webmasterBanner->type;
-                        } catch (Exception $e) {
-                            $SliderBanner_type = 0;
-                        }
-                        ?>
-                @endforeach
-                    <?php
-                    $title_var = "title_".@Helper::currentLanguage()->code;
-                    $title_var2 = "title_".config('smartend.default_language');
-                    $details_var = "details_".@Helper::currentLanguage()->code;
-                    $details_var2 = "details_".config('smartend.default_language');
-                    $file_var = "file_".@Helper::currentLanguage()->code;
-                    $file_var2 = "file_".config('smartend.default_language');
-                    $link_var = "link_".@Helper::currentLanguage()->code;
-                    ?>
-                @if($SliderBanner_type==0)
-                    {{-- Text/Code Banners--}}
-                    <div class="text-center">
-                        @foreach($SliderBanners as $SliderBanner)
-                                <?php
-                                if ($SliderBanner->$details_var != "") {
-                                    if ($SliderBanner->$details_var != "") {
-                                        $BDetails = $SliderBanner->$details_var;
-                                    } else {
-                                        $BDetails = $SliderBanner->$details_var2;
-                                    }
-                                } else {
-                                    $BDetails = $SliderBanner->$details_var2;
-                                }
-                                ?>
-                            @if($BDetails !="")
-                                <div>{!! $BDetails !!}</div>
-                            @endif
-                        @endforeach
-                    </div>
-                @elseif($SliderBanner_type==1)
-                    {{-- Photo Slider Banners--}}
-                    <div id="matchdayCarousel" class="carousel slide {{ $SliderBannersCount === 1 ? 'matchday-single-slide' : '' }}" data-bs-ride="carousel"
-                         data-bs-interval="7000" data-bs-pause="hover">
-                        <div class="carousel-inner">
+@php
+    $sliderItems = collect();
+    $languageCode = optional(Helper::currentLanguage())->code ?: config('smartend.default_language');
+    $defaultLanguageCode = config('smartend.default_language');
+    $titleField = 'title_'.$languageCode;
+    $fallbackTitleField = 'title_'.$defaultLanguageCode;
+    $detailsField = 'details_'.$languageCode;
+    $fallbackDetailsField = 'details_'.$defaultLanguageCode;
+    $legacyBanners = collect();
+    $legacyBannerType = null;
 
-                            <?php $i = 0; ?>
-                            @foreach($SliderBanners as $SliderBanner)
-                                    <?php
-                                    if ($SliderBanner->$title_var != "") {
-                                        $BTitle = $SliderBanner->$title_var;
-                                    } else {
-                                        $BTitle = $SliderBanner->$title_var2;
-                                    }
-                                    $BDetails = $SliderBanner->$details_var;
-                                    if ($SliderBanner->$file_var != "") {
-                                        $BFile = $SliderBanner->$file_var;
-                                    } else {
-                                        $BFile = $SliderBanner->$file_var2;
-                                    }
-                                    $SliderBanner->loadMissing(['fixture.league', 'fixture.season', 'fixture.homeTeam', 'fixture.awayTeam']);
-                                    $BFixture = $SliderBanner->fixture;
-                                    ?>
-                                <div class="carousel-item {{ ($i==0)?"active":"" }}">
-                                    <div class="matchday-slide" style="--matchday-image:url('{{ route("fileView",["path" =>'banners/'.$BFile ]) }}')">
-                                        <div class="matchday-image" aria-hidden="true"></div>
-                                        <div class="matchday-cut" aria-hidden="true"></div>
-                                        <div class="matchday-outline" aria-hidden="true">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</div>
-                                        <div class="container matchday-content">
-                                            <div class="matchday-kicker">
-                                                <span class="matchday-brand"><b>967</b>SPORT</span>
-                                                <span class="matchday-live"><i></i>{{ __('frontend.heroLiveCoverage') }}</span>
-                                            </div>
-                                            <div class="matchday-headline">
-                                                <span>{{ __('frontend.heroTopStory') }}</span>
-                                                @if($BTitle !="")
-                                                    <h2>{!! $BTitle !!}</h2>
-                                                @endif
-                                            </div>
-                                            <div class="matchday-summary">
-                                                @if($BFixture && $BFixture->homeTeam && $BFixture->awayTeam)
-                                                    <?php
-                                                        $isEnglish = Helper::currentLanguage()?->code === 'en';
-                                                        $homeName = $isEnglish ? ($BFixture->homeTeam->name_en ?: $BFixture->homeTeam->name_ar) : ($BFixture->homeTeam->name_ar ?: $BFixture->homeTeam->name_en);
-                                                        $awayName = $isEnglish ? ($BFixture->awayTeam->name_en ?: $BFixture->awayTeam->name_ar) : ($BFixture->awayTeam->name_ar ?: $BFixture->awayTeam->name_en);
-                                                        $leagueName = $isEnglish ? ($BFixture->league?->name_en ?: $BFixture->league?->name_ar) : ($BFixture->league?->name_ar ?: $BFixture->league?->name_en);
-                                                        $stateCode = strtoupper((string) $BFixture->state_code);
-                                                        $isLive = !$BFixture->is_finished && ($BFixture->minute || preg_match('/LIVE|INPLAY|BREAK|HT/', $stateCode));
-                                                        $homeScore = !is_null($BFixture->ft_home_score) ? $BFixture->ft_home_score : $BFixture->home_score;
-                                                        $awayScore = !is_null($BFixture->ft_away_score) ? $BFixture->ft_away_score : $BFixture->away_score;
-                                                    ?>
-                                                    <div class="matchday-fixture {{ $isLive ? 'is-live' : '' }}">
-                                                        <div class="matchday-fixture-top">
-                                                            <span>{{ $leagueName }}@if($BFixture->season?->name) · {{ $BFixture->season->name }}@endif</span>
-                                                            <b>
-                                                                @if($isLive)
-                                                                    <i></i>{{ __('frontend.sliderMatchLive') }}@if($BFixture->minute) {{ $BFixture->minute }}′@endif
-                                                                @elseif($BFixture->is_finished)
-                                                                    {{ __('frontend.sliderMatchFinished') }}
-                                                                @else
-                                                                    {{ __('frontend.sliderMatchUpcoming') }}
-                                                                @endif
-                                                            </b>
-                                                        </div>
-                                                        <div class="matchday-fixture-board">
-                                                            <div class="matchday-club">
-                                                                @if($BFixture->homeTeam->image_path)<img src="{{ $BFixture->homeTeam->image_path }}" alt="">@else<span class="matchday-club-placeholder">{{ mb_substr($homeName, 0, 1) }}</span>@endif
-                                                                <strong>{{ $homeName }}</strong>
-                                                            </div>
-                                                            <div class="matchday-fixture-center">
-                                                                @if($BFixture->is_finished || $isLive || !is_null($homeScore) || !is_null($awayScore))
-                                                                    <span class="matchday-score"><em>{{ $homeScore ?? 0 }}</em><small>:</small><em>{{ $awayScore ?? 0 }}</em></span>
-                                                                    @if(!is_null($BFixture->pen_home) && !is_null($BFixture->pen_away))
-                                                                        <small>{{ __('frontend.sliderMatchPenalty') }} {{ $BFixture->pen_home }}-{{ $BFixture->pen_away }}</small>
-                                                                    @endif
-                                                                @else
-                                                                    <time datetime="{{ $BFixture->starting_at?->toIso8601String() }}">
-                                                                        <b>{{ $BFixture->starting_at?->format('H:i') }}</b>
-                                                                        <small>{{ $BFixture->starting_at?->translatedFormat('d M Y') }}</small>
-                                                                    </time>
-                                                                @endif
-                                                            </div>
-                                                            <div class="matchday-club">
-                                                                @if($BFixture->awayTeam->image_path)<img src="{{ $BFixture->awayTeam->image_path }}" alt="">@else<span class="matchday-club-placeholder">{{ mb_substr($awayName, 0, 1) }}</span>@endif
-                                                                <strong>{{ $awayName }}</strong>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @endif
-                                                @if($BDetails !="")
-                                                    <p>{!! nl2br($BDetails) !!}</p>
-                                                @endif
-                                                @if($SliderBanner->$link_var !="")
-                                                    <a href="{!! $SliderBanner->$link_var !!}" class="matchday-read" aria-label="{{ __('frontend.moreDetails') }}">
-                                                        <i class="bi bi-arrow-up-left"></i>
-                                                        <span>{{ __('frontend.moreDetails') }}</span>
-                                                    </a>
-                                                @endif
-                                            </div>
+    if (isset($SliderTopics) && count($SliderTopics)) {
+        $sliderItems = collect($SliderTopics)->map(function ($topic) use ($titleField, $fallbackTitleField, $detailsField, $fallbackDetailsField) {
+            $title = $topic->{$titleField} ?: $topic->{$fallbackTitleField};
+            $details = $topic->{$detailsField} ?: $topic->{$fallbackDetailsField};
+            $category = $topic->category($topic->id);
+
+            return (object) [
+                'title' => $title,
+                'details' => $details,
+                'image' => $topic->photo_file
+                    ? route('fileView', ['path' => 'topics/'.$topic->photo_file]).'?w=1920&h=1080&r=fit'
+                    : null,
+                'link' => Helper::topicURL($topic->id, '', $topic),
+                'category' => $category ? ($category->{$titleField} ?: $category->{$fallbackTitleField}) : null,
+            ];
+        })->filter(fn ($item) => filled(strip_tags((string) $item->title)) && filled($item->image))->values();
+    } elseif (!empty($BannersSettingsId)) {
+        $banners = Helper::BannersList($BannersSettingsId);
+        $legacyBanners = collect($banners);
+        $legacyBannerType = (int) optional(optional($legacyBanners->first())->webmasterBanner)->type;
+        $fileField = 'file_'.$languageCode;
+        $fallbackFileField = 'file_'.$defaultLanguageCode;
+        $linkField = 'link_'.$languageCode;
+
+        $sliderItems = collect($banners)->filter(function ($banner) {
+            return (int) optional($banner->webmasterBanner)->type === 1;
+        })->map(function ($banner) use ($titleField, $fallbackTitleField, $detailsField, $fallbackDetailsField, $fileField, $fallbackFileField, $linkField) {
+            $file = $banner->{$fileField} ?: $banner->{$fallbackFileField};
+
+            return (object) [
+                'title' => $banner->{$titleField} ?: $banner->{$fallbackTitleField},
+                'details' => $banner->{$detailsField} ?: $banner->{$fallbackDetailsField},
+                'image' => $file ? route('fileView', ['path' => 'banners/'.$file]) : null,
+                'link' => $banner->{$linkField},
+                'category' => null,
+            ];
+        })->filter(fn ($item) => filled($item->image))->values();
+    }
+
+    $sliderCount = $sliderItems->count();
+    $sliderId = 'matchday-carousel-'.($TopicBlock->id ?? $BannersSettingsId ?? uniqid());
+@endphp
+
+@if($sliderCount)
+    <section id="landing-slider-{{ $TopicBlock->id ?? 'main' }}" class="matchday-hero" aria-label="{{ __('frontend.heroStories') }}">
+        <div class="matchday-stage">
+            <div id="{{ $sliderId }}"
+                 class="carousel slide matchday-carousel {{ $sliderCount === 1 ? 'matchday-single-slide' : '' }}"
+                 data-matchday-carousel
+                 data-slider-interval="5000"
+                 dir="{{ $languageCode === 'ar' ? 'rtl' : 'ltr' }}">
+                <div class="carousel-inner">
+                    @foreach($sliderItems as $sliderItem)
+                        @php
+                            $plainTitle = trim(strip_tags((string) $sliderItem->title));
+                            $plainDetails = trim(preg_replace('/\s+/u', ' ', strip_tags((string) $sliderItem->details)));
+                        @endphp
+                        <div class="carousel-item {{ $loop->first ? 'active' : '' }}" data-matchday-slide>
+                            <article class="matchday-slide">
+                                <div class="matchday-image" aria-hidden="true">
+                                    <img src="{{ $sliderItem->image }}" alt="" width="1920" height="1080"
+                                         {{ $loop->first ? 'fetchpriority=high' : 'loading=lazy' }}>
+                                </div>
+                                <div class="matchday-shade" aria-hidden="true"></div>
+                                <div class="matchday-outline" aria-hidden="true">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</div>
+
+                                <div class="container matchday-content">
+                                    <div class="matchday-copy">
+                                        <div class="matchday-kicker">
+                                            <span class="matchday-brand"><b>967</b>SPORT</span>
+                                            <span class="matchday-live"><i></i>{{ $sliderItem->category ?: __('frontend.featuredNews') }}</span>
                                         </div>
-                                        <div class="matchday-stamp" aria-hidden="true">
-                                            <b>YEMEN</b><span>FOOTBALL</span><small>967 / MEDIA</small>
+                                        <div class="matchday-headline">
+                                            <span>{{ __('frontend.heroTopStory') }}</span>
+                                            <h2>{{ $plainTitle }}</h2>
                                         </div>
-                                        <div class="matchday-progress" aria-hidden="true"><span></span></div>
+                                        @if($plainDetails)
+                                            <p class="matchday-description">{{ \Illuminate\Support\Str::limit($plainDetails, 180) }}</p>
+                                        @endif
+                                        @if($sliderItem->link)
+                                            <a href="{{ $sliderItem->link }}" class="matchday-read">
+                                                <span>{{ __('frontend.readMore') }}</span>
+                                                <i class="bi bi-arrow-up-left" aria-hidden="true"></i>
+                                            </a>
+                                        @endif
                                     </div>
                                 </div>
-                                <?php $i++; ?>
+
+                                <div class="matchday-progress" aria-hidden="true"><span></span></div>
+                            </article>
+                        </div>
+                    @endforeach
+                </div>
+
+                @if($sliderCount > 1)
+                    <div class="container matchday-navigation">
+                        <div class="matchday-controls" aria-label="{{ __('frontend.heroStories') }}">
+                            <button type="button" data-matchday-action="previous" aria-label="{{ __('frontend.heroPrevious') }}">
+                                <i class="bi bi-chevron-{{ $languageCode === 'ar' ? 'right' : 'left' }}" aria-hidden="true"></i>
+                            </button>
+                            <span class="matchday-counter" aria-live="polite">
+                                <b data-matchday-current>01</b>
+                                <small>/ {{ str_pad($sliderCount, 2, '0', STR_PAD_LEFT) }}</small>
+                            </span>
+                            <button type="button" data-matchday-action="next" aria-label="{{ __('frontend.heroNext') }}">
+                                <i class="bi bi-chevron-{{ $languageCode === 'ar' ? 'left' : 'right' }}" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="matchday-indicators" role="tablist" aria-label="{{ __('frontend.heroStories') }}">
+                            @foreach($sliderItems as $sliderItem)
+                                <button type="button" class="{{ $loop->first ? 'is-active' : '' }}"
+                                        data-matchday-to="{{ $loop->index }}"
+                                        aria-label="{{ __('frontend.slideNumber', ['number' => $loop->iteration]) }}"
+                                        aria-selected="{{ $loop->first ? 'true' : 'false' }}"></button>
                             @endforeach
                         </div>
-
-                        @if(count($SliderBanners) >1)
-                            <div class="container matchday-navigation">
-                                <div class="matchday-controls">
-                                    <button type="button" data-bs-target="#matchdayCarousel" data-bs-slide="prev" aria-label="{{ __('frontend.heroPrevious') }}">
-                                        <i class="bi bi-chevron-right"></i>
-                                    </button>
-                                    <span><b class="matchday-current">01</b><small>/ {{ str_pad($SliderBannersCount, 2, '0', STR_PAD_LEFT) }}</small></span>
-                                    <button type="button" data-bs-target="#matchdayCarousel" data-bs-slide="next" aria-label="{{ __('frontend.heroNext') }}">
-                                        <i class="bi bi-chevron-left"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-                @else
-                    {{-- Video Banners--}}
-                    <div class="text-center">
-                        @foreach($SliderBanners as $SliderBanner)
-                                <?php
-                                if ($SliderBanner->$title_var != "") {
-                                    $BTitle = $SliderBanner->$title_var;
-                                } else {
-                                    $BTitle = $SliderBanner->$title_var2;
-                                }
-                                if ($SliderBanner->$details_var != "") {
-                                    $BDetails = $SliderBanner->$details_var;
-                                } else {
-                                    $BDetails = $SliderBanner->$details_var2;
-                                }
-                                if ($SliderBanner->$file_var != "") {
-                                    $BFile = $SliderBanner->$file_var;
-                                } else {
-                                    $BFile = $SliderBanner->$file_var2;
-                                }
-                                ?>
-                            @if($SliderBanner->youtube_link !="")
-                                @if($SliderBanner->video_type ==1)
-                                        <?php
-                                        $Youtube_id = Helper::Get_youtube_video_id($SliderBanner->youtube_link);
-                                        ?>
-                                    @if($Youtube_id !="")
-                                        {{-- Youtube Video --}}
-                                        <iframe width="100%" height="500" frameborder="0" allowfullscreen
-                                                src="https://www.youtube.com/embed/{{ $Youtube_id }}?autoplay=1&mute=1"
-                                                allow="autoplay">
-                                        </iframe>
-                                    @endif
-                                @elseif($SliderBanner->video_type ==2)
-                                        <?php
-                                        $Vimeo_id = Helper::Get_vimeo_video_id($SliderBanner->youtube_link);
-                                        ?>
-                                    @if($Vimeo_id !="")
-                                        {{-- Vimeo Video --}}
-                                        <iframe width="100%" height="500" frameborder="0" allowfullscreen
-                                                src="https://player.vimeo.com/video/{{ $Vimeo_id }}?title=0&amp;byline=0">
-                                        </iframe>
-                                    @endif
-                                @endif
-                            @endif
-                            @if($SliderBanner->video_type ==0)
-                                @if($BFile !="")
-                                    {{-- Direct Video --}}
-                                    <video width="100%" height="500" controls autoplay>
-                                        <source src="{{ route("fileView",["path" =>'banners/'.$BFile ]) }}"
-                                                type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                @endif
-                            @endif
-                            @if($BDetails !="")
-                                <div>{!! $BDetails !!}</div>
-                            @endif
-                        @endforeach
                     </div>
                 @endif
             </div>
-        </section>
-    @endif
-    @push('after-styles')
-        @if(Helper::GeneralSiteSettings("style_header") && Helper::GeneralSiteSettings("style_bg_type"))
-            <style>
-                .fixed-top-margin {
-                    margin-top: 0 !important;
-                }
+        </div>
+    </section>
 
-
-                .header-bg, .header-bg a {
-                    color: #444444;
-                }
-
-                @media (min-width: 968px) {
-
-                    .header-no-bg, .header-no-bg a, .topbar-no-bg, .topbar-no-bg a {
-                        color: #fff;
-                    }
-
-                    .header-no-bg .navbar a, .topbar-no-bg .header-dropdown .btn {
-                        color: #fff;
-                    }
-
-                    .dropdown-item {
-                        color: #212529 !important;
-                    }
-
-                    .header-scrolled .navbar a, .header-scrolled .header-dropdown .btn {
-                        color: #444444;
-                    }
-                }
-
-                .topbar-no-bg {
-                    box-shadow: 0 0 1px rgba(255, 255, 255, 0.5) !important;
-                }
-            </style>
+    @once
+        @push('after-scripts')
+            <script src="{{ URL::asset('assets/frontend/js/967sport-slider.js') }}?v={{ Helper::system_version() }}"></script>
+        @endpush
+    @endonce
+@elseif($legacyBanners->isNotEmpty())
+    <section class="legacy-slider-media text-center">
+        @if($legacyBannerType === 0)
+            @foreach($legacyBanners as $banner)
+                @php($legacyDetails = $banner->{$detailsField} ?: $banner->{$fallbackDetailsField})
+                @if($legacyDetails)
+                    <div>{!! $legacyDetails !!}</div>
+                @endif
+            @endforeach
+        @else
+            @foreach($legacyBanners as $banner)
+                @php
+                    $legacyFileField = 'file_'.$languageCode;
+                    $legacyFallbackFileField = 'file_'.$defaultLanguageCode;
+                    $legacyFile = $banner->{$legacyFileField} ?: $banner->{$legacyFallbackFileField};
+                @endphp
+                @if($banner->youtube_link && (int) $banner->video_type === 1 && Helper::Get_youtube_video_id($banner->youtube_link))
+                    <iframe width="100%" height="500" frameborder="0" allowfullscreen
+                            src="https://www.youtube.com/embed/{{ Helper::Get_youtube_video_id($banner->youtube_link) }}?autoplay=1&mute=1"
+                            allow="autoplay"></iframe>
+                @elseif($banner->youtube_link && (int) $banner->video_type === 2 && Helper::Get_vimeo_video_id($banner->youtube_link))
+                    <iframe width="100%" height="500" frameborder="0" allowfullscreen
+                            src="https://player.vimeo.com/video/{{ Helper::Get_vimeo_video_id($banner->youtube_link) }}?title=0&amp;byline=0"></iframe>
+                @elseif((int) $banner->video_type === 0 && $legacyFile)
+                    <video width="100%" height="500" controls autoplay muted playsinline>
+                        <source src="{{ route('fileView', ['path' => 'banners/'.$legacyFile]) }}" type="video/mp4">
+                    </video>
+                @endif
+            @endforeach
         @endif
-    @endpush
-    @push('after-scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                var carousel = document.getElementById('matchdayCarousel');
-                if (!carousel) return;
-
-                var current = carousel.querySelector('.matchday-current');
-                carousel.addEventListener('slid.bs.carousel', function (event) {
-                    if (current) current.textContent = String(event.to + 1).padStart(2, '0');
-                });
-            });
-        </script>
-    @endpush
+    </section>
 @endif
