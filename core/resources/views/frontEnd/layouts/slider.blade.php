@@ -140,7 +140,9 @@
     <section class="legacy-slider-media text-center">
         @if($legacyBannerType === 0)
             @foreach($legacyBanners as $banner)
-                @php($legacyDetails = $banner->{$detailsField} ?: $banner->{$fallbackDetailsField})
+                @php
+                    $legacyDetails = $banner->{$detailsField} ?: $banner->{$fallbackDetailsField};
+                @endphp
                 @if($legacyDetails)
                     <div>{!! $legacyDetails !!}</div>
                 @endif
