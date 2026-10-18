@@ -26,7 +26,7 @@ if (@$TopicBlockContents->module_id) {
 ?>
 
 @if(count($BlockTopics) >0)
-    <section id="landing-block-{{ @$TopicBlock->id }}" class="news landing-block {{ @$TopicBlock->css_classes  }}" style="{{ $block_style }}">
+    <section id="landing-block-{{ @$TopicBlock->id }}" class="news landing-block {{ $isHomepageNews ? 'sport-news-modern' : '' }} {{ @$TopicBlock->css_classes  }}" style="{{ $block_style }}">
         <div class="container">
             @if(@$TopicBlock->title_status || @$TopicBlock->desc_status)
                 <div class="section-title meu-reveal">
@@ -41,7 +41,7 @@ if (@$TopicBlockContents->module_id) {
                     </div>
                 </div>
             @endif
-            <div class="row g-4 sport-news-layout">
+            <div class="row g-4 sport-news-layout {{ $isHomepageNews ? 'sport-news-v2' : '' }}">
                 <div class="{{ $isHomepageNews ? 'col-lg-7' : 'col-lg-6' }} meu-reveal meu-reveal-left">
                         <?php
                         $Topic = @$BlockTopics->first();
@@ -85,7 +85,7 @@ if (@$TopicBlockContents->module_id) {
                 </div>
                 <div class="{{ $isHomepageNews ? 'col-lg-5' : 'col-lg-6' }}">
                     <div class="{{ $isHomepageNews ? 'sport-news-list' : 'meu-editorial' }} meu-stagger">
-                        @foreach($BlockTopics->slice(1, $isHomepageNews ? 3 : null) as $Topic)
+                        @foreach($BlockTopics->slice(1, $isHomepageNews ? 2 : null) as $Topic)
                                 <?php
                                 if ($Topic->$title_var != "") {
                                     $title = $Topic->$title_var;
