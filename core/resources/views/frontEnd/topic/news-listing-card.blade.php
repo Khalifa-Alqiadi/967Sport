@@ -3,7 +3,7 @@
     $newsSummary = trim(strip_tags((string) $Topic->{$details}));
     $newsDate = $Topic->date ?: $Topic->created_at;
 @endphp
-<article class="sport-news-entry">
+<article class="sport-news-entry mb-5">
     <a class="sport-news-entry__image" href="{{ $topic_link_url }}" aria-label="{{ $title }}">
         @if($newsImage)
             <img src="{{ route('fileView', ['path' => 'topics/'.$newsImage]) }}?w=720&h=450&r=fit" alt="{{ $title }}" loading="lazy">
