@@ -104,7 +104,7 @@
 @endsection
 @if(@$isSportHome)
     @push('after-styles')
-        <link href="{{ URL::asset('assets/frontend/css/967sport-home.css') }}?v={{ Helper::system_version() }}" rel="stylesheet"/>
+        <link href="{{ URL::asset('assets/frontend/css/967sport-home.css') }}?v=2" rel="stylesheet"/>
     @endpush
 @endif
 @if($custom_css_code !="" || $custom_js_code !="")

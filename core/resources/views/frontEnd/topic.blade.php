@@ -1,7 +1,7 @@
 @extends('frontEnd.layouts.master')
 
 @push('after-styles')
-    <link href="{{ URL::asset('assets/frontend/css/topic-page.css') }}?v={{ Helper::system_version() }}" rel="stylesheet"/>
+    <link href="{{ URL::asset('assets/frontend/css/topic-page.css') }}?v=2" rel="stylesheet"/>
 @endpush
 
 @section('content')

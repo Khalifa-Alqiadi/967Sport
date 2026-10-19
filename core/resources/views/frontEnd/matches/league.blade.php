@@ -115,6 +115,6 @@
 @endsection
 
 @push('after-styles')
-<link href="{{ URL::asset('assets/frontend/css/967sport-matches.css') }}?v={{ Helper::system_version() }}&ui=4" rel="stylesheet">
-<link href="{{ URL::asset('assets/frontend/css/967sport-league.css') }}?v={{ Helper::system_version() }}" rel="stylesheet">
+<link href="{{ URL::asset('assets/frontend/css/967sport-matches.css') }}?v=2&ui=4" rel="stylesheet">
+<link href="{{ URL::asset('assets/frontend/css/967sport-league.css') }}?v=2" rel="stylesheet">
 @endpush

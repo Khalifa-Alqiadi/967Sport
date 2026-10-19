@@ -6,10 +6,10 @@
     @stack('before-styles')
     @include('frontEnd.layouts.head')
     @include('frontEnd.layouts.colors')
-    <link href="{{ URL::asset('assets/frontend/css/967sport-brand.css') }}?v={{ Helper::system_version() }}" rel="stylesheet"/>
+    <link href="{{ URL::asset('assets/frontend/css/967sport-brand.css') }}?v=2" rel="stylesheet"/>
     @yield('headInclude')
     @stack('after-styles')
-    <link href="{{ URL::asset('assets/frontend/css/967sport-inner.css') }}?v={{ Helper::system_version() }}" rel="stylesheet"/>
+    <link href="{{ URL::asset('assets/frontend/css/967sport-inner.css') }}?v=2" rel="stylesheet"/>
     @if(Helper::GeneralSiteSettings("css")!="")
         <style type="text/css">
             {!! Helper::GeneralSiteSettings("css") !!}
