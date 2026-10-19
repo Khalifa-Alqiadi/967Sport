@@ -2,12 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Helpers\Helper;
-use App\Models\Section;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use RuntimeException;
 
 class Sport967NavigationBannersSeeder extends Seeder
 {
@@ -34,27 +31,16 @@ class Sport967NavigationBannersSeeder extends Seeder
                 $now
             );
 
-            $sections = Section::query()->whereIn('id', [30, 31, 32, 33, 34, 35])->get()->keyBy('id');
-            $missingSections = collect([30, 31, 32, 33, 34, 35])->diff($sections->keys());
-
-            if ($missingSections->isNotEmpty()) {
-                throw new RuntimeException(
-                    'Missing 967Sport news sections: '.$missingSections->implode(', ')
-                    .'. Run Sport967PlatformSeeder first.'
-                );
-            }
-
             $gatewayBanners = [
-                [9673501, 1, 30, 'الدوري اليمني', 'Yemeni League', 'كل أخبار وجولات وترتيب الدوري اليمني.', 'League news, rounds and standings.', 'bi-trophy'],
-                [9673502, 2, 31, 'المنتخبات الوطنية', 'National Teams', 'متابعة المنتخبات اليمنية في مختلف الفئات.', 'Follow Yemen national teams at every level.', 'bi-flag'],
-                [9673503, 3, 32, 'كأس الجمهورية', 'Republic Cup', 'مباريات وأخبار بطولة كأس الجمهورية.', 'Republic Cup matches and news.', 'bi-award'],
-                [9673504, 4, 33, 'المحترفون اليمنيون', 'Yemeni Professionals', 'أخبار اللاعبين اليمنيين المحترفين خارجياً.', 'Yemeni professionals playing abroad.', 'bi-person-badge'],
-                [9673505, 5, 34, 'انتقالات الأندية', 'Club Transfers', 'آخر الانتقالات والتعاقدات بين الأندية.', 'Latest club transfers and signings.', 'bi-arrow-left-right'],
-                [9673506, 6, 35, 'الملاعب والمنشآت', 'Stadiums and Facilities', 'أخبار الملاعب والمنشآت الرياضية اليمنية.', 'Yemeni stadiums and sports facilities.', 'bi-building'],
+                [9673501, 1, 'الدوري اليمني', 'Yemeni League', 'المباريات والترتيب والإحصائيات.', 'Fixtures, standings and statistics.', 'bi-trophy', route('sport.league', ['league' => 1], false), route('sport.localized.league', ['lang' => 'en', 'league' => 1], false)],
+                [9673502, 2, 'كل البطولات', 'All Competitions', 'استعرض البطولات اليمنية ومواسمها.', 'Explore Yemeni competitions and seasons.', 'bi-grid', route('sport.competitions', [], false), route('sport.localized.competitions', ['lang' => 'en'], false)],
+                [9673503, 3, 'كأس الجمهورية', 'Republic Cup', 'المباريات والنتائج والترتيب.', 'Fixtures, results and standings.', 'bi-award', route('sport.league', ['league' => 96704], false), route('sport.localized.league', ['lang' => 'en', 'league' => 96704], false)],
+                [9673504, 4, 'مباريات اليوم', "Today's Matches", 'جدول مباريات اليوم ونتائجها.', "Today's fixtures and results.", 'bi-calendar-event', route('sport.matches', ['day' => 'today'], false), route('sport.localized.matches', ['lang' => 'en', 'day' => 'today'], false)],
+                [9673505, 5, 'مباريات الغد', "Tomorrow's Matches", 'تعرّف إلى المواجهات القادمة.', 'See the upcoming fixtures.', 'bi-calendar-plus', route('sport.matches', ['day' => 'tomorrow'], false), route('sport.localized.matches', ['lang' => 'en', 'day' => 'tomorrow'], false)],
+                [9673506, 6, 'نتائج الأمس', "Yesterday's Results", 'راجع نتائج آخر المباريات.', 'Review the latest results.', 'bi-bar-chart-line', route('sport.matches', ['day' => 'yesterday'], false), route('sport.localized.matches', ['lang' => 'en', 'day' => 'yesterday'], false)],
             ];
 
-            foreach ($gatewayBanners as [$id, $row, $sectionId, $titleAr, $titleEn, $detailsAr, $detailsEn, $icon]) {
-                $section = $sections->get($sectionId);
+            foreach ($gatewayBanners as [$id, $row, $titleAr, $titleEn, $detailsAr, $detailsEn, $icon, $linkAr, $linkEn]) {
                 $this->seedBanner(
                     $id,
                     self::GATEWAY_GROUP_ID,
@@ -64,23 +50,20 @@ class Sport967NavigationBannersSeeder extends Seeder
                     $detailsAr,
                     $detailsEn,
                     $icon,
-                    $this->relativeCategoryUrl($section, 'ar'),
-                    $this->relativeCategoryUrl($section, 'en'),
+                    $linkAr,
+                    $linkEn,
                     $now
                 );
             }
 
             $manifestoBanners = [
-                [9673601, 1, 'الدوري اليمني', 'Yemeni League', 'bi-trophy', $sections->get(30)],
-                [9673602, 2, 'المنتخبات', 'National Teams', 'bi-flag', $sections->get(31)],
-                [9673603, 3, 'النتائج', 'Results', 'bi-bar-chart-line', null],
-                [9673604, 4, 'المحترفون', 'Professionals', 'bi-person-badge', $sections->get(33)],
+                [9673601, 1, 'الدوري اليمني', 'Yemeni League', 'bi-trophy', route('sport.league', ['league' => 1], false), route('sport.localized.league', ['lang' => 'en', 'league' => 1], false)],
+                [9673602, 2, 'البطولات', 'Competitions', 'bi-grid', route('sport.competitions', [], false), route('sport.localized.competitions', ['lang' => 'en'], false)],
+                [9673603, 3, 'النتائج', 'Results', 'bi-bar-chart-line', route('sport.matches', ['day' => 'yesterday'], false), route('sport.localized.matches', ['lang' => 'en', 'day' => 'yesterday'], false)],
+                [9673604, 4, 'المباريات', 'Matches', 'bi-calendar-event', route('sport.matches', [], false), route('sport.localized.matches', ['lang' => 'en'], false)],
             ];
 
-            foreach ($manifestoBanners as [$id, $row, $titleAr, $titleEn, $icon, $section]) {
-                $linkAr = $section ? $this->relativeCategoryUrl($section, 'ar') : '/#home-fixtures-title';
-                $linkEn = $section ? $this->relativeCategoryUrl($section, 'en') : '/en#home-fixtures-title';
-
+            foreach ($manifestoBanners as [$id, $row, $titleAr, $titleEn, $icon, $linkAr, $linkEn]) {
                 $this->seedBanner(
                     $id,
                     self::MANIFESTO_GROUP_ID,
@@ -169,12 +152,4 @@ class Sport967NavigationBannersSeeder extends Seeder
         );
     }
 
-    private function relativeCategoryUrl(Section $section, string $language): string
-    {
-        $url = Helper::categoryURL($section->id, $language, $section);
-        $path = parse_url($url, PHP_URL_PATH) ?: '/';
-        $query = parse_url($url, PHP_URL_QUERY);
-
-        return $path.($query ? '?'.$query : '');
-    }
 }

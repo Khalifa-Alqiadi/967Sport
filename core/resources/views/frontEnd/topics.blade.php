@@ -58,10 +58,11 @@
             $Category_description = @$TagDescription;
         }
         $is_services_section = (int) @$WebmasterSection->id === 2;
+        $is_news_section = (int) @$WebmasterSection->id === 3;
         $has_categories = @count($Categories) > 0;
         ?>
 
-        <section class="breadcrumbs d-flex align-items-center justify-content-center {{ $is_services_section ? 'services-breadcrumbs' : '' }}" style="background-image: url({{$category_image}})">
+        <section class="breadcrumbs d-flex align-items-center justify-content-center {{ $is_services_section ? 'services-breadcrumbs' : '' }} {{ $is_news_section ? 'sport-news-breadcrumbs' : '' }}" style="background-image: url({{$category_image}})">
             <div class="container">
                 <div class="">
                     <h1>{{  (@$search_word !="")?(__('backend.resultsFoundFor')." [ ".@$search_word." ]"):$page_title }}</h1>
@@ -94,21 +95,21 @@
                 @endif
             </div>
         </section>
-        <section id="content" class="{{ $is_services_section ? 'services-directory-content' : '' }}">
+        <section id="content" class="{{ $is_services_section ? 'services-directory-content' : '' }} {{ $is_news_section ? 'sport-news-directory' : '' }}">
             <div class="container">
-                <div class="row g-lg-5">
+                <div class="row {{ $is_news_section ? 'sport-news-directory-layout' : 'g-lg-5' }}">
                     @if($has_categories)
                         @include('frontEnd.layouts.side')
                     @endif
                     <div
-                        class="col-lg-{{ $has_categories ? "9":"12" }} col-md-{{ $has_categories ? "7":"12" }} col-sm-12 col-xs-12 {{ $is_services_section ? 'services-directory-main' : '' }}">
+                        class="col-lg-{{ $has_categories ? "9":"12" }} col-md-{{ $has_categories ? "7":"12" }} col-sm-12 col-xs-12 {{ $is_services_section ? 'services-directory-main' : '' }} {{ $is_news_section ? 'sport-news-directory-main' : '' }}">
                         @if($Topics->total() == 0)
                             <div class="p-5 card text-center no-data">
                                 <i class="fa fa-desktop fa-5x opacity-50"></i>
                                 <h5 class="mt-3 text-muted">{{ __('frontend.noData') }}</h5>
                             </div>
                         @else
-                            <div class="row {{ $is_services_section ? 'services-directory-grid g-4' : '' }}">
+                            <div class="row {{ $is_services_section ? 'services-directory-grid g-4' : '' }} {{ $is_news_section ? 'sport-news-directory-grid' : '' }}">
                                 @if($Topics->total() > 0)
 
                                         <?php
@@ -136,7 +137,7 @@
                                             $topic_link_url = Helper::topicURL($Topic->id, "", $Topic);
                                             ?>
                                         <div
-                                            class="col-lg-{{$cols_lg}} col-md-{{$cols_md}} {{ $is_services_section ? 'd-flex' : '' }}">
+                                            class="{{ $is_news_section ? ($has_categories ? 'col-xl-6 col-lg-12 col-md-6' : 'col-lg-4 col-md-6') : 'col-lg-'.$cols_lg.' col-md-'.$cols_md }} {{ $is_services_section ? 'd-flex' : '' }}">
                                             @if($is_services_section)
                                                 <article class="service-directory-card" style="--service-order: {{ $loop->index }}">
                                                     <a class="service-directory-link" aria-label="{{ $title }}" href="{{ $topic_link_url }}">
@@ -164,6 +165,8 @@
                                                         </span> --}}
                                                     </a>
                                                 </article>
+                                            @elseif($is_news_section)
+                                                @include('frontEnd.topic.news-listing-card', ['Topic' => $Topic, 'title' => $title, 'details' => $details, 'topic_link_url' => $topic_link_url])
                                             @else
                                                 @include("frontEnd.topic.card",["Topic"=>$Topic])
                                             @endif

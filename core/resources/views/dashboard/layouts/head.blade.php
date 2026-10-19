@@ -32,5 +32,5 @@
     <link rel="stylesheet" href="{{ asset('assets/dashboard/css/bootstrap-rtl/dist/bootstrap-rtl.css') }}?v={{ Helper::system_version() }}">
     <link rel="stylesheet" href="{{ asset('assets/dashboard/css/app.rtl.css') }}?v={{ Helper::system_version() }}">
 @endif
-{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"> --}}
+<link rel="stylesheet" href="{{ asset('assets/dashboard/vendor/fontawesome-5.15.1/css/all.min.css') }}?v={{ Helper::system_version() }}" type="text/css"/>
 @stack('after-styles')

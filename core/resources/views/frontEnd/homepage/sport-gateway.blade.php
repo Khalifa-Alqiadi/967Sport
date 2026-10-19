@@ -20,7 +20,6 @@
         @if((@$TopicBlock->title_status && $gatewayHeading) || (@$TopicBlock->desc_status && $gatewayDescription))
             <div class="sport-gateway-head">
                 <div>
-                    <span class="sport-section-label"><i></i> {{ __('frontend.sportGatewayKicker') }}</span>
                     @if(@$TopicBlock->title_status && $gatewayHeading)
                         <h2>{{ $gatewayHeading }}</h2>
                     @endif

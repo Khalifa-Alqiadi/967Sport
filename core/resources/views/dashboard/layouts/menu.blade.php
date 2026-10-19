@@ -382,6 +382,18 @@ $mnu_title_var2 = 'title_' . config('smartend.default_language');
                             <span class="nav-text">{{ __('backend.countries') }}</span>
                         </a>
                     </li>
+                    <?php
+                    $currentFolder = 'venues';
+                    $PathCurrentFolder = substr($urlAfterRoot, 0, strlen($currentFolder));
+                    ?>
+                    <li {{ $PathCurrentFolder == $currentFolder ? 'class=active' : '' }}>
+                        <a href="{{ route('venues') }}">
+                            <span class="nav-icon">
+                                <i class="material-icons">&#xe53b;</i>
+                            </span>
+                            <span class="nav-text">{{ __('backend.venues') }}</span>
+                        </a>
+                    </li>
 
                     @if (
                         (Helper::GeneralWebmasterSettings('banners_status') && @Auth::user()->permissionsGroup->banners_status) ||

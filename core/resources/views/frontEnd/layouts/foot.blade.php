@@ -1,4 +1,4 @@
-<a href="#" title="{{ __('frontend.toTop') }}" class="back-to-top d-flex align-items-center justify-content-center" aria-label="Go to Top"><i
+<a href="#" title="{{ __('frontend.toTop') }}" class="back-to-top d-flex align-items-center justify-content-center" aria-label="{{ __('frontend.toTop') }}"><i
         class="bi bi-arrow-up-short"></i></a>
 
 <script type="text/javascript">

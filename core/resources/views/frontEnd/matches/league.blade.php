@@ -9,42 +9,50 @@
 @endphp
 
 @section('content')
-<div class="sm-page sm-page--league-v2">
+<div class="sm-page sm-page--league-studio">
     <section class="sm-league-hero">
-        <span class="sm-league-hero__watermark" aria-hidden="true">967</span>
         <div class="container">
             <div class="sm-league-hero__crumbs">
-                <a href="{{ route('sport.competitions') }}">{{ __('matches.competitions') }}</a><i class="bi bi-chevron-left"></i><span>{{ $leagueName }}</span>
+                <a href="{{ route('sport.competitions') }}">{{ __('matches.competitions') }}</a><i class="bi bi-chevron-left" aria-hidden="true"></i><span aria-current="page">{{ $leagueName }}</span>
             </div>
             <div class="sm-league-hero__main">
-                <div class="sm-league-badge">@if($league->image_path)<img src="{{ $league->image_path }}" alt="{{ $leagueName }}">@else<i class="bi bi-trophy"></i>@endif</div>
                 <div class="sm-league-title">
-                    <span class="sm-eyebrow"><i></i>{{ __('matches.officialCompetitionPage') }}</span>
+                    <span class="sm-eyebrow">{{ __('matches.officialCompetitionPage') }}</span>
                     <h1>{{ $leagueName }}</h1>
-                    <p>{{ $season?->name ?: __('matches.currentSeason') }}</p>
+                    <p>{{ __('matches.season') }} <b>{{ $season?->name ?: __('matches.currentSeason') }}</b></p>
                     <div class="sm-league-title__facts">
                         <span><b>{{ $statistics['teams'] }}</b>{{ __('matches.team') }}</span>
                         <span><b>{{ $statistics['matches'] }}</b>{{ __('matches.match') }}</span>
                         <span><b>{{ $statistics['goals'] }}</b>{{ __('matches.goals') }}</span>
                     </div>
                 </div>
-                @if($seasons->isNotEmpty())
-                    <form class="sm-season-switcher" action="{{ route('sport.league', $league->id) }}" method="GET">
-                        <input type="hidden" name="tab" value="{{ $tab }}">
-                        <label for="league-season">{{ __('matches.season') }}</label>
-                        <select id="league-season" name="season" onchange="this.form.submit()">
-                            @foreach($seasons as $seasonOption)<option value="{{ $seasonOption->id }}" {{ $season?->id === $seasonOption->id ? 'selected' : '' }}>{{ $seasonOption->name }}</option>@endforeach
-                        </select>
-                    </form>
-                @endif
+                <div class="sl-hero-identity" aria-hidden="true">
+                    <span class="sl-hero-identity__ring"></span>
+                    <span class="sm-league-badge">@if($league->image_path)<img src="{{ $league->image_path }}" alt="">@else<i class="bi bi-trophy"></i>@endif</span>
+                    <span class="sl-hero-identity__line"></span>
+                </div>
             </div>
-            <nav class="sm-league-tabs" aria-label="{{ __('matches.leagueSections') }}">
-                @foreach($tabs as $tabName)
-                    <a class="{{ $tab === $tabName ? 'is-active' : '' }}" href="{{ route('sport.league', ['league' => $league->id, 'tab' => $tabName, 'season' => $season?->id]) }}"><i class="bi {{ ['overview' => 'bi-grid', 'matches' => 'bi-calendar2-week', 'news' => 'bi-newspaper', 'statistics' => 'bi-bar-chart', 'standings' => 'bi-list-ol'][$tabName] }}"></i>{{ __('matches.tabs.'.$tabName) }}</a>
-                @endforeach
-            </nav>
         </div>
     </section>
+
+    <div class="sl-navigation">
+        <div class="container sl-navigation__inner">
+            <nav class="sm-league-tabs" aria-label="{{ __('matches.leagueSections') }}">
+                @foreach($tabs as $tabName)
+                    <a class="{{ $tab === $tabName ? 'is-active' : '' }}" @if($tab === $tabName) aria-current="page" @endif href="{{ route('sport.league', ['league' => $league->id, 'tab' => $tabName, 'season' => $season?->id]) }}">{{ __('matches.tabs.'.$tabName) }}</a>
+                @endforeach
+            </nav>
+            @if($seasons->isNotEmpty())
+                <form class="sm-season-switcher" action="{{ route('sport.league', $league->id) }}" method="GET">
+                    <input type="hidden" name="tab" value="{{ $tab }}">
+                    <label for="league-season">{{ __('matches.season') }}</label>
+                    <select id="league-season" name="season" onchange="this.form.submit()">
+                        @foreach($seasons as $seasonOption)<option value="{{ $seasonOption->id }}" {{ $season?->id === $seasonOption->id ? 'selected' : '' }}>{{ $seasonOption->name }}</option>@endforeach
+                    </select>
+                </form>
+            @endif
+        </div>
+    </div>
 
     <section class="sm-section sm-league-content">
         <div class="container">
@@ -108,4 +116,5 @@
 
 @push('after-styles')
 <link href="{{ URL::asset('assets/frontend/css/967sport-matches.css') }}?v={{ Helper::system_version() }}&ui=4" rel="stylesheet">
+<link href="{{ URL::asset('assets/frontend/css/967sport-league.css') }}?v={{ Helper::system_version() }}" rel="stylesheet">
 @endpush

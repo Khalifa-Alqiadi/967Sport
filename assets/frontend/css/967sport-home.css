@@ -431,13 +431,7 @@
 }
 
 .sport-home .landing-block.news::before {
-    content: "NEWS";
-    position: absolute;
-    top: 55px;
-    inset-inline-end: 3vw;
-    color: rgba(77, 44, 133, .035);
-    font: italic 900 clamp(7rem, 18vw, 18rem)/1 "Barlow Condensed", sans-serif;
-    pointer-events: none;
+    display: none;
 }
 
 .sport-home .landing-block.news .section-title {
@@ -1354,21 +1348,18 @@
     line-height: 1.55;
     -webkit-line-clamp: 2;
 }
-
-.sport-home .landing-block.news.sport-news-modern .sport-news-more {
+ .sport-news-more {
     display: flex;
     margin-top: 24px;
     align-items: center;
     gap: 18px;
 }
-
-.sport-home .landing-block.news.sport-news-modern .sport-news-more > span {
+ .sport-news-more > span {
     height: 1px;
     background: #e4dfe6;
     flex: 1;
 }
-
-.sport-home .landing-block.news.sport-news-modern .sport-news-more > a {
+ .sport-news-more > a {
     display: inline-flex;
     min-height: 46px;
     padding: 0 17px 0 8px;
@@ -1383,8 +1374,7 @@
     gap: 14px;
     transition: color .2s ease, background-color .2s ease, transform .2s ease;
 }
-
-.sport-home .landing-block.news.sport-news-modern .sport-news-more > a i {
+ .sport-news-more > a i {
     display: grid;
     width: 31px;
     height: 31px;
@@ -1394,19 +1384,17 @@
     font-size: 13px;
     place-items: center;
 }
-
-.sport-home .landing-block.news.sport-news-modern .sport-news-more > a:hover {
+ .sport-news-more > a:hover {
     color: #211329;
     background: #ffc32b;
     transform: translateY(-2px);
 }
-
-.sport-home .landing-block.news.sport-news-modern .sport-news-more > a:hover i {
+ .sport-news-more > a:hover i {
     color: #fff;
     background: #211329;
 }
 
-[dir="ltr"] .sport-home .landing-block.news.sport-news-modern .sport-news-more > a i {
+[dir="ltr"] .sport-news-more > a i {
     transform: scaleX(-1);
 }
 

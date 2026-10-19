@@ -1,5 +1,5 @@
 /* 967Sport brand layer — derived from the official Facebook profile mark. */
-@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800;1,900&family=Changa:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800;1,900&family=Tajawal:wght@400;500;600;700;800;900&display=swap");
 
 :root {
     --sport-yellow: #febb22;
@@ -28,7 +28,7 @@
 
 html[dir="rtl"] body,
 html[dir="rtl"] body *:not(i):not(.fa):not(.fas):not(.far):not(.fab):not(.bi) {
-    font-family: "Changa", "Tajawal", sans-serif;
+    font-family: "Tajawal", sans-serif;
 }
 
 html[dir="ltr"] body {
@@ -625,6 +625,23 @@ a:hover,
 }
 
 #footer.sport-footer-v2 .sport-footer-nav a:hover > i { color: #160a27; }
+
+#footer.sport-footer-v2 .sport-footer-nav a:hover span i,
+#footer.sport-footer-v2 .sport-footer-nav a:focus-visible span i,
+#footer.sport-footer-v2 .sport-footer-nav a:focus-visible > i { color: #160a27 !important; }
+
+#footer.sport-footer-v2 .sport-footer-nav a:focus-visible {
+    outline: 2px solid var(--sport-yellow);
+    outline-offset: 2px;
+}
+
+.back-to-top { width: 42px; height: 42px; border-radius: 10px; box-shadow: 0 6px 18px rgba(31, 12, 50, .18); }
+.back-to-top i { color: #211329 !important; font-size: 24px; transition: color .2s ease, transform .2s ease; }
+.back-to-top:hover,
+.back-to-top:focus-visible { background: #291735 !important; border-color: #291735 !important; color: #fff !important; }
+.back-to-top:hover i,
+.back-to-top:focus-visible i { color: #fff !important; transform: translateY(-2px); }
+.back-to-top:focus-visible { outline: 2px solid var(--sport-yellow); outline-offset: 3px; }
 
 #footer.sport-footer-v2 .sport-footer-contact-grid {
     display: grid;

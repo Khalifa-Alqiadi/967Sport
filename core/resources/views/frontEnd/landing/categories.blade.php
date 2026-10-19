@@ -81,7 +81,7 @@ if (@$TopicBlockContents->module_id) {
                 @endforeach
             </div>
             @if (@$TopicBlock->more_btn_status)
-                <div class="row mt-4">
+                {{-- <div class="row mt-4">
                     <div class="col-lg-12">
                         <div class="more-btn">
                             <a href="{{ url($section_url) }}" class="btn btn-theme"><i
@@ -90,6 +90,13 @@ if (@$TopicBlockContents->module_id) {
                                     class="fa fa-angle-right"></i></a>
                         </div>
                     </div>
+                </div> --}}
+                <div class="sport-news-more">
+                    <span aria-hidden="true"></span>
+                    <a href="{{ url($section_url) }}">
+                        {{ __('frontend.viewMore') }}
+                        <i class="bi bi-arrow-up-left" aria-hidden="true"></i>
+                    </a>
                 </div>
             @endif
         </div>

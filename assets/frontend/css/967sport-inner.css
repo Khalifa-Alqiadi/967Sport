@@ -70,37 +70,12 @@
 }
 
 .sport-inner-page .breadcrumbs::after {
-    content: "967";
-    position: absolute;
-    z-index: -1;
-    inset-inline-end: clamp(-20px, 2vw, 40px);
-    bottom: -0.28em;
-    color: transparent;
-    -webkit-text-stroke: 2px rgba(255,255,255,.055);
-    font-family: "Barlow Condensed", sans-serif !important;
-    font-size: clamp(150px, 25vw, 340px);
-    font-style: italic;
-    font-weight: 900;
-    line-height: .8;
-    letter-spacing: -.08em;
-    pointer-events: none;
+    display: none;
 }
 
 .sport-inner-page .breadcrumbs .container { position: relative; z-index: 2; }
 .sport-inner-page .breadcrumbs .container::before {
-    content: "967SPORT  /  YEMEN FOOTBALL";
-    display: block;
-    width: max-content;
-    margin-bottom: 16px;
-    padding: 7px 12px;
-    color: var(--inner-ink);
-    background: var(--inner-yellow);
-    font-family: "Barlow Condensed", sans-serif !important;
-    font-size: 12px;
-    font-style: italic;
-    font-weight: 800;
-    letter-spacing: .08em;
-    transform: skewX(-7deg);
+    display: none;
 }
 
 .sport-inner-page .breadcrumbs h1,
@@ -418,6 +393,10 @@
 }
 
 @media (max-width: 767.98px) {
+    .sport-inner-page #main > div > section > .container,
+    .sport-inner-page #content > .container,
+    .sport-inner-page .breadcrumbs > .container,
+    .sport-inner-page .topic-content-section > .container { max-width: none; padding-inline: 14px; }
     .sport-inner-page .breadcrumbs { min-height: 220px; padding: 92px 0 42px; }
     .sport-inner-page .breadcrumbs .container::before { margin-bottom: 12px; font-size: 10px; }
     .sport-inner-page .breadcrumbs h1,
@@ -432,4 +411,52 @@
 
 @media (prefers-reduced-motion: reduce) {
     .sport-inner-page *, .sport-inner-page *::before, .sport-inner-page *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
+
+/* News section: one surface per story, no nested cards. */
+.sport-inner-page .sport-news-breadcrumbs::after,
+.sport-inner-page .sport-news-breadcrumbs .container::before { display: none; }
+.sport-inner-page .sport-news-breadcrumbs { min-height: 225px; padding-block: 105px 38px; }
+.sport-inner-page .sport-news-breadcrumbs h1 { font-size: clamp(2rem, 4vw, 3.4rem); margin-bottom: 10px; }
+.sport-inner-page #content.sport-news-directory { padding: 36px 0 70px; background: #fff; }
+.sport-inner-page #content.sport-news-directory::before { display: none; }
+.sport-inner-page .sport-news-directory-layout { --bs-gutter-x: 24px; }
+.sport-inner-page .sport-news-directory-grid { --bs-gutter-x: 20px; --bs-gutter-y: 28px; }
+.sport-inner-page #content.sport-news-directory .sport-news-directory-grid > [class*="col-"] { margin-bottom: 0; }
+.sport-inner-page #content.sport-news-directory article.sport-news-entry {
+    height: 100%; padding: 0 !important; overflow: visible;
+    border: 0 !important; border-radius: 0 !important;
+    background: transparent; box-shadow: none;
+}
+.sport-inner-page .sport-news-entry__image {
+    display: block; overflow: hidden; aspect-ratio: 16 / 10;
+    border-radius: 10px; background: #ede8f2;
+}
+.sport-inner-page .sport-news-entry__image img { width: 100%; height: 100%; object-fit: cover; transition: transform .25s ease; }
+.sport-inner-page .sport-news-entry:hover .sport-news-entry__image img { transform: scale(1.025); }
+.sport-inner-page .sport-news-entry__image > span { display: grid; height: 100%; place-items: center; color: #654587; font-size: 32px; }
+.sport-inner-page .sport-news-entry__body { padding: 14px 1px 0; }
+.sport-inner-page .sport-news-entry__body time { color: #77717c; font-size: 12px; }
+.sport-inner-page .sport-news-entry__body h2 { margin: 7px 0 0; font-size: clamp(16px, 1.25vw, 20px); font-weight: 800; line-height: 1.5; }
+.sport-inner-page .sport-news-entry__body h2 a { color: #201528; text-decoration: none; }
+.sport-inner-page .sport-news-entry__body h2 a:hover { color: #4d2c85; }
+.sport-inner-page .sport-news-entry__body p { display: -webkit-box; overflow: hidden; margin: 7px 0 0; color: #716b76; font-size: 13px; line-height: 1.7; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.sport-inner-page .right-sidebar .sport-news-popular { overflow: visible; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.sport-inner-page .right-sidebar .sport-news-popular .widget-title { padding: 0 0 11px !important; border-bottom: 2px solid #291735 !important; color: #21152a !important; background: transparent !important; font-size: 18px; }
+.sport-inner-page .right-sidebar .sport-news-popular .widget-title::after { display: none; }
+.sport-inner-page .sport-news-popular__item { display: grid; min-height: 88px; padding: 13px 0; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; align-items: center; border-bottom: 1px solid #e9e5ec; color: #251b2d; text-decoration: none; }
+.sport-inner-page .sport-news-popular__item:not(:has(img)) { grid-template-columns: 1fr; }
+.sport-inner-page .sport-news-popular__item img { width: 84px; height: 62px; border-radius: 6px; object-fit: cover; }
+.sport-inner-page .sport-news-popular__item span { display: -webkit-box; overflow: hidden; font-size: 13px; font-weight: 750; line-height: 1.5; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.sport-inner-page .sport-news-popular__item:hover span { color: #4d2c85; }
+
+@media (max-width: 767.98px) {
+    .sport-inner-page .sport-news-breadcrumbs { min-height: 170px; padding: 86px 0 22px; }
+    .sport-inner-page #content.sport-news-directory { padding: 22px 0 48px; }
+    .sport-inner-page #content.sport-news-directory > .container,
+    .sport-inner-page .sport-news-breadcrumbs > .container { padding-inline: 14px; }
+    .sport-inner-page .sport-news-directory-layout { --bs-gutter-x: 18px; }
+    .sport-inner-page .sport-news-directory-grid { --bs-gutter-x: 14px; --bs-gutter-y: 22px; }
+    .sport-inner-page .sport-news-entry__body { padding-top: 10px; }
+    .sport-inner-page .sport-news-entry__body p { font-size: 12px; }
 }

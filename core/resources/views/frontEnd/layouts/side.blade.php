@@ -12,13 +12,13 @@
                 </div>
             </form>
         </div> --}}
-        @if(count($Categories)>0)
-                <?php
-                $title_var = "title_".@Helper::currentLanguage()->code;
-                $title_var2 = "title_".config('smartend.default_language');
-                $slug_var = "seo_url_slug_".@Helper::currentLanguage()->code;
-                $slug_var2 = "seo_url_slug_".config('smartend.default_language');
-                ?>
+        @if (count($Categories) > 0)
+            <?php
+            $title_var = 'title_' . @Helper::currentLanguage()->code;
+            $title_var2 = 'title_' . config('smartend.default_language');
+            $slug_var = 'seo_url_slug_' . @Helper::currentLanguage()->code;
+            $slug_var2 = 'seo_url_slug_' . config('smartend.default_language');
+            ?>
             <div class="widget categories-widget sidebar-list mb-4">
                 <div class="widget-title categories-title">
                     <span class="float-end d-block d-sm-none"><i class="fa-solid fa-bars"></i></span>
@@ -26,98 +26,88 @@
                 </div>
                 <div class="categories-list">
                     <ul class="list-group">
-                        @foreach($Categories as $Category)
-                                <?php $active_cat = ""; ?>
-                            @if($CurrentCategory!="none")
-                                @if(!empty($CurrentCategory))
-                                    @if($Category->id == $CurrentCategory->id)
-                                            <?php $active_cat = "active"; ?>
+                        @foreach ($Categories as $Category)
+                            <?php $active_cat = ''; ?>
+                            @if ($CurrentCategory != 'none')
+                                @if (!empty($CurrentCategory))
+                                    @if ($Category->id == $CurrentCategory->id)
+                                        <?php $active_cat = 'active'; ?>
                                     @endif
                                 @endif
                             @endif
-                                <?php
-                                if ($Category->$title_var != "") {
-                                    $Category_title = $Category->$title_var;
-                                } else {
-                                    $Category_title = $Category->$title_var2;
-                                }
-                                ?>
+                            <?php
+                            if ($Category->$title_var != '') {
+                                $Category_title = $Category->$title_var;
+                            } else {
+                                $Category_title = $Category->$title_var2;
+                            }
+                            ?>
                             <li class="list-group-item">
-                                <a href="{{ Helper::categoryURL($Category->id,"",$Category) }}" class="nav-link {{ $active_cat }}">
-                                            <span>
-                                                 @if($Category->icon !="")
-                                                    <i class="{{$Category->icon}}"></i> &nbsp;
-                                                @endif
-                                                {{ $Category_title }}
-                                            </span>
-                                    @if(@$TopicsCountPerCat[$Category->id] >0)
-                                        <span
-                                            class="badge bg-primary">{{ @$TopicsCountPerCat[$Category->id] }}</span>
-                                    @endif
+                                <a href="{{ Helper::categoryURL($Category->id, '', $Category) }}"
+                                    class="nav-link {{ $active_cat }}">
+                                    <span>
+                                        @if ($Category->icon != '')
+                                            <i class="{{ $Category->icon }}"></i> &nbsp;
+                                        @endif
+                                        {{ $Category_title }}
+                                    </span>
                                 </a>
-                                @if(count($Category->fatherSections))
+                                @if (count($Category->fatherSections))
                                     <ul class="list-group">
-                                        @foreach($Category->fatherSections as $MnuCategory)
-                                                <?php $active_cat = ""; ?>
-                                            @if($CurrentCategory!="none")
-                                                @if(!empty($CurrentCategory))
-                                                    @if($MnuCategory->id == $CurrentCategory->id)
-                                                            <?php $active_cat = "active"; ?>
+                                        @foreach ($Category->fatherSections as $MnuCategory)
+                                            <?php $active_cat = ''; ?>
+                                            @if ($CurrentCategory != 'none')
+                                                @if (!empty($CurrentCategory))
+                                                    @if ($MnuCategory->id == $CurrentCategory->id)
+                                                        <?php $active_cat = 'active'; ?>
                                                     @endif
                                                 @endif
                                             @endif
-                                                <?php
-                                                if ($MnuCategory->$title_var != "") {
-                                                    $MnuCategory_title = $MnuCategory->$title_var;
-                                                } else {
-                                                    $MnuCategory_title = $MnuCategory->$title_var2;
-                                                }
-                                                ?>
+                                            <?php
+                                            if ($MnuCategory->$title_var != '') {
+                                                $MnuCategory_title = $MnuCategory->$title_var;
+                                            } else {
+                                                $MnuCategory_title = $MnuCategory->$title_var2;
+                                            }
+                                            ?>
                                             <li class="list-group-item"><a
-                                                    href="{{ Helper::categoryURL($MnuCategory->id,"",$MnuCategory) }}"
+                                                    href="{{ Helper::categoryURL($MnuCategory->id, '', $MnuCategory) }}"
                                                     class="nav-link {{ $active_cat }}">
-                                            <span>
-                                                 @if($MnuCategory->icon !="")
-                                                    <i class="{{$MnuCategory->icon}}"></i> &nbsp;
-                                                @endif
-                                                {{ $MnuCategory_title }}
-                                            </span>
-                                                    @if(@$TopicsCountPerCat[$MnuCategory->id] >0)
-                                                        <span
-                                                            class="badge bg-primary">{{ @$TopicsCountPerCat[$MnuCategory->id] }}</span>
-                                                    @endif
+                                                    <span>
+                                                        @if ($MnuCategory->icon != '')
+                                                            <i class="{{ $MnuCategory->icon }}"></i> &nbsp;
+                                                        @endif
+                                                        {{ $MnuCategory_title }}
+                                                    </span>
                                                 </a>
-                                                @if(count($MnuCategory->fatherSections))
+                                                @if (count($MnuCategory->fatherSections))
                                                     <ul class="list-group">
-                                                        @foreach($MnuCategory->fatherSections as $MnuCategory2)
-                                                                <?php $active_cat = ""; ?>
-                                                            @if($CurrentCategory!="none")
-                                                                @if(!empty($CurrentCategory))
-                                                                    @if($MnuCategory2->id == $CurrentCategory->id)
-                                                                            <?php $active_cat = "active"; ?>
+                                                        @foreach ($MnuCategory->fatherSections as $MnuCategory2)
+                                                            <?php $active_cat = ''; ?>
+                                                            @if ($CurrentCategory != 'none')
+                                                                @if (!empty($CurrentCategory))
+                                                                    @if ($MnuCategory2->id == $CurrentCategory->id)
+                                                                        <?php $active_cat = 'active'; ?>
                                                                     @endif
                                                                 @endif
                                                             @endif
-                                                                <?php
-                                                                if ($MnuCategory2->$title_var != "") {
-                                                                    $MnuCategory2_title = $MnuCategory2->$title_var;
-                                                                } else {
-                                                                    $MnuCategory2_title = $MnuCategory2->$title_var2;
-                                                                }
-                                                                ?>
+                                                            <?php
+                                                            if ($MnuCategory2->$title_var != '') {
+                                                                $MnuCategory2_title = $MnuCategory2->$title_var;
+                                                            } else {
+                                                                $MnuCategory2_title = $MnuCategory2->$title_var2;
+                                                            }
+                                                            ?>
                                                             <li class="list-group-item"><a
-                                                                    href="{{ Helper::categoryURL($MnuCategory2->id,"",$MnuCategory2) }}"
+                                                                    href="{{ Helper::categoryURL($MnuCategory2->id, '', $MnuCategory2) }}"
                                                                     class="nav-link {{ $active_cat }}">
-                                            <span>
-                                                 @if($MnuCategory2->icon !="")
-                                                    <i class="{{$MnuCategory2->icon}}"></i> &nbsp;
-                                                @endif
-                                                {{ $MnuCategory2_title }}
-                                            </span>
-                                                                    @if(@$TopicsCountPerCat[$MnuCategory2->id] >0)
-                                                                        <span
-                                                                            class="badge bg-primary">{{ @$TopicsCountPerCat[$MnuCategory2->id] }}</span>
-                                                                    @endif
+                                                                    <span>
+                                                                        @if ($MnuCategory2->icon != '')
+                                                                            <i class="{{ $MnuCategory2->icon }}"></i>
+                                                                            &nbsp;
+                                                                        @endif
+                                                                        {{ $MnuCategory2_title }}
+                                                                    </span>
                                                                 </a>
                                                             </li>
                                                         @endforeach
@@ -134,18 +124,25 @@
             </div>
 
         @endif
-        @if((int) @$WebmasterSection->id !== 2 && @count(@$MostViewedTopics) >0)
-            <div class="widget mb-4 d-none d-md-block">
+        @if ((int) @$WebmasterSection->id !== 2 && @count(@$MostViewedTopics) > 0)
+            <div
+                class="widget mb-4 d-none d-md-block {{ (int) @$WebmasterSection->id === 3 ? 'sport-news-popular' : '' }}">
                 <h5 class="widget-title">{{ __('frontend.mostViewed') }}</h5>
 
-                @foreach($MostViewedTopics as $TopicMostViewed)
-                    @include("frontEnd.topic.card2",["Post"=>$TopicMostViewed])
+                @foreach ($MostViewedTopics as $TopicMostViewed)
+                    @if ((int) @$WebmasterSection->id === 3)
+                        @include('frontEnd.topic.news-popular-item', ['Post' => $TopicMostViewed])
+                    @else
+                        @include('frontEnd.topic.card2', ['Post' => $TopicMostViewed])
+                    @endif
                 @endforeach
 
             </div>
         @endif
 
-        @include('frontEnd.layouts.banners',["BannersSettingsId"=>Helper::GeneralWebmasterSettings("side_banners_section_id")])
+        @include('frontEnd.layouts.banners', [
+            'BannersSettingsId' => Helper::GeneralWebmasterSettings('side_banners_section_id'),
+        ])
 
     </aside>
 </div>
