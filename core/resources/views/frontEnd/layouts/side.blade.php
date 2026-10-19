@@ -124,7 +124,7 @@
             </div>
 
         @endif
-        @if ((int) @$WebmasterSection->id !== 2 && @count(@$MostViewedTopics) > 0)
+        {{-- @if ((int) @$WebmasterSection->id !== 2 && @count(@$MostViewedTopics) > 0)
             <div
                 class="widget mb-4 d-none d-md-block {{ (int) @$WebmasterSection->id === 3 ? 'sport-news-popular' : '' }}">
                 <h5 class="widget-title">{{ __('frontend.mostViewed') }}</h5>
@@ -138,7 +138,7 @@
                 @endforeach
 
             </div>
-        @endif
+        @endif --}}
 
         @include('frontEnd.layouts.banners', [
             'BannersSettingsId' => Helper::GeneralWebmasterSettings('side_banners_section_id'),

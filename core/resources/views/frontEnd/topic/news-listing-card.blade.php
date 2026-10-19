@@ -12,8 +12,8 @@
         @endif
     </a>
     <div class="sport-news-entry__body">
-        @if($newsDate)<time datetime="{{ \Carbon\Carbon::parse($newsDate)->toDateString() }}">{{ \Carbon\Carbon::parse($newsDate)->translatedFormat('d M Y') }}</time>@endif
+        {{-- @if($newsDate)<time datetime="{{ \Carbon\Carbon::parse($newsDate)->toDateString() }}">{{ \Carbon\Carbon::parse($newsDate)->translatedFormat('d M Y') }}</time>@endif --}}
         <h2><a href="{{ $topic_link_url }}">{{ $title }}</a></h2>
-        @if($newsSummary !== '')<p>{{ \Illuminate\Support\Str::limit($newsSummary, 125) }}</p>@endif
+        {{-- @if($newsSummary !== '')<p>{{ \Illuminate\Support\Str::limit($newsSummary, 125) }}</p>@endif --}}
     </div>
 </article>
