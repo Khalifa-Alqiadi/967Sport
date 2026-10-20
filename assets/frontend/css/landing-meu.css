@@ -671,14 +671,6 @@
         margin: 0;
     }
 
-    #navbar .mobile-nav-toggle:hover,
-    #navbar .mobile-nav-toggle:focus-visible {
-        color: #fff !important;
-        background: var(--meu-accent, #2f7fd6);
-        outline: 3px solid rgba(47, 127, 214, .18);
-        outline-offset: 2px;
-    }
-
     #navbar.navbar-mobile {
         position: fixed !important;
         inset: 0 !important;
