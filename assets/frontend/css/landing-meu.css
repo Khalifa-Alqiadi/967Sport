@@ -658,11 +658,10 @@
         height: 44px;
         margin: 0;
         padding: 0;
-        color: var(--meu-navy, #102a4c) !important;
         font-size: 25px;
         line-height: 1;
         background: rgba(47, 127, 214, .08);
-        border: 1px solid rgba(47, 127, 214, .2);
+        border: 1px solid rgba(244, 245, 247, 0.651);
         border-radius: 13px;
         box-shadow: none;
         transition: color .2s ease, background-color .2s ease, transform .2s ease;
@@ -3282,10 +3281,6 @@
     background: color-mix(in srgb, var(--meu-accent) 8%, #f7f8fa);
     border-inline-start-color: var(--meu-accent);
     padding-inline-start: 24px;
-}
-
-.mobile-nav-toggle {
-    color: var(--meu-navy, #102a4c) !important;
 }
 
 /* language switcher, now living as the last nav item instead of a
