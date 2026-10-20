@@ -12,7 +12,7 @@ if (Helper::GeneralSiteSettings('social_links') != "") {
     <div class="social-links text-center text-md-right pt-3 pt-md-0">
         @foreach($socialLinks as $link)
             <a href="{{ @$link['url'] }}" data-bs-toggle="tooltip" title="{{ @$link['title'] }}" data-bs-placement="{{ @$tt_position }}"
-               target="_blank" class="" style="background-color:{{ @$link['color'] }}">
+               target="_blank" rel="noopener noreferrer" class="" style="background-color:{{ @$link['color'] }}">
                 <i class="{{ $link['icon'] }}"></i>
             </a>
         @endforeach

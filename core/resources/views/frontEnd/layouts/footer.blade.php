@@ -12,16 +12,11 @@ if (Helper::GeneralWebmasterSettings("footer_menu_id") >0) {
 $site_title_var = "site_title_".@Helper::currentLanguage()->code;
 $site_desc_var = "site_desc_".@Helper::currentLanguage()->code;
 ?>
-<footer id="footer" class="meu-footer sport-footer-v2" {!!  $footer_style !!}>
-    <div class="sport-footer-backdrop" aria-hidden="true">
-        <span class="sport-footer-grid"></span>
-        <span class="sport-footer-number">967</span>
-        <span class="sport-footer-stripe"></span>
-    </div>
-
+<footer id="footer" class="meu-footer sport-footer-v3" {!!  $footer_style !!}>
     <div class="footer-top">
         <div class="container">
-            <div class="sport-footer-masthead">
+          <div class="sport-footer-layout">
+            <div class="sport-footer-intro">
                 <div class="sport-footer-identity">
                     <span class="sport-footer-kicker"><i></i>{{ __('frontend.sportManifestoEyebrow') }}</span>
                     <a href="{{ Helper::homeURL() }}" class="footer-logo sport-brand">
@@ -110,6 +105,7 @@ $site_desc_var = "site_desc_".@Helper::currentLanguage()->code;
                     </div>
                 </div>
             </div>
+          </div>
         </div>
     </div>
     <div class="footer-bottom">

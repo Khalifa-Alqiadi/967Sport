@@ -10,7 +10,7 @@
             @endphp
             <tr>
                 <td><b>{{ $row->position ?: $loop->iteration }}</b></td>
-                <td><span class="sm-table-team">@if($team?->image_path)<img src="{{ $team->image_path }}" alt="">@else<i>{{ mb_substr($teamName ?: __('matches.unknown'), 0, 1) }}</i>@endif<strong>{{ $teamName ?: __('matches.unknown') }}</strong></span></td>
+                <td><span class="sm-table-team">@if($team?->image_path)<img src="{{ $team->image_path }}" alt="">@else<i>{{ mb_substr($teamName ?: __('matches.unknown'), 0, 1) }}</i>@endif @if($team?->status)<a href="{{ app()->getLocale() === 'en' ? route('sport.localized.team', ['lang' => 'en', 'team' => $team->id]) : route('sport.team', $team->id) }}">{{ $teamName ?: __('matches.unknown') }}</a>@else<strong>{{ $teamName ?: __('matches.unknown') }}</strong>@endif</span></td>
                 <td>{{ $row->played }}</td><td>{{ $row->won }}</td><td>{{ $row->draw }}</td><td>{{ $row->lost }}</td><td dir="ltr">{{ $row->goal_difference > 0 ? '+' : '' }}{{ $row->goal_difference }}</td><td><strong>{{ $row->points }}</strong></td>
             </tr>
         @endforeach

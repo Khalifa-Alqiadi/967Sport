@@ -35,7 +35,7 @@
             <div class="sm-scoreboard" aria-label="{{ __('matches.matchSummary') }}">
                 <div class="sm-scoreboard__team">
                     <span>@if($fixture->homeTeam?->image_path)<img src="{{ $fixture->homeTeam->image_path }}" alt="{{ $homeName }}">@else<b>{{ mb_substr($homeName ?: __('matches.unknown'), 0, 1) }}</b>@endif</span>
-                    <h2>{{ $homeName ?: __('matches.unknown') }}</h2><small>{{ __('matches.homeTeam') }}</small>
+                    <h2>@if($fixture->homeTeam?->status)<a href="{{ $isEnglish ? route('sport.localized.team', ['lang' => 'en', 'team' => $fixture->home_team_id]) : route('sport.team', $fixture->home_team_id) }}">{{ $homeName ?: __('matches.unknown') }}</a>@else{{ $homeName ?: __('matches.unknown') }}@endif</h2><small>{{ __('matches.homeTeam') }}</small>
                 </div>
                 <div class="sm-scoreboard__center">
                     <span>{{ optional($fixture->starting_at)->translatedFormat('l, d F Y') }}</span>
@@ -49,7 +49,7 @@
                 </div>
                 <div class="sm-scoreboard__team">
                     <span>@if($fixture->awayTeam?->image_path)<img src="{{ $fixture->awayTeam->image_path }}" alt="{{ $awayName }}">@else<b>{{ mb_substr($awayName ?: __('matches.unknown'), 0, 1) }}</b>@endif</span>
-                    <h2>{{ $awayName ?: __('matches.unknown') }}</h2><small>{{ __('matches.awayTeam') }}</small>
+                    <h2>@if($fixture->awayTeam?->status)<a href="{{ $isEnglish ? route('sport.localized.team', ['lang' => 'en', 'team' => $fixture->away_team_id]) : route('sport.team', $fixture->away_team_id) }}">{{ $awayName ?: __('matches.unknown') }}</a>@else{{ $awayName ?: __('matches.unknown') }}@endif</h2><small>{{ __('matches.awayTeam') }}</small>
                 </div>
             </div>
             <div class="sm-match-facts">
@@ -85,7 +85,15 @@
                             <article class="{{ $event->team_id === $fixture->away_team_id ? 'is-away' : 'is-home' }} is-{{ $event->type }}">
                                 <time>{{ $event->minute }}{{ $event->extra_minute ? '+'.$event->extra_minute : '' }}'</time>
                                 <span class="sm-event-icon"><i class="bi {{ $eventIcon }}"></i></span>
-                                <div><small>{{ __('matches.events.'.$event->type) }}</small><strong>{{ $eventPlayerName }}</strong><em>{{ $eventTeamName }}</em></div>
+                                <div><small>{{ __('matches.events.'.$event->type) }}</small><strong>
+                                    @if($event->type === 'substitution' && ($event->playerOut || $event->playerIn))
+                                        @if($event->playerOut)<a href="{{ $isEnglish ? route('sport.localized.player', ['lang' => 'en', 'player' => $event->playerOut->id]) : route('sport.player', $event->playerOut->id) }}">{{ $playerOutName }}</a>@else{{ __('matches.unknownPlayer') }}@endif
+                                        {{ $isEnglish ? '→' : '←' }}
+                                        @if($event->playerIn)<a href="{{ $isEnglish ? route('sport.localized.player', ['lang' => 'en', 'player' => $event->playerIn->id]) : route('sport.player', $event->playerIn->id) }}">{{ $playerInName }}</a>@else{{ __('matches.unknownPlayer') }}@endif
+                                    @elseif($event->player)
+                                        <a href="{{ $isEnglish ? route('sport.localized.player', ['lang' => 'en', 'player' => $event->player->id]) : route('sport.player', $event->player->id) }}">{{ $eventPlayerName }}</a>
+                                    @else{{ $eventPlayerName }}@endif
+                                </strong><em>{{ $eventTeamName }}</em></div>
                             </article>
                         @endforeach
                     </div>

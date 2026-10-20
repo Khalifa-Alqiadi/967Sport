@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Custom;
 
 use App\Http\Controllers\Controller;
 use App\Models\Fixture;
+use App\Models\FixtureEvent;
 use App\Models\League;
 use App\Models\Season;
 use App\Models\LeagueStanding;
+use App\Models\Player;
+use App\Models\Team;
 use App\Models\Topic;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -39,6 +42,89 @@ class FootballController extends Controller
         app()->setLocale($lang);
 
         return $this->match($fixture);
+    }
+
+    public function localizedTeam(Request $request, string $lang, int $team)
+    {
+        app()->setLocale($lang);
+
+        return $this->team($request, $team);
+    }
+
+    public function localizedPlayer(Request $request, string $lang, int $player)
+    {
+        app()->setLocale($lang);
+
+        return $this->player($request, $player);
+    }
+
+    public function team(Request $request, int $team)
+    {
+        $team = Team::query()->where('status', 1)->with(['country', 'venue'])->findOrFail($team);
+        $tab = in_array($request->query('tab'), ['overview', 'matches', 'squad', 'news'], true)
+            ? $request->query('tab') : 'overview';
+
+        $fixtures = fn () => Fixture::query()
+            ->where(fn ($query) => $query->where('home_team_id', $team->id)->orWhere('away_team_id', $team->id))
+            ->with(['league', 'homeTeam', 'awayTeam', 'round']);
+
+        $upcomingMatches = $fixtures()->where('starting_at', '>=', now())
+            ->where('is_finished', false)->orderBy('starting_at')
+            ->limit($tab === 'matches' ? 24 : 5)->get();
+        $completedMatches = $fixtures()->where('is_finished', true)
+            ->orderByDesc('starting_at')->limit($tab === 'matches' ? 24 : 5)->get();
+
+        $squad = $team->players()->wherePivot('is_current', true)
+            ->with('country')->orderByPivot('jersey_number')->get()->unique('id')->values();
+        $standings = LeagueStanding::query()->where('league_standings.team_id', $team->id)
+            ->join('seasons', 'seasons.id', '=', 'league_standings.season_id')
+            ->select('league_standings.*')->with(['league', 'season'])
+            ->orderByDesc('seasons.is_current')->orderByDesc('seasons.starting_at')
+            ->limit(4)->get();
+        $news = Topic::query()->where('team_id', $team->id)->where('status', 1)
+            ->latest('date')->latest('id')->limit($tab === 'news' ? 24 : 4)->get();
+
+        $played = $fixtures()->where('is_finished', true)->get()
+            ->filter(fn ($match) => ($match->ft_home_score ?? $match->home_score) !== null
+                && ($match->ft_away_score ?? $match->away_score) !== null);
+        $stats = [
+            'played' => $played->count(),
+            'wins' => $played->filter(fn ($match) => $this->teamScore($match, $team->id) > $this->opponentScore($match, $team->id))->count(),
+            'draws' => $played->filter(fn ($match) => $this->teamScore($match, $team->id) === $this->opponentScore($match, $team->id))->count(),
+            'goals' => $played->sum(fn ($match) => $this->teamScore($match, $team->id)),
+        ];
+
+        return view('frontEnd.matches.team', compact('team', 'tab', 'upcomingMatches', 'completedMatches', 'squad', 'standings', 'news', 'stats') + [
+            'PageTitle' => $this->localizedName($team),
+            'page_type' => 'football',
+        ]);
+    }
+
+    public function player(Request $request, int $player)
+    {
+        $player = Player::query()->with('country')->findOrFail($player);
+        $tab = in_array($request->query('tab'), ['overview', 'matches', 'career', 'news'], true)
+            ? $request->query('tab') : 'overview';
+
+        $teams = $player->teams()->wherePivot('is_current', true)->get()->unique('id')->values();
+        $careerTeams = $player->teams()->orderByPivot('from_date', 'desc')->get();
+        $events = FixtureEvent::query()->where(fn ($query) => $query
+            ->where('player_id', $player->id)->orWhere('assist_player_id', $player->id)
+            ->orWhere('player_in_id', $player->id)->orWhere('player_out_id', $player->id));
+        $stats = [
+            'goals' => (clone $events)->where('player_id', $player->id)->whereIn('type', ['goal', 'penalty'])->count(),
+            'assists' => (clone $events)->where('assist_player_id', $player->id)->whereIn('type', ['goal', 'penalty'])->count(),
+            'appearances' => (clone $events)->distinct()->count('fixture_id'),
+        ];
+        $recentEvents = (clone $events)->with(['fixture.homeTeam', 'fixture.awayTeam', 'fixture.league'])
+            ->orderByDesc('id')->limit($tab === 'matches' ? 30 : 8)->get();
+        $news = Topic::query()->where('player_id', $player->id)->where('status', 1)
+            ->latest('date')->latest('id')->limit($tab === 'news' ? 24 : 4)->get();
+
+        return view('frontEnd.matches.player', compact('player', 'tab', 'teams', 'careerTeams', 'stats', 'recentEvents', 'news') + [
+            'PageTitle' => $this->localizedName($player),
+            'page_type' => 'football',
+        ]);
     }
 
     public function competitions()
@@ -148,6 +234,8 @@ class FootballController extends Controller
                 'events.team',
                 'events.player',
                 'events.assistPlayer',
+                'events.playerIn',
+                'events.playerOut',
             ])
             ->findOrFail($fixture);
 
@@ -232,6 +320,20 @@ class FootballController extends Controller
         }
 
         return now()->startOfDay();
+    }
+
+    private function teamScore(Fixture $fixture, int $teamId): int
+    {
+        return (int) ((int) $fixture->home_team_id === $teamId
+            ? ($fixture->ft_home_score ?? $fixture->home_score)
+            : ($fixture->ft_away_score ?? $fixture->away_score));
+    }
+
+    private function opponentScore(Fixture $fixture, int $teamId): int
+    {
+        return (int) ((int) $fixture->home_team_id === $teamId
+            ? ($fixture->ft_away_score ?? $fixture->away_score)
+            : ($fixture->ft_home_score ?? $fixture->home_score));
     }
 
     private function localizedName($model): string

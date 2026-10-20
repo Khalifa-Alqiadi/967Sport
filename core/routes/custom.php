@@ -8,6 +8,8 @@ Route::get('/competitions', [FootballController::class, 'competitions'])->name('
 Route::get('/league/{league}', [FootballController::class, 'league'])->whereNumber('league')->name('sport.league');
 Route::get('/matches', [FootballController::class, 'matches'])->name('sport.matches');
 Route::get('/match/{fixture}', [FootballController::class, 'match'])->whereNumber('fixture')->name('sport.match');
+Route::get('/team/{team}', [FootballController::class, 'team'])->whereNumber('team')->name('sport.team');
+Route::get('/player/{player}', [FootballController::class, 'player'])->whereNumber('player')->name('sport.player');
 
 Route::prefix('{lang}')
     ->where(['lang' => 'en'])
@@ -16,6 +18,8 @@ Route::prefix('{lang}')
         Route::get('/league/{league}', [FootballController::class, 'localizedLeague'])->whereNumber('league')->name('sport.localized.league');
         Route::get('/matches', [FootballController::class, 'localizedMatches'])->name('sport.localized.matches');
         Route::get('/match/{fixture}', [FootballController::class, 'localizedMatch'])->whereNumber('fixture')->name('sport.localized.match');
+        Route::get('/team/{team}', [FootballController::class, 'localizedTeam'])->whereNumber('team')->name('sport.localized.team');
+        Route::get('/player/{player}', [FootballController::class, 'localizedPlayer'])->whereNumber('player')->name('sport.localized.player');
     });
 
 // private route example ( require login )

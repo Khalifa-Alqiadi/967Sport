@@ -10,6 +10,7 @@
     @yield('headInclude')
     @stack('after-styles')
     <link href="{{ URL::asset('assets/frontend/css/967sport-inner.css') }}?v=2" rel="stylesheet"/>
+    <link href="{{ URL::asset('assets/frontend/css/967sport-footer.css') }}?v=1" rel="stylesheet"/>
     @if(Helper::GeneralSiteSettings("css")!="")
         <style type="text/css">
             {!! Helper::GeneralSiteSettings("css") !!}

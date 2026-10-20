@@ -117,6 +117,8 @@
     line-height: 1.4;
 }
 .sport-match-page .sm-page--match-editorial .sm-scoreboard__team small { color: #c0b3ce; font-size: 11px; font-weight: 600; }
+.sport-match-page .sm-page--match-editorial .sm-scoreboard__team h2 a { color: #fff !important; }
+.sport-match-page .sm-page--match-editorial .sm-scoreboard__team h2 a:hover { color: var(--md-gold) !important; }
 .sport-match-page .sm-page--match-editorial .sm-scoreboard__center {
     display: grid;
     place-items: center;
@@ -213,6 +215,8 @@
 .sport-match-page .sm-page--match-editorial .sm-timeline small,
 .sport-match-page .sm-page--match-editorial .sm-timeline em { color: var(--md-muted); font-size: 11px; font-style: normal; font-weight: 500; line-height: 1.5; }
 .sport-match-page .sm-page--match-editorial .sm-timeline strong { margin: 2px 0; color: var(--md-ink); font-size: 14px; font-weight: 700; line-height: 1.45; }
+.sport-match-page .sm-page--match-editorial .sm-timeline strong a { color: var(--md-ink) !important; }
+.sport-match-page .sm-page--match-editorial .sm-timeline strong a:hover { color: var(--md-purple) !important; text-decoration: underline; }
 .sport-match-page .sm-page--match-editorial .sm-side-panel,
 .sport-match-page .sm-page--match-editorial .sm-related { margin-bottom: 18px; padding: 21px; border: 1px solid var(--md-line); border-radius: 7px; background: #fff; box-shadow: none; }
 .sport-match-page .sm-page--match-editorial .sm-side-panel h2,

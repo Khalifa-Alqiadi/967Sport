@@ -176,6 +176,8 @@
 .sport-matches-page .sm-table-team { display: flex; align-items: center; gap: 10px; min-width: 190px; text-align: start; }
 .sport-matches-page .sm-table-team img, .sport-matches-page .sm-table-team i { display: grid; place-items: center; width: 32px; height: 32px; object-fit: contain; border-radius: 50%; background: rgba(77,44,133,.08); font-style: normal; }
 .sport-matches-page .sm-table-team strong { color: var(--sm-ink); font-size: 10px; }
+.sport-matches-page .sm-table-team a { color: var(--sm-ink) !important; font-size: 12px; font-weight: 800; }
+.sport-matches-page .sm-table-team a:hover { color: var(--sm-purple) !important; }
 .sport-matches-page .sm-table-wrap.is-compact .sm-standings-table { min-width: 620px; }
 .sport-matches-page .sm-news-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 15px; }
 .sport-matches-page .sm-news-card { display: block; overflow: hidden; color: var(--sm-ink) !important; border: 1px solid var(--sm-line); border-radius: 6px 22px 6px 6px; background: #fff; box-shadow: var(--sm-shadow); }
