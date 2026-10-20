@@ -38,8 +38,7 @@
 }
 
 .sport-home-page #header .sport-brand-copy b,
-.sport-home-page #header .sport-brand-copy small,
-.sport-home-page #header .navbar>ul>li>a {
+.sport-home-page #header .sport-brand-copy small {
     color: #fff !important;
 }
 
